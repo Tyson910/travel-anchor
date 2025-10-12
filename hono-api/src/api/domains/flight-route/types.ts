@@ -1,6 +1,10 @@
 import { z } from "@hono/zod-openapi";
 
-export { airlineSchema, airportSchema, routeSchema } from "#domains/airport/types.ts";
+export {
+	airlineSchema,
+	airportSchema,
+	routeSchema,
+} from "#domains/airport/types.ts";
 
 export const flightRoutesQuerySchema = z.object({
 	IATA: z

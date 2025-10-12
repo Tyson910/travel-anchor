@@ -1,4 +1,4 @@
-import type { DB } from "#database/types.ts";
+import type { DB } from "./types.ts";
 
 import {
 	type AnyColumnWithTable,

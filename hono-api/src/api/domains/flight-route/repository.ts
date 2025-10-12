@@ -1,5 +1,3 @@
-import type { DB } from "#database/types.ts";
-
 import {
 	type AnyColumnWithTable,
 	type ExpressionBuilder,
@@ -8,7 +6,7 @@ import {
 } from "kysely";
 import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/sqlite";
 
-import { kyselyDriver } from "#database/driver.ts";
+import { type DB, kyselyDriver } from "#database";
 import { logger } from "#logger";
 
 function asBoolean(

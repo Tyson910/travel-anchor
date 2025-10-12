@@ -1,7 +1,6 @@
 import type { AnyColumnWithTable, Expression, SqlBool } from "kysely";
-import type { DB } from "#database/types.ts";
 
-import { kyselyDriver } from "#database/driver.ts";
+import { type DB, kyselyDriver } from "#database";
 import { logger } from "#logger";
 
 const airportColumns = [
