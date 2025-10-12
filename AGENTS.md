@@ -2,20 +2,7 @@
 
 This document outlines the essential commands and code style guidelines for AI agents operating within this repository.
 
-## Project Overview
-
-This is a monorepo managed with `bun`. It consists of several services:
-
-- **`hono-api`**: A backend API built with [Hono](https://hono.dev/) running on Node.js.
-- **`nuxt-app`**: The frontend application built with [Nuxt](https://nuxt.com/).
-- **`data-layer`**: The data access layer. Uses [Prisma](https://www.prisma.io/) for schema definition, migrations, and type generation, but [Kysely](https://kysely.dev/) for writing queries and interacting with the database.
-- **`python`**: Contains Python scripts for data processing, such as scraping airline routes.
-
-
-## 1. Build, Lint, and Test Commands
-
-
-## 2. Code Style Guidelines
+## Code Style Guidelines
 
 ### Formatting & Linting
 - This project uses `Biome` for code formatting & linting. Always run `bun run lint` from the root before committing changes to ensure consistent formatting.
@@ -41,7 +28,6 @@ Instructions:
 
 For testing strategies and coverage requirements: .github/instructions/nodejsjavascript-vitest.instructions.md
 For working on Front-End: .github/instructions/web-interface-guidelines.instructions.md
-For making changes to Nuxt reference the docs from `https://ui.nuxt.com/llms.txt` & `https://nuxt.com/llms.txt`
 
 ## General Guidelines
 
