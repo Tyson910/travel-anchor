@@ -9,7 +9,7 @@ import {
 import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/sqlite";
 
 import { kyselyDriver } from "#database/driver.ts";
-import { logger } from "#logger/logger.ts";
+import { logger } from "#logger";
 
 function asBoolean(
 	eb: ExpressionBuilder<DB, "airline">,

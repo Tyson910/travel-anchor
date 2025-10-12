@@ -8,7 +8,7 @@
 		"#middleware/*": "./src/api/shared/middleware/*",
 		"#utils/*": "./src/api/shared/utils/*",
 		"#database/*": "./src/api/shared/infrastructure/database/*",
-		"#logger/*": "./src/api/shared/infrastructure/logger/*"
+		"#logger": "./src/api/shared/utils/logger.ts"
 	},
 	"scripts": {
 		"dev": "bun --watch src/index.ts",

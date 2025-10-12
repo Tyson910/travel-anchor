@@ -2,7 +2,7 @@ import type { SQLiteError } from "bun:sqlite";
 
 import { z } from "zod";
 
-import { logger } from "#logger/logger.ts";
+import { logger } from "#logger";
 
 /**
  * Handles SQLite database errors and maps them to appropriate HTTP responses.

@@ -1,7 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 
 import { flightRouteService } from "#domains/flight-route/service.ts";
-import { logger } from "#logger/logger.ts";
+import { logger } from "#logger";
 import { notFoundUtils } from "#utils/errors.ts";
 import {
 	getAirportByIATARoute,

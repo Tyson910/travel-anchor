@@ -10,7 +10,7 @@ import { secureHeaders } from "hono/secure-headers";
 
 import { airportRoutes } from "#domains/airport/routes.ts";
 import { flightRouteRoutes } from "#domains/flight-route/routes.ts";
-import { logger } from "#logger/logger.ts";
+import { logger } from "#logger";
 import { timing } from "#middleware/timing.ts";
 import { handleSQLiteError } from "#utils/errors.ts";
 import { SQLiteError } from "bun:sqlite";

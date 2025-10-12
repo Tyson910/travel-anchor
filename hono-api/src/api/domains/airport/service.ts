@@ -2,7 +2,7 @@ import type { Airport } from "./types.ts";
 
 import { NoResultError } from "kysely";
 
-import { logger } from "#logger/logger.ts";
+import { logger } from "#logger";
 import { getAirportByIATA, searchAirport } from "./repository.ts";
 
 export const airportService = {

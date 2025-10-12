@@ -2,7 +2,7 @@ import type { AnyColumnWithTable, Expression, SqlBool } from "kysely";
 import type { DB } from "#database/types.ts";
 
 import { kyselyDriver } from "#database/driver.ts";
-import { logger } from "#logger/logger.ts";
+import { logger } from "#logger";
 
 const airportColumns = [
 	"airport.city_name",

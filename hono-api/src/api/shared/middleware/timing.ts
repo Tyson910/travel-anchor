@@ -1,6 +1,6 @@
 import type { MiddlewareHandler } from "hono";
 
-import { logger } from "#logger/logger.ts";
+import { logger } from "#logger";
 
 export const startTime: MiddlewareHandler = async (c, next) => {
 	c.set("startTime", performance.now());

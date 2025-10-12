@@ -10,7 +10,7 @@ import {
 } from "kysely";
 import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/sqlite";
 
-import { logger } from "#logger/logger.ts";
+import { logger } from "#logger";
 import { kyselyDriver } from "./driver.ts";
 
 function asBoolean(
