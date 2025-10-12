@@ -2,7 +2,7 @@ import type { SQLiteError } from "bun:sqlite";
 
 import { z } from "zod";
 
-import { logger } from "./logger.ts";
+import { logger } from "#logger/logger.ts";
 
 /**
  * Handles SQLite database errors and maps them to appropriate HTTP responses.
@@ -200,19 +200,6 @@ const HTTPErrorCodeSchema = z.union([
 	z.literal("PRODUCT_NOT_FOUND"),
 ]);
 
-// const userNotFoundDetailsSchema = resourceNotFoundDetailsSchema.extend({
-//   resource: z.literal('user'),
-//   userId: z.string(),
-//   availableUsers: z.array(z.string()).optional(),
-// });
-
-// const productNotFoundDetailsSchema = resourceNotFoundDetailsSchema.extend({
-//   resource: z.literal('product'),
-//   productId: z.string(),
-//   category: z.string().optional(),
-//   similarProducts: z.array(z.string()).optional(),
-// });
-
 // Suggestions schema
 const suggestionsSchema = z.object({
 	similarResources: z.array(z.string()).optional(),
@@ -237,8 +224,6 @@ export const notFoundResponseSchema = z.object({
 // Type inference from Zod schemas
 type NotFoundResponse = z.infer<typeof notFoundResponseSchema>;
 type HTTPErrorCode = z.infer<typeof HTTPErrorCodeSchema>;
-// type UserNotFoundDetails = z.infer<typeof userNotFoundDetailsSchema>;
-// type ProductNotFoundDetails = z.infer<typeof productNotFoundDetailsSchema>;
 
 // Factory function with Zod validation
 function APIResponseFactory() {
@@ -281,7 +266,7 @@ function APIResponseFactory() {
 	}
 
 	function generateErrorId(): string {
-		return `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+		return `err_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 	}
 
 	return {
@@ -317,25 +302,6 @@ export const notFoundUtils = {
 			path,
 			method,
 		}),
-
-	// User not found
-	// user: (
-	// 	userId: string,
-	// 	path: string,
-	// 	method: string,
-	// 	availableUsers?: string[],
-	// ) =>
-	// 	APIResponseFactory().createNotFoundResponse({
-	// 		code: "USER_NOT_FOUND",
-	// 		message: `User with ID ${userId} not found`,
-	// 		details: userNotFoundDetailsSchema.parse({
-	// 			resource: "user",
-	// 			userId,
-	// 			availableUsers,
-	// 		}),
-	// 		path,
-	// 		method,
-	// 	}),
 
 	// Endpoint not found
 	endpoint: (path: string, method: string) =>

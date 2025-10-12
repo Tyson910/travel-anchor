@@ -73,3 +73,9 @@ export const iataParamSchema = z.object({
 			example: "JFK",
 		}),
 });
+
+export type Airport = z.infer<typeof airportSchema>;
+export type Airline = z.infer<typeof airlineSchema>;
+export type Route = z.infer<typeof routeSchema>;
+export type AirportSearchQuery = z.infer<typeof airportSearchQuerySchema>;
+export type IATAParam = z.infer<typeof iataParamSchema>;

@@ -1,5 +1,5 @@
 import type { Database } from "bun:sqlite";
-import type { DB } from "../database-types";
+import type { DB } from "#/database-types";
 
 import {
 	CompiledQuery,

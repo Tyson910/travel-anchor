@@ -1,6 +1,6 @@
 import { testClient } from "hono/testing";
 
-import { app } from "./index.ts";
+import { app } from "../../../../src/api/app.ts";
 import { describe, expect, it } from "bun:test";
 
 describe("Airport API", () => {

@@ -1,4 +1,4 @@
-import type { DB } from "../database-types.ts";
+import type { DB } from "#database/types.ts";
 
 import { Kysely, ParseJSONResultsPlugin } from "kysely";
 
