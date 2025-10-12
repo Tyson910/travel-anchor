@@ -2,13 +2,13 @@
 	"name": "@travel-anchor/hono-api",
 	"type": "module",
 	"imports": {
-		"#shared/*": "./src/api/shared/*",
-		"#domains/*": "./src/api/domains/*",
-		"#middleware/*": "./src/api/shared/middleware/*",
-		"#utils/*": "./src/api/shared/utils/*",
-		"#database/*": "./src/api/shared/database/*",
-		"#database": "./src/api/shared/database/index.ts",
-		"#logger": "./src/api/shared/utils/logger.ts"
+		"#shared/*": "./src/backend/shared/*",
+		"#domains/*": "./src/backend/domains/*",
+		"#middleware/*": "./src/backend/shared/middleware/*",
+		"#utils/*": "./src/backend/shared/utils/*",
+		"#database/*": "./src/backend/shared/database/*",
+		"#database": "./src/backend/shared/database/index.ts",
+		"#logger": "./src/backend/shared/utils/logger.ts"
 	},
 	"scripts": {
 		"dev": "bun --watch src/index.ts",

@@ -1,3 +1,3 @@
-export type { App } from "./api/app.ts";
+export type { App } from "./backend/app.ts";
 
-export { default } from "./api/server.ts";
+export { default } from "./backend/server.ts";
