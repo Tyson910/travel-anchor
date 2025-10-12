@@ -5,15 +5,6 @@
 		"rootDir": "./src",
 		"outDir": "./dist",
 		"baseUrl": ".",
-		// "paths": {
-		// 	"#shared/*": ["./src/api/shared/*"],
-		// 	"#domains/*": ["./src/api/domains/*"],
-		// 	"#infrastructure/*": ["./src/api/shared/infrastructure/*"],
-		// 	"#middleware/*": ["./src/api/shared/middleware/*"],
-		// 	"#utils/*": ["./src/api/shared/utils/*"],
-		// 	"#database/*": ["./src/api/shared/infrastructure/database/*"],
-		// 	"#logger/*": ["./src/api/shared/infrastructure/logger/*"]
-		// },
 
 		"allowImportingTsExtensions": true,
 		"noEmit": true,
@@ -45,5 +36,6 @@
 		"noUncheckedSideEffectImports": true,
 		"moduleDetection": "force",
 		"skipLibCheck": true
-	}
+	},
+	"exclude": ["tests"]
 }
