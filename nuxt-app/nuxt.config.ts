@@ -6,5 +6,11 @@ export default defineNuxtConfig({
   devServer: {
     port: 3001,
   },
-  modules: ["@nuxt/eslint", "@nuxt/image", "@nuxt/ui", "@nuxt/test-utils"],
+  modules: [
+    "@nuxt/eslint",
+    "@nuxt/image",
+    "@nuxt/ui",
+    "@nuxt/test-utils",
+    "@vueuse/nuxt",
+  ],
 });
