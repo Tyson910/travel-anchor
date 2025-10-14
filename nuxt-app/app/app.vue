@@ -9,13 +9,12 @@ import { VueQueryDevtools } from "@tanstack/vue-query-devtools";
     <NuxtRouteAnnouncer />
     <NuxtLoadingIndicator />
     <UApp>
-      <UHeader />
       <UMain>
         <NuxtLayout>
           <NuxtPage />
         </NuxtLayout>
       </UMain>
-      <UFooter />
+      <!-- <UFooter /> -->
     </UApp>
     <DevOnly>
       <VueQueryDevtools button-position="bottom-left" />
