@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { type UseAirportSearchQueryResult, useAirportSearchQuery } from "~/composables/use-queries";
+import {
+  type UseAirportSearchQueryResult,
+  useAirportSearchQuery,
+} from "~/composables/use-queries";
 
 const airportSearchStr = ref("");
 const debouncedAirportSearchStr = debouncedRef(airportSearchStr);
