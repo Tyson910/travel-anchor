@@ -18,10 +18,12 @@
 	},
 	"workspaces": {
 		"packages": [
-			"hono-api"
+			"hono-api",
+			"nuxt-app"
 		],
 		"catalog": {
-			"@types/bun": "^1.2.23"
+			"@types/bun": "^1.2.23",
+			"typescript": "^5.9.2"
 		}
 	}
 }

@@ -35,6 +35,6 @@
 		"@types/bun": "catalog:",
 		"prisma": "^6.16.0",
 		"prisma-kysely": "^2.2.0",
-		"typescript": "^5.9.2"
+		"typescript": "catalog:"
 	}
 }
