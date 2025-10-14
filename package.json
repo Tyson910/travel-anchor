@@ -23,6 +23,7 @@
 		],
 		"catalog": {
 			"@types/bun": "^1.2.23",
+			"hono": "^4.9.6",
 			"typescript": "^5.9.2"
 		}
 	}

@@ -14,7 +14,7 @@
         "@hono/zod-openapi": "^1.1.0",
         "cheerio": "^1.1.2",
         "geolib": "^3.3.4",
-        "hono": "^4.9.6",
+        "hono": "catalog:",
         "kysely": "^0.28.5",
         "ofetch": "^1.4.1",
         "winston": "^3.17.0",
@@ -36,8 +36,10 @@
         "@nuxt/image": "1.11.0",
         "@nuxt/ui": "^4.0.1",
         "@tanstack/vue-query": "^5.87.4",
+        "@travel-anchor/hono-api": "workspace:",
         "@vueuse/core": "13.9.0",
         "@vueuse/nuxt": "13.9.0",
+        "hono": "catalog:",
         "nuxt": "^4.1.3",
         "vue": "^3.5.22",
         "vue-router": "^4.5.1",
@@ -54,6 +56,7 @@
   },
   "catalog": {
     "@types/bun": "^1.2.23",
+    "hono": "^4.9.6",
     "typescript": "^5.9.2",
   },
   "packages": {

@@ -1,6 +1,12 @@
 {
 	"name": "@travel-anchor/hono-api",
 	"type": "module",
+	"exports": {
+		".": {
+			"types": "./src/index.ts",
+			"default": null
+		}
+	},
 	"imports": {
 		"#shared/*": "./src/backend/shared/*",
 		"#domains/*": "./src/backend/domains/*",
@@ -24,7 +30,7 @@
 		"@hono/zod-openapi": "^1.1.0",
 		"cheerio": "^1.1.2",
 		"geolib": "^3.3.4",
-		"hono": "^4.9.6",
+		"hono": "catalog:",
 		"kysely": "^0.28.5",
 		"ofetch": "^1.4.1",
 		"winston": "^3.17.0",
