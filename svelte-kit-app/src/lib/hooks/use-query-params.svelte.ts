@@ -1,7 +1,7 @@
-import { z } from "zod";
-
-import { page } from "$app/state";
 import { goto } from "$app/navigation";
+import { page } from "$app/state";
+
+import { z } from "zod";
 
 const querySchema = z.object({
 	codes: z.union([
@@ -11,36 +11,32 @@ const querySchema = z.object({
 	view: z.enum(["grid", "map"]).optional().default("grid"),
 });
 
-export function useSearchQueryParams() {
-	const rawQueryParamsObj = $derived(
+class UseSearchQueryParams {
+	#rawQueryParamsObj = $derived(
 		Object.fromEntries(page.url.searchParams.entries()),
 	);
 
-	const iataCodes = $derived.by(() => {
-		const validationResult = querySchema.safeParse(rawQueryParamsObj);
-		if (validationResult.error) {
+	#validationResult = $derived(querySchema.safeParse(this.#rawQueryParamsObj));
+
+	iataCodes = $derived.by(() => {
+		if (this.#validationResult.error) {
 			return [];
 		}
-		if (typeof validationResult.data.codes == "string") {
-			return [validationResult.data.codes];
+		if (typeof this.#validationResult.data.codes == "string") {
+			return [this.#validationResult.data.codes];
 		}
-		return validationResult.data.codes;
+		return this.#validationResult.data.codes;
 	});
 
-	const activeView = $derived.by(() => {
-		const validationResult = querySchema.safeParse(rawQueryParamsObj);
-		return validationResult.success ? validationResult.data.view : "map";
-	});
+	activeView = $derived(
+		this.#validationResult.success ? this.#validationResult.data.view : "map",
+	);
 
-	function setView(view: z.infer<typeof querySchema>["view"]) {
+	setView(view: z.infer<typeof querySchema>["view"]) {
 		const freshURL = page.url;
 		freshURL.searchParams.set("view", view);
 		return goto(freshURL);
 	}
-
-	return {
-		activeView,
-		iataCodes,
-		setView,
-	};
 }
+
+export const useSearchQueryParams = () => new UseSearchQueryParams();
