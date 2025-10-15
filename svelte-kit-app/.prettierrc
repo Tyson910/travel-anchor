@@ -10,12 +10,6 @@
 				"trailingComma": "none",
 				"printWidth": 100
 			}
-		},
-		{
-			"files": "*",
-			"options": {
-				"requirePragma": true
-			}
 		}
 	],
 	"tailwindStylesheet": "./src/app.css"
