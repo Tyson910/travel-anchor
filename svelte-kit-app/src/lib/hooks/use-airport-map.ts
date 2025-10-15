@@ -3,7 +3,7 @@ import type { LatLngExpression, Map as LeafletMap, Marker } from "leaflet";
 import { divIcon, map as leafletMap, marker, tileLayer } from "leaflet";
 import { onMount } from "svelte";
 
-interface Airport {
+export interface Airport {
 	iata_code: string;
 	latitude: number;
 	longitude: number;
@@ -13,7 +13,6 @@ interface Airport {
 
 interface UseAirportParams {
 	airports: Airport[];
-	mapContainer: HTMLElement | null;
 	initialZoom?: number;
 	initialCenter?: LatLngExpression;
 }
@@ -22,6 +21,7 @@ interface UseAirportMapReturn {
 	readonly map: LeafletMap | null;
 	readonly loading: boolean;
 	readonly error: string | null;
+	mapContainer: HTMLDivElement | null;
 }
 
 export function useAirportMap(params: UseAirportParams): UseAirportMapReturn {
@@ -29,9 +29,10 @@ export function useAirportMap(params: UseAirportParams): UseAirportMapReturn {
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 	let airportMarkers = $state<Marker[]>([]);
+	// biome-ignore lint/style/useConst: consumers can update this var
+	let mapContainer: HTMLDivElement | null = $state(null);
 
 	function initializeMap() {
-		const { mapContainer } = params;
 		try {
 			if (!mapContainer) {
 				throw new Error("Map container not found");
@@ -153,6 +154,7 @@ export function useAirportMap(params: UseAirportParams): UseAirportMapReturn {
 		map: $derived(map),
 		loading: $derived(loading),
 		error: $derived(error),
+		mapContainer,
 	};
 }
 
