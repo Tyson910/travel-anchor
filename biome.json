@@ -7,7 +7,8 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"maxSize": 2000000
+		"maxSize": 2000000,
+		"includes": ["**/*", "!**/*.svelte", "!**/*.vue"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -59,7 +60,7 @@
 	},
 	"overrides": [
 		{
-			"includes": ["**/*.vue"],
+			"includes": ["**/*.vue", "**/*.svelte"],
 			"linter": {
 				"rules": {
 					"style": {
