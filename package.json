@@ -19,7 +19,8 @@
 	"workspaces": {
 		"packages": [
 			"hono-api",
-			"nuxt-app"
+			"nuxt-app",
+			"svelte-kit-app"
 		],
 		"catalog": {
 			"@types/bun": "^1.2.23",
