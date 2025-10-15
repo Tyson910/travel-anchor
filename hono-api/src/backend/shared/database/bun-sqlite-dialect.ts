@@ -56,7 +56,7 @@ class BunSqliteDriver implements Driver {
 		// SQLite only has one single connection. We use a mutex here to wait
 		// until the single connection has been released.
 		await this.#connectionMutex.lock();
-		return this.#connection!;
+		return this.#connection as DatabaseConnection; // Trust me bro
 	}
 
 	async beginTransaction(connection: DatabaseConnection): Promise<void> {
@@ -93,10 +93,12 @@ class BunSqliteConnection implements DatabaseConnection {
 
 		if (stmt.columnNames.length > 0) {
 			return Promise.resolve({
+				// biome-ignore lint/suspicious/noExplicitAny: necessary evil
 				rows: stmt.all(parameters as any) as O[],
 			});
 		}
 
+		// biome-ignore lint/suspicious/noExplicitAny: necessary evil
 		const results = stmt.run(parameters as any);
 
 		return Promise.resolve({
@@ -118,6 +120,7 @@ class BunSqliteConnection implements DatabaseConnection {
 			);
 		}
 
+		// biome-ignore lint/suspicious/noExplicitAny: necessary evil
 		for await (const row of stmt.iterate(parameters as any)) {
 			yield { rows: [row as R] };
 		}
