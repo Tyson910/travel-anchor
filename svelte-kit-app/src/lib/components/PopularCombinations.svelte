@@ -73,7 +73,7 @@
 <div class="container mx-auto px-4">
 	<div class="mb-16 text-center">
 		<h2 class="mb-4 text-3xl font-bold md:text-4xl">Popular Combinations</h2>
-		<p class="text-muted-foreground mx-auto max-w-2xl text-lg md:text-xl">
+		<p class="mx-auto max-w-2xl text-lg text-muted-foreground md:text-xl">
 			Click any combination to instantly search for meeting points
 		</p>
 	</div>
