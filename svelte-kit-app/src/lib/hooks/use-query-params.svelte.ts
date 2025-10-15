@@ -1,7 +1,7 @@
+import { z } from "zod";
+
 import { goto } from "$app/navigation";
 import { page } from "$app/state";
-
-import { z } from "zod";
 
 const querySchema = z.object({
 	codes: z.union([
