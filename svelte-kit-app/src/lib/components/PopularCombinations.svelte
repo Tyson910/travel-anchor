@@ -60,22 +60,21 @@
 	</div>
 
 	<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-		{#each popularCombinations as combination (combination.codes.join('-'))}
+		{#each popularCombinations as {codes, description, title, Icon} (codes.join('-'))}
 			<Card
 				class="hover:shadow-xl transition-all duration-300 cursor-pointer group hover:-translate-y-1 border-2 hover:border-primary-200 dark:hover:border-primary-800"
 			>
 				<a
 					class="block p-6 lg:p-8 text-center"
-					href="/search?codes={combination.codes.join(',')}&view=map"
+					href="/search?codes={codes.join(',')}&view=map"
 				>
 					<div class="flex justify-center mb-4">
-						<svelte:component
-							this={combination.Icon}
+						<Icon
 							class="size-10 text-primary-500 group-hover:scale-110 transition-transform duration-300"
 						/>
 					</div>
-					<h3 class="text-xl font-semibold mb-2">{combination.title}</h3>
-					<p class="text-muted-foreground">{combination.description}</p>
+					<h3 class="text-xl font-semibold mb-2">{title}</h3>
+					<p class="text-muted-foreground">{description}</p>
 				</a>
 			</Card>
 		{/each}
