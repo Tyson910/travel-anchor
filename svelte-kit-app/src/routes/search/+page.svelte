@@ -79,7 +79,7 @@
 						</Card>
 					{:else if searchParams.activeView === 'grid'}
 						<!-- Grid View -->
-						<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+						<div class="grid gap-6">
 							{#each result.routes as route}
 								<AirportCard {route} />
 							{/each}
