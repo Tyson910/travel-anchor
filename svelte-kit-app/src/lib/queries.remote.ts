@@ -1,6 +1,6 @@
 import type { App } from "@travel-anchor/hono-api";
 
-import { hc, parseResponse, DetailedError } from "hono/client";
+import { DetailedError, hc, parseResponse } from "hono/client";
 import * as z from "zod";
 
 import { query } from "$app/server";
