@@ -72,7 +72,7 @@ export class UseAirportMap {
 			// Initialize map when component is mounted
 			this.initializeMap();
 
-			return this.cleanupFn;
+			return () => this.cleanupFn;
 		});
 	}
 
