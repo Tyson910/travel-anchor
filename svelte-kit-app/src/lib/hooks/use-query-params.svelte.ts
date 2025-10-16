@@ -12,11 +12,6 @@ const querySchema = z.object({
 });
 
 class UseSearchQueryParams {
-	#rawQueryParamsObj = $derived(
-		Object.fromEntries(page.url.searchParams.entries()),
-	);
-
-
 	iataCodes: string[] = $derived.by(() => {
 		const codesParam = page.url.searchParams.getAll("codes");
 		const validationResult = querySchema.shape.codes.safeParse(codesParam);
@@ -31,7 +26,11 @@ class UseSearchQueryParams {
 	});
 
 	activeView = $derived.by(() => {
-		const validationResult = querySchema.safeParse(this.#rawQueryParamsObj);
+		const rawQueryParamsObj = Object.fromEntries(
+			page.url.searchParams.entries(),
+		);
+
+		const validationResult = querySchema.safeParse(rawQueryParamsObj);
 		return validationResult.success ? validationResult.data.view : "map";
 	});
 
