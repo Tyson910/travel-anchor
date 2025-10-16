@@ -1,47 +1,27 @@
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import type { Component } from 'svelte';
+	import { useSearchQueryParams } from '$lib/hooks/use-query-params.svelte';
 	import { LayoutGrid, Map } from '@lucide/svelte';
 
-	interface Props {
-		activeView: 'grid' | 'map';
-		onViewChange: (view: 'grid' | 'map') => void;
-		class?: string;
-	}
-
-	const props: Props = $props();
-
-	const { activeView, onViewChange, class: className } = props;
+	const searchParams = useSearchQueryParams();
 </script>
 
-<div
-	class={cn(
-		'inline-flex items-center rounded-lg border border-border bg-background p-1',
-		className
-	)}
->
+{#snippet ToggleButton(label: 'grid' | 'map', Icon: Component)}
 	<button
 		type="button"
-		class="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium transition-all {activeView ===
-		'grid'
+		class="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium capitalize transition-all {searchParams.activeView ===
+		label
 			? 'bg-primary text-primary-foreground shadow-sm'
 			: 'text-muted-foreground hover:bg-accent hover:text-foreground'}"
-		onclick={() => onViewChange('grid')}
-		aria-pressed={activeView === 'grid'}
+		onclick={() => searchParams.setView(label)}
+		aria-pressed={searchParams.activeView === label}
 	>
-		<LayoutGrid class="mr-2 size-4" />
-		Grid
+		<Icon class="mr-2 size-4" />
+		{label}
 	</button>
+{/snippet}
 
-	<button
-		type="button"
-		class="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium transition-all {activeView ===
-		'map'
-			? 'bg-primary text-primary-foreground shadow-sm'
-			: 'text-muted-foreground hover:bg-accent hover:text-foreground'}"
-		onclick={() => onViewChange('map')}
-		aria-pressed={activeView === 'map'}
-	>
-		<Map class="mr-2 size-4" />
-		Map
-	</button>
+<div class="border-border bg-background inline-flex items-center rounded-lg border p-1">
+	{@render ToggleButton('grid', LayoutGrid)}
+	{@render ToggleButton('map', Map)}
 </div>
