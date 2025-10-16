@@ -30,11 +30,27 @@
 			<!-- Header with Sidebar Trigger -->
 			<div class="mb-8 flex items-center gap-4">
 				<Sidebar.Trigger />
-				<div>
-					<h1 class="text-3xl font-bold tracking-tight md:text-4xl">Find Your Meeting Point</h1>
-					<p class="text-muted-foreground mt-2 text-lg">
-						Compare flight routes from multiple airports to discover the perfect destination
-					</p>
+
+				<div class="w-full">
+					{#if IATA_CODES.length > 2}
+						<!-- Results Header -->
+						<div class="flex items-center justify-between">
+							<div>
+								<h1 class="text-2xl font-semibold">
+									Meeting Points from {IATA_CODES.join(' + ')}
+								</h1>
+								<p class="text-muted-foreground">
+									Common destinations reachable from all selected airports
+								</p>
+							</div>
+							<ViewToggle />
+						</div>
+					{:else}
+						<h1 class="text-2xl font-semibold tracking-tight">Find Your Meeting Point</h1>
+						<p class="text-muted-foreground mt-2 text-lg">
+							Compare flight routes from multiple airports to discover the perfect destination
+						</p>
+					{/if}
 				</div>
 			</div>
 
@@ -48,19 +64,6 @@
 					</p>
 				</Card>
 			{:else}
-				<!-- Results Header -->
-				<div class="mb-6 flex items-center justify-between">
-					<div>
-						<h2 class="text-2xl font-semibold">
-							Meeting Points from {IATA_CODES.join(' + ')}
-						</h2>
-						<p class="text-muted-foreground">
-							Common destinations reachable from all selected airports
-						</p>
-					</div>
-					<ViewToggle />
-				</div>
-
 				<!-- Results Content -->
 				<svelte:boundary>
 					<!-- {@const result = await useFlightRouteQuery(IATA_CODES)} -->
