@@ -23,6 +23,10 @@ export const useAirportSearchQuery = query(z.string(), async (searchQuery) => {
 	return result;
 });
 
+export type UseAirportSearchQuery = Awaited<
+	ReturnType<typeof useAirportSearchQuery>
+>;
+
 export const useAirportDetailsQuery = query(
 	airportIATAValidator,
 	async (airportIATA) => {
