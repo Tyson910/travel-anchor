@@ -25,7 +25,7 @@
 <div class="flex min-h-screen">
 	<SearchSidebar />
 
-	<Sidebar.Inset class="flex-1">
+	<Sidebar.Inset>
 		<div class="px-4 py-8">
 			<!-- Header with Sidebar Trigger -->
 			<div class="mb-8 flex items-center gap-4">
