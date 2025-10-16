@@ -47,7 +47,7 @@
 						</div>
 					{:else}
 						<h1 class="text-2xl font-semibold tracking-tight">Find Your Meeting Point</h1>
-						<p class="text-muted-foreground mt-2 text-lg">
+						<p class="mt-2 text-lg text-muted-foreground">
 							Compare flight routes from multiple airports to discover the perfect destination
 						</p>
 					{/if}
@@ -57,9 +57,9 @@
 			{#if IATA_CODES.length < 2}
 				<!-- Empty State -->
 				<Card class="p-12 text-center">
-					<Plane class="text-muted-foreground mx-auto mb-4 size-16" />
+					<Plane class="mx-auto mb-4 size-16 text-muted-foreground" />
 					<h2 class="mb-2 text-2xl font-semibold">Start Your Search</h2>
-					<p class="text-muted-foreground mb-6">
+					<p class="mb-6 text-muted-foreground">
 						Use the sidebar to add at least 2 airports to find meeting destinations
 					</p>
 				</Card>
@@ -71,7 +71,7 @@
 
 					{#if result.routes.length == 0}
 						<Card class="p-12 text-center">
-							<Plane class="text-muted-foreground mx-auto mb-4 size-16" />
+							<Plane class="mx-auto mb-4 size-16 text-muted-foreground" />
 							<h2 class="mb-2 text-2xl font-semibold">No Results Found</h2>
 							<p class="text-muted-foreground">
 								No common destinations found for the selected airports
@@ -108,9 +108,9 @@
 						<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 							{#each { length: 6 } as _}
 								<Card class="animate-pulse p-6">
-									<div class="bg-muted mb-4 h-4 w-3/4 rounded"></div>
-									<div class="bg-muted mb-2 h-3 w-1/2 rounded"></div>
-									<div class="bg-muted h-3 w-2/3 rounded"></div>
+									<div class="mb-4 h-4 w-3/4 rounded bg-muted"></div>
+									<div class="mb-2 h-3 w-1/2 rounded bg-muted"></div>
+									<div class="h-3 w-2/3 rounded bg-muted"></div>
 								</Card>
 							{/each}
 						</div>
@@ -118,7 +118,7 @@
 
 					{#snippet failed(err)}
 						<Card class="p-12 text-center">
-							<AlertCircle class="text-destructive mx-auto mb-4 size-16" />
+							<AlertCircle class="mx-auto mb-4 size-16 text-destructive" />
 							<h2 class="mb-2 text-2xl font-semibold">Search Error</h2>
 							<p class="text-muted-foreground">
 								There was an error searching for flight routes. Please try again.
