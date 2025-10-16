@@ -18,13 +18,7 @@ export const useAirportSearchQuery = query(z.string(), async (searchQuery) => {
 		},
 	});
 
-	const result = await parseResponse(endpoint).catch((e: DetailedError) => e);
-
-	if (result instanceof DetailedError) {
-		throw DetailedError;
-	} else if (result instanceof Error) {
-		throw result;
-	}
+	const result = await parseResponse(endpoint);
 
 	return result;
 });
