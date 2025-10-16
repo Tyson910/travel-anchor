@@ -68,3 +68,6 @@ export const useFlightRouteQuery = query(
 		return result;
 	},
 );
+
+
+export type UseFlightRouteQueryResult = Awaited<ReturnType<typeof useFlightRouteQuery>>
