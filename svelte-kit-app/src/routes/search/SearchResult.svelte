@@ -59,9 +59,9 @@
 		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{#each { length: 6 } as _}
 				<Card class="animate-pulse p-6">
-					<div class="bg-muted mb-4 h-4 w-3/4 rounded"></div>
-					<div class="bg-muted mb-2 h-3 w-1/2 rounded"></div>
-					<div class="bg-muted h-3 w-2/3 rounded"></div>
+					<div class="mb-4 h-4 w-3/4 rounded bg-muted"></div>
+					<div class="mb-2 h-3 w-1/2 rounded bg-muted"></div>
+					<div class="h-3 w-2/3 rounded bg-muted"></div>
 				</Card>
 			{/each}
 		</div>
@@ -70,7 +70,7 @@
 	{#snippet failed(err)}
 		<Card class="p-12 text-center">
 			{err}
-			<AlertCircle class="text-destructive mx-auto mb-4 size-16" />
+			<AlertCircle class="mx-auto mb-4 size-16 text-destructive" />
 			<h2 class="mb-2 text-2xl font-semibold">Search Error {err}</h2>
 			<p class="text-muted-foreground">
 				There was an error searching for flight routes. Please try again.
