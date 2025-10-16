@@ -16,21 +16,24 @@ class UseSearchQueryParams {
 		Object.fromEntries(page.url.searchParams.entries()),
 	);
 
-	#validationResult = $derived(querySchema.safeParse(this.#rawQueryParamsObj));
 
-	iataCodes = $derived.by(() => {
-		if (this.#validationResult.error) {
+	iataCodes: string[] = $derived.by(() => {
+		const codesParam = page.url.searchParams.getAll("codes");
+		const validationResult = querySchema.shape.codes.safeParse(codesParam);
+
+		if (validationResult.error) {
 			return [];
 		}
-		if (typeof this.#validationResult.data.codes == "string") {
-			return [this.#validationResult.data.codes];
+		if (typeof validationResult.data == "string") {
+			return [validationResult.data];
 		}
-		return this.#validationResult.data.codes;
+		return validationResult.data;
 	});
 
-	activeView = $derived(
-		this.#validationResult.success ? this.#validationResult.data.view : "map",
-	);
+	activeView = $derived.by(() => {
+		const validationResult = querySchema.safeParse(this.#rawQueryParamsObj);
+		return validationResult.success ? validationResult.data.view : "map";
+	});
 
 	setView(view: z.infer<typeof querySchema>["view"]) {
 		const freshURL = page.url;
