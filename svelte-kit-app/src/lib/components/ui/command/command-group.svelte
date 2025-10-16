@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Command as CommandPrimitive } from 'bits-ui';
+	import { Command as CommandPrimitive, useId } from 'bits-ui';
 	import { cn } from '$lib/utils.js';
 
 	let {
@@ -12,15 +12,13 @@
 	}: CommandPrimitive.GroupProps & {
 		heading?: string;
 	} = $props();
-
-	const componentId = $props.id();
 </script>
 
 <CommandPrimitive.Group
 	bind:ref
 	data-slot="command-group"
 	class={cn('overflow-hidden p-1 text-foreground', className)}
-	value={value ?? heading ?? `----${componentId}`}
+	value={value ?? heading ?? `----${useId()}`}
 	{...restProps}
 >
 	{#if heading}
