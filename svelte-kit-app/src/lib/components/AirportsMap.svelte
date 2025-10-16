@@ -3,35 +3,42 @@
 
 	import type { LatLngExpression } from 'leaflet';
 
-	import { type Airport, useAirportMap } from '$lib/hooks/use-airport-map';
+	import { type Airport, UseAirportMap } from '$lib/hooks/use-airport-map.svelte';
+	import * as Alert from '$lib/components/ui/alert';
 
 	interface Props {
 		airports: Airport[];
 		initialZoom?: number;
 		initialCenter?: LatLngExpression;
 	}
+
 	const props: Props = $props();
 
-	let { loading, error, mapContainer } = useAirportMap({
+	let airportMap = new UseAirportMap({
 		airports: props.airports,
-		initialZoom: props.initialZoom ?? 3,
-		initialCenter: props.initialCenter ?? [39.8283, -98.5795]
+		initialZoom: props.initialZoom,
+		initialCenter: props.initialCenter
 	});
 </script>
 
 <div class="route-map-container">
-	<div bind:this={mapContainer} class="route-map"></div>
+	<div bind:this={airportMap.mapContainer} class="route-map"></div>
 
-	{#if loading}
+	{#if airportMap.loading}
 		<div class="map-loading">
 			<div class="loading-spinner">
 				<!-- <UIcon name="i-heroicons-arrow-path" class="animate-spin" /> -->
 				<span>Loading map...</span>
 			</div>
 		</div>
-	{:else if error}
+	{:else if airportMap.error}
 		<div class="map-error">
-			<!-- <UAlert title="Map Error" :description="error" color="error" variant="solid" /> -->
+			<Alert.Root variant="destructive">
+				<Alert.Title>Map Error</Alert.Title>
+				<Alert.Description>
+					{airportMap.error}
+				</Alert.Description>
+			</Alert.Root>
 		</div>
 	{/if}
 </div>
