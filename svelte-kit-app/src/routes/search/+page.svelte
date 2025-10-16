@@ -4,11 +4,14 @@
 	import ViewToggle from '$lib/components/ViewToggle.svelte';
 	import { Card } from '$lib/components/ui/card';
 	import { useSearchQueryParams } from '$lib/hooks/use-query-params.svelte';
-	import { useFlightRouteQuery } from '$lib/queries.remote';
 	import { Plane, AlertCircle } from '@lucide/svelte';
 	import { browser } from '$app/environment';
+	import SearchResult from './SearchResult.svelte';
+
+	const { data } = $props();
 
 	const searchParams = useSearchQueryParams();
+	const IATA_CODES = $derived(data.IATA_CODES);
 </script>
 
 <svelte:head>
@@ -19,33 +22,34 @@
 	/>
 </svelte:head>
 
-<div class="min-h-screen bg-background">
+<div class="bg-background min-h-screen">
 	<div class="px-4 py-8">
 		<!-- Header -->
 		<div class="mb-8 text-center">
 			<h1 class="text-3xl font-bold tracking-tight md:text-4xl">Find Your Meeting Point</h1>
-			<p class="mt-2 text-lg text-muted-foreground">
+			<p class="text-muted-foreground mt-2 text-lg">
 				Compare flight routes from multiple airports to discover the perfect destination
 			</p>
 		</div>
 
 		<div>
-			{#if searchParams.iataCodes.length < 2}
+			{#if IATA_CODES.length < 2}
 				<!-- Empty State -->
 				<Card class="p-12 text-center">
-					<Plane class="mx-auto mb-4 size-16 text-muted-foreground" />
+					<Plane class="text-muted-foreground mx-auto mb-4 size-16" />
 					<h2 class="mb-2 text-2xl font-semibold">Start Your Search</h2>
-					<p class="mb-6 text-muted-foreground">
+					<p class="text-muted-foreground mb-6">
 						Add at least 2 airports to find meeting destinations
 					</p>
 					<PopularCombinations />
 				</Card>
 			{:else}
+				<SearchResult />
 				<!-- Results Header -->
 				<div class="mb-6 flex items-center justify-between">
 					<div>
 						<h2 class="text-2xl font-semibold">
-							Meeting Points from {searchParams.iataCodes.join(' + ')}
+							Meeting Points from {IATA_CODES.join(' + ')}
 						</h2>
 						<p class="text-muted-foreground">
 							Common destinations reachable from all selected airports
@@ -56,7 +60,8 @@
 
 				<!-- Results Content -->
 				<svelte:boundary>
-					{@const result = await useFlightRouteQuery(searchParams.iataCodes)}
+					<!-- {@const result = await useFlightRouteQuery(IATA_CODES)} -->
+					{@const result = data}
 
 					{#if result.routes.length == 0}
 						No results found
@@ -91,9 +96,9 @@
 						<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 							{#each { length: 6 } as _}
 								<Card class="animate-pulse p-6">
-									<div class="mb-4 h-4 w-3/4 rounded bg-muted"></div>
-									<div class="mb-2 h-3 w-1/2 rounded bg-muted"></div>
-									<div class="h-3 w-2/3 rounded bg-muted"></div>
+									<div class="bg-muted mb-4 h-4 w-3/4 rounded"></div>
+									<div class="bg-muted mb-2 h-3 w-1/2 rounded"></div>
+									<div class="bg-muted h-3 w-2/3 rounded"></div>
 								</Card>
 							{/each}
 						</div>
@@ -102,7 +107,7 @@
 					{#snippet failed(err)}
 						<Card class="p-12 text-center">
 							{err}
-							<AlertCircle class="mx-auto mb-4 size-16 text-destructive" />
+							<AlertCircle class="text-destructive mx-auto mb-4 size-16" />
 							<h2 class="mb-2 text-2xl font-semibold">Search Error</h2>
 							<p class="text-muted-foreground">
 								There was an error searching for flight routes. Please try again.

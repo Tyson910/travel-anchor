@@ -3,7 +3,7 @@ import { z } from "zod";
 import { goto } from "$app/navigation";
 import { page } from "$app/state";
 
-const querySchema = z.object({
+export const querySchema = z.object({
 	codes: z.union([
 		z.string().length(3).toUpperCase(),
 		z.string().length(3).toUpperCase().array(),
@@ -11,19 +11,21 @@ const querySchema = z.object({
 	view: z.enum(["grid", "map"]).optional().default("grid"),
 });
 
-class UseSearchQueryParams {
-	iataCodes: string[] = $derived.by(() => {
-		const codesParam = page.url.searchParams.getAll("codes");
-		const validationResult = querySchema.shape.codes.safeParse(codesParam);
+export function parseIataCodesParams(searchParams: URLSearchParams): string[] {
+	const codesParam = searchParams.getAll("codes");
+	const validationResult = querySchema.shape.codes.safeParse(codesParam);
 
-		if (validationResult.error) {
-			return [];
-		}
-		if (typeof validationResult.data == "string") {
-			return [validationResult.data];
-		}
-		return validationResult.data;
-	});
+	if (validationResult.error) {
+		return [];
+	}
+	if (typeof validationResult.data == "string") {
+		return [validationResult.data];
+	}
+	return validationResult.data;
+}
+
+class UseSearchQueryParams {
+	iataCodes: string[] = $derived(parseIataCodesParams(page.url.searchParams));
 
 	activeView = $derived.by(() => {
 		const rawQueryParamsObj = Object.fromEntries(
