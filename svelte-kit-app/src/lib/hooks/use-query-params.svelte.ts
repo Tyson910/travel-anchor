@@ -18,6 +18,7 @@ export function parseIataCodesParams(searchParams: URLSearchParams): string[] {
 	if (validationResult.error) {
 		return [];
 	}
+	// TODO: prevent dupes
 	if (typeof validationResult.data == "string") {
 		return [validationResult.data];
 	}
