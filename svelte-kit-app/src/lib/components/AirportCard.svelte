@@ -32,7 +32,7 @@
 					<Accordion.Trigger>{option.name}</Accordion.Trigger>
 					<Accordion.Content>
 						<ul class="mt-4 flex list-disc flex-col gap-4">
-							<div class="text-secondary-foreground font-bold">
+							<div class="font-bold text-secondary-foreground">
 								{option.airline_options.length} airline options
 							</div>
 							{#each option.airline_options as airline}

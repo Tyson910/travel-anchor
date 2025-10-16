@@ -21,7 +21,7 @@
 	</button>
 {/snippet}
 
-<div class="border-border bg-background inline-flex items-center rounded-lg border p-1">
+<div class="inline-flex items-center rounded-lg border border-border bg-background p-1">
 	{@render ToggleButton('grid', LayoutGrid)}
 	{@render ToggleButton('map', Map)}
 </div>
