@@ -8,7 +8,7 @@
 	"files": {
 		"ignoreUnknown": false,
 		"maxSize": 2000000,
-		"includes": ["**/*", "!**/*.svelte", "!**/*.vue"]
+		"includes": ["**/*", "!**/*.svelte", "!**/*.vue", "!**/*.astro"]
 	},
 	"formatter": {
 		"enabled": true,
