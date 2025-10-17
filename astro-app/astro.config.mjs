@@ -8,10 +8,10 @@ import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  server: {
-    port: 3001,
-  },
-  site: "https://flight-anchor.com",
-  vite: { plugins: [tailwindcss()] },
-  integrations: [vue({ devtools: true }), svelte(), react()],
+	server: {
+		port: 3001,
+	},
+	site: "https://flight-anchor.com",
+	vite: { plugins: [tailwindcss()] },
+	integrations: [vue({ devtools: true }), svelte(), react()],
 });
