@@ -81,7 +81,7 @@
 		<Sidebar.Group>
 			<AirportSearch
 				onSelect={(airport) => {
-					console.log(airport);
+					searchQuery.addAirportToSearchParams(airport.iata_code);
 				}}
 			/>
 			<Sidebar.GroupLabel class="sr-only">Selected Airports</Sidebar.GroupLabel>
