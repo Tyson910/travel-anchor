@@ -7,7 +7,7 @@ const useHonoClient = () => {
 	return hc<App>(`http://localhost:3000`);
 };
 
-export const useAirportSearchQuery = async (searchQuery: string) => {
+export const useAirportSearchQuery = (searchQuery: string) => {
 	const fetcher = async () => {
 		const endpoint = useHonoClient().v1.airport.$get({
 			query: {
