@@ -37,7 +37,7 @@
 						<div class="flex items-center justify-between">
 							<div>
 								<h1 class="text-2xl font-semibold">
-									Meeting Points from {IATA_CODES.join(' + ')}
+								 {data.routes.length}	Meeting Points from {IATA_CODES.join(' + ')}
 								</h1>
 								<p class="text-muted-foreground">
 									Common destinations reachable from all selected airports
