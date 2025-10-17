@@ -34,6 +34,7 @@
 		"motion": "^12.23.24",
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",
+		"react-leaflet": "^5.0.0",
 		"svelte": "^5.40.2",
 		"swr": "^2.3.6",
 		"tailwind-merge": "^3.3.1",
