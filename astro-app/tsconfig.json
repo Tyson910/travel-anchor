@@ -4,12 +4,13 @@
   "exclude": ["dist"],
   "compilerOptions": {
     "jsx": "preserve",
-		"baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
       "@layouts/*": ["src/layouts/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@/*": ["./src/*"]
     }
   }
 }
