@@ -20,7 +20,8 @@
 		"packages": [
 			"hono-api",
 			"nuxt-app",
-			"svelte-kit-app"
+			"svelte-kit-app",
+			"astro-app"
 		],
 		"catalog": {
 			"@types/bun": "^1.2.23",

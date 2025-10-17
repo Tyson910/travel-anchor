@@ -60,7 +60,7 @@
 	},
 	"overrides": [
 		{
-			"includes": ["**/*.vue", "**/*.svelte"],
+			"includes": ["**/*.vue", "**/*.svelte", "**/*.astro"],
 			"linter": {
 				"rules": {
 					"style": {
