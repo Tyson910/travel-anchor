@@ -42,6 +42,38 @@ class UseSearchQueryParams {
 		freshURL.searchParams.set("view", view);
 		return goto(freshURL);
 	}
+
+	addAirportToSearchParams(code: string) {
+		const params = page.url.searchParams;
+		const upperCode = code.toUpperCase();
+		params.delete("codes", upperCode);
+		params.append("codes", upperCode);
+		return goto(`${page.url.pathname}?${params.toString()}`);
+	}
+
+	removeAirport(code: string) {
+		const params = page.url.searchParams;
+		params.delete("codes", code);
+		return goto(`${page.url.pathname}?${params.toString()}`);
+	}
+
+	clearAll() {
+		const params = page.url.searchParams;
+		params.delete("codes");
+		return goto(`${page.url.pathname}?${params.toString()}`);
+	}
+
+	getPopularCombinationURL(codes: string[]) {
+		const params = page.url.searchParams;
+
+		params.delete("codes");
+		[...new Set(codes)].forEach((iata) => {
+			const sanitizedIATA = iata.trim().toUpperCase();
+			params.append("codes", sanitizedIATA);
+		});
+
+		return new URL(`${page.url.pathname}?${params.toString()}`, page.url);
+	}
 }
 
 export const useSearchQueryParams = () => new UseSearchQueryParams();
