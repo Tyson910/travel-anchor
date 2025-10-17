@@ -30,7 +30,7 @@ const { loading, error } = useAirportMap({
 
     <div v-if="loading" class="map-loading">
       <div class="loading-spinner">
-        <UIcon name="i-heroicons-arrow-path" class="animate-spin" />
+        <UIcon name="lucide:arrow-right" class="animate-spin" />
         <span>Loading map...</span>
       </div>
     </div>

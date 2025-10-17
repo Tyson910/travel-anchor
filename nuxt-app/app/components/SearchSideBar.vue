@@ -9,13 +9,13 @@ const viewItems = [
     label: "Grid View",
     value: "grid",
     description: "View meeting points in a card grid layout",
-    icon: "i-heroicons-squares-2x2",
+    icon: "lucide:grid-2x2",
   },
   {
     label: "Map View",
     value: "map",
     description: "View meeting points on an interactive map",
-    icon: "i-heroicons-map",
+    icon: "lucide:map-pinned",
   },
 ] as const satisfies RadioGroupItem[];
 
@@ -143,14 +143,14 @@ const { activeView, iataCodes, addAirport, removeAirport, setView } =
             <UButton
               :variant="activeView === 'grid' ? 'solid' : 'outline'"
               @click="setView('grid')"
-              icon="i-heroicons-squares-2x2"
+              icon="lucide:grid-2x2"
               size="sm"
               square
             />
             <UButton
               :variant="activeView === 'map' ? 'solid' : 'outline'"
               @click="setView('map')"
-              icon="i-heroicons-map"
+              icon="lucide:map-pinned"
               size="sm"
               square
             />
