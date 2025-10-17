@@ -7,25 +7,19 @@ const useHonoClient = () => {
 	return hc<App>(`http://localhost:3000`);
 };
 
-type HonoClient = ReturnType<typeof useHonoClient>;
-
 export const useAirportSearchQuery = async (searchQuery: string) => {
-	const fetcher =
-		(arg: InferRequestType<HonoClient["v1"]["airport"]["$get"]>) =>
-		async () => {
-			const $get = useHonoClient().v1.airport.$get;
-			const result = await parseResponse($get(arg));
-			return result;
-		};
-
-	return useSWR(
-		"airport-search",
-		fetcher({
+	const fetcher = async () => {
+		const endpoint = useHonoClient().v1.airport.$get({
 			query: {
 				query: searchQuery,
 			},
-		}),
-	);
+		});
+
+		const result = await parseResponse(endpoint);
+		return result;
+	};
+
+	return useSWR("airport-search", fetcher);
 };
 
 export type UseAirportSearchQuery = Awaited<
