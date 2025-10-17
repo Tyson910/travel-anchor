@@ -19,7 +19,7 @@ export const useAirportSearchQuery = (searchQuery: string) => {
 		return result;
 	};
 
-	return useSWR("airport-search", fetcher);
+	return useSWR(searchQuery, fetcher);
 };
 
 export type UseAirportSearchQuery = Awaited<
