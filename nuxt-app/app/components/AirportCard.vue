@@ -63,12 +63,6 @@ function getRouteDurationStr(duration_min: number) {
         </template>
 
         <div class="flex flex-col gap-y-3">
-          <OriginAirportDisplay
-            v-for="originAirport in route.origin_airport_options"
-            :key="originAirport.route_id"
-            :airport="originAirport"
-          />
-
           <div
             v-for="originAirport in route.origin_airport_options"
             :key="originAirport.route_id"
