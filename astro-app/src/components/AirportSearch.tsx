@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -42,10 +42,7 @@ export function AirportSearch({ onSelect, children }: AirportSearchProps) {
 
   const { data, error, isLoading } = useAirportSearchQuery(debouncedSearchTerm);
 
-  const airports = useMemo(() => {
-    if (!data?.airports) return [];
-    return data.airports;
-  }, [data]);
+  const airports = data?.airports ?? [];
 
   const handleSelect = (airport: Airport) => {
     onSelect(airport);
