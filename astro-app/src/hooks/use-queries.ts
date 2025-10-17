@@ -1,6 +1,6 @@
 import type { App } from "@travel-anchor/hono-api";
 
-import { hc, type InferRequestType, parseResponse } from "hono/client";
+import { hc, parseResponse } from "hono/client";
 import useSWR from "swr";
 
 const useHonoClient = () => {
