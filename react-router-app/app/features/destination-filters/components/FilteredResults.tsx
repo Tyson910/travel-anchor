@@ -4,17 +4,16 @@ import { Plane } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
+import { DestinationCard } from "./DestinationCard";
 
 interface FilteredResultsProps {
 	destinations: MockDestination[];
-	onClearFilters: () => void;
-	renderDestinationCard: (destination: MockDestination) => React.ReactNode;
+	onClearFilters?: () => void;
 }
 
 export function FilteredResults({
 	destinations,
 	onClearFilters,
-	renderDestinationCard,
 }: FilteredResultsProps) {
 	if (destinations.length === 0) {
 		return (
@@ -35,7 +34,9 @@ export function FilteredResults({
 
 	return (
 		<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{destinations.map((destination) => renderDestinationCard(destination))}
+			{destinations.map((destination) => (
+				<DestinationCard key={destination.id} destination={destination} />
+			))}
 		</div>
 	);
 }

@@ -15,7 +15,7 @@ import {
 
 interface DestinationCardProps {
 	destination: MockDestination;
-	travelFilterFieldsWithIcons: FilterFieldConfig[];
+	travelFilterFieldsWithIcons?: FilterFieldConfig[];
 }
 
 export function DestinationCard({
@@ -24,7 +24,7 @@ export function DestinationCard({
 }: DestinationCardProps) {
 	const getAirlineNames = (airlineCodes: string[]) => {
 		const airlines =
-			travelFilterFieldsWithIcons.find((f) => f.key === "airlines")?.options ||
+			travelFilterFieldsWithIcons?.find((f) => f.key === "airlines")?.options ||
 			[];
 		return airlineCodes.map((code) => {
 			const airline = airlines.find(
@@ -46,7 +46,7 @@ export function DestinationCard({
 						</CardDescription>
 					</div>
 					{destination.directFlights && (
-						<Badge variant="default" className="text-xs">
+						<Badge variant="primary" className="text-xs">
 							Direct
 						</Badge>
 					)}

@@ -3,6 +3,7 @@ import type { MockDestination } from "~/lib/travel-filters";
 import { MapPin, X } from "lucide-react";
 
 import { Badge, BadgeButton } from "~/components/ui/badge";
+import { FilteredResults } from "../destination-filters";
 import { AirportSearch } from "./components/SearchPopup";
 import { useAirportSearchParamsState } from "./hooks/use-airport-search-params";
 
@@ -18,18 +19,21 @@ export function MutualDestinationsList({
 	totalDestinations,
 }: MutualDestinationsListProps) {
 	return (
-		<div className="mb-6">
-			<div className="flex items-center justify-between mb-4">
-				<h2 className="text-xl font-semibold">
-					Destinations ({destinations.length})
-				</h2>
-				{destinations.length < totalDestinations && (
-					<p className="text-sm text-muted-foreground">
-						Filtered from {totalDestinations} total destinations
-					</p>
-				)}
+		<>
+			<div className="mb-6">
+				<div className="flex items-center justify-between mb-4">
+					<h2 className="text-xl font-semibold">
+						Destinations ({destinations.length})
+					</h2>
+					{destinations.length < totalDestinations && (
+						<p className="text-sm text-muted-foreground">
+							Filtered from {totalDestinations} total destinations
+						</p>
+					)}
+				</div>
 			</div>
-		</div>
+			<FilteredResults destinations={destinations} />
+		</>
 	);
 }
 
