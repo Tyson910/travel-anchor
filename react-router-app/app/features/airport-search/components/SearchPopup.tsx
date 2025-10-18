@@ -31,7 +31,6 @@ import {
 	EmptyMedia,
 	EmptyTitle,
 } from "~/components/ui/empty";
-import { Skeleton } from "~/components/ui/skeleton";
 import { useAirportSearchParamsState } from "../hooks/use-airport-search-params";
 import {
 	type AirportSearchQueryResult,
@@ -65,6 +64,7 @@ function AirportCommandPalette({
 }) {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+	const { isLoading } = useAirportSearchQuery(searchTerm);
 
 	// Debounce search term
 	useEffect(() => {
@@ -84,7 +84,13 @@ function AirportCommandPalette({
 
 	return (
 		<Command shouldFilter={false}>
-			<CommandInput value={searchTerm} onValueChange={setSearchTerm} />
+			<CommandInput
+				value={searchTerm}
+				onValueChange={setSearchTerm}
+				className="grow w-full"
+				isLoading={isLoading || searchTerm != debouncedSearchTerm}
+			/>
+
 			<div className="h-[300px]">
 				<SearchResults
 					searchTerm={debouncedSearchTerm}
@@ -104,7 +110,7 @@ function SearchResults({
 		airport: AirportSearchQueryResult["airports"][number],
 	) => void;
 }) {
-	const { data, error, isLoading } = useAirportSearchQuery(searchTerm);
+	const { data, error } = useAirportSearchQuery(searchTerm);
 	const { addAirport } = useAirportSearchParamsState();
 
 	if (error) {
@@ -113,7 +119,6 @@ function SearchResults({
 				<AlertIcon>
 					<AlertCircleIcon />
 				</AlertIcon>
-
 				<AlertContent>
 					<AlertTitle>Unable to process your search</AlertTitle>
 					<AlertDescription>
@@ -121,17 +126,6 @@ function SearchResults({
 					</AlertDescription>
 				</AlertContent>
 			</Alert>
-		);
-	}
-
-	if (isLoading) {
-		return (
-			<div className="flex flex-col py-3 gap-y-3">
-				{Array.from({ length: 5 }).map((_, i) => (
-					// biome-ignore lint/suspicious/noArrayIndexKey: dont need one
-					<Skeleton key={i} className="h-10" />
-				))}
-			</div>
 		);
 	}
 
