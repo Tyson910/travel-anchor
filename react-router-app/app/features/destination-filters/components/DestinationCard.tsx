@@ -1,5 +1,5 @@
-import type { MockDestination } from "~/lib/travel-filters";
 import type { FilterFieldConfig, FilterOption } from "~/components/ui/filters";
+import type { MockDestination } from "~/lib/travel-filters";
 
 import { Clock, DollarSign, MapPin, Plane, Users } from "lucide-react";
 

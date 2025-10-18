@@ -1,5 +1,5 @@
-import type { MockDestination } from "~/lib/travel-filters";
 import type { Filter } from "~/components/ui/filters";
+import type { MockDestination } from "~/lib/travel-filters";
 
 import { useMemo } from "react";
 
