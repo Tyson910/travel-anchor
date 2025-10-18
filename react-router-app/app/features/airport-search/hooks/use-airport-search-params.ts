@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import { z } from "zod";
 
 const querySchema = z.object({
@@ -31,7 +31,6 @@ function getActiveViewFromSearchParams(searchParams: URLSearchParams) {
 
 export function useAirportSearchParamsState() {
 	const [searchParams, setSearchParams] = useSearchParams();
-	const navigate = useNavigate();
 
 	const iataCodes = getIATACodesFromSearchParams(searchParams);
 	const activeView = getActiveViewFromSearchParams(searchParams);
@@ -43,6 +42,7 @@ export function useAirportSearchParamsState() {
 			// Remove existing instance to prevent duplicates
 			newParams.delete("codes", upperCode);
 			newParams.append("codes", upperCode);
+			newParams.set("view", getActiveViewFromSearchParams(searchParams));
 			return newParams;
 		});
 	};
@@ -66,7 +66,7 @@ export function useAirportSearchParamsState() {
 		setSearchParams({ view });
 	};
 
-	const getPopularCombinationURL = async (codes: string[]) => {
+	const getPopularCombinationURL = (codes: string[]) => {
 		const params = new URLSearchParams();
 
 		[...new Set(codes)].forEach((iata) => {
@@ -74,9 +74,7 @@ export function useAirportSearchParamsState() {
 			params.append("codes", sanitizedIATA);
 		});
 
-		return await navigate({
-			search: params.toString(),
-		});
+		setSearchParams(params);
 	};
 
 	return {
