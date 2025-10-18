@@ -1,4 +1,4 @@
-import type { MockDestination } from "~/airport-search/travel-filters";
+import type { MockDestination } from "~/features/airport-search/travel-filters";
 import type { FilterFieldConfig, FilterOption } from "~/components/ui/filters";
 
 import { Clock, DollarSign, MapPin, Plane, Users } from "lucide-react";

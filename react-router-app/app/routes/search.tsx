@@ -5,7 +5,7 @@ import { useState } from "react";
 import {
 	MOCK_DESTINATIONS,
 	TRAVEL_FILTER_FIELDS,
-} from "~/airport-search/travel-filters";
+} from "~/features/airport-search/travel-filters";
 import {
 	MutualDestinationsList,
 	OriginCitiesDisplay,

@@ -1,4 +1,4 @@
-import type { MockDestination } from "~/airport-search/travel-filters";
+import type { MockDestination } from "~/features/airport-search/travel-filters";
 
 import { Plane } from "lucide-react";
 
