@@ -44,7 +44,13 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 					<OriginCitiesDisplay />
 				</div>
 
-				{isBrowser && <AirportsMap airports={[]} />}
+				{isBrowser && (
+					<AirportsMap
+						airports={loaderData.routes.map(
+							({ destination_airport }) => destination_airport,
+						)}
+					/>
+				)}
 			</div>
 		</div>
 	);

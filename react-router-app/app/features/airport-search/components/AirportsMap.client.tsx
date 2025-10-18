@@ -4,40 +4,49 @@ import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
 
-import { useEffect } from "react";
-
 interface Airport {
 	iata_code: string;
 	latitude: number;
 	longitude: number;
-	name?: string;
-	city_name?: string | null;
+	name: string;
+	city_name: string | null;
 }
 
 interface AirportsMapProps {
 	airports: Airport[];
 }
 
+function FitMapToBounds({ airports }: AirportsMapProps) {
+	fitBoundsToRoutes(airports);
+	return null;
+}
+
 export function AirportsMap({ airports }: AirportsMapProps) {
-	useEffect(() => {
-		fitBoundsToRoutes(airports);
-	}, [airports]);
 	return (
 		<MapContainer
-			center={[51.505, -0.09]}
+			boundsOptions={{
+				padding: [20, 20],
+			}}
 			zoom={13}
 			scrollWheelZoom={false}
-			className=" size-full relative min-h-[400px]"
+			className=" size-full relative h-[600px] z-0"
 		>
+			<FitMapToBounds airports={airports} />
 			<TileLayer
 				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
-			<Marker position={[51.505, -0.09]}>
-				<Popup>
-					A pretty CSS3 popup. <br /> Easily customizable.
-				</Popup>
-			</Marker>
+
+			{airports.map((airport) => {
+				return (
+					<Marker
+						key={airport.iata_code}
+						position={[airport.latitude, airport.longitude]}
+					>
+						<Popup>{airport.name}</Popup>
+					</Marker>
+				);
+			})}
 		</MapContainer>
 	);
 }
