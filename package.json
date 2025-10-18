@@ -20,7 +20,6 @@
 		"packages": [
 			"hono-api",
 			"nuxt-app",
-			"svelte-kit-app",
 			"astro-app",
 			"react-router-app"
 		],
