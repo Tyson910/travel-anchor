@@ -7,7 +7,6 @@ import {
 	DollarSign,
 	MapPin,
 	Plane,
-	Users,
 } from "lucide-react";
 
 // Mock airline data
@@ -65,6 +64,7 @@ export const TRAVEL_FILTER_FIELDS: FilterFieldConfig[] = [
 		placeholder: "Select airlines...",
 		searchable: true,
 		defaultOperator: "is_any_of",
+		icon: <Plane className="size-4" />,
 	},
 	{
 		key: "alliances",
@@ -73,6 +73,7 @@ export const TRAVEL_FILTER_FIELDS: FilterFieldConfig[] = [
 		options: ALLIANCE_OPTIONS,
 		placeholder: "Select alliances...",
 		defaultOperator: "is_any_of",
+		icon: <Building2 className="size-4" />,
 	},
 	{
 		key: "regions",
@@ -82,6 +83,7 @@ export const TRAVEL_FILTER_FIELDS: FilterFieldConfig[] = [
 		placeholder: "Select regions...",
 		searchable: true,
 		defaultOperator: "is_any_of",
+		icon: <MapPin className="size-4" />,
 	},
 	{
 		key: "airport_size",
@@ -90,6 +92,7 @@ export const TRAVEL_FILTER_FIELDS: FilterFieldConfig[] = [
 		options: AIRPORT_SIZE_OPTIONS,
 		placeholder: "Select airport size...",
 		defaultOperator: "is",
+		icon: <Building2 className="size-4" />,
 	},
 	{
 		key: "flight_frequency",
@@ -98,6 +101,7 @@ export const TRAVEL_FILTER_FIELDS: FilterFieldConfig[] = [
 		options: FLIGHT_FREQUENCY_OPTIONS,
 		placeholder: "Select frequency...",
 		defaultOperator: "is",
+		icon: <Calendar className="size-4" />,
 	},
 	{
 		key: "price_range",
@@ -109,6 +113,7 @@ export const TRAVEL_FILTER_FIELDS: FilterFieldConfig[] = [
 		max: 2000,
 		step: 50,
 		defaultOperator: "between",
+		icon: <DollarSign className="size-4" />,
 	},
 	{
 		key: "flight_duration",
@@ -120,6 +125,7 @@ export const TRAVEL_FILTER_FIELDS: FilterFieldConfig[] = [
 		max: 12,
 		step: 0.5,
 		defaultOperator: "between",
+		icon: <Clock className="size-4" />,
 	},
 	{
 		key: "direct_only",
@@ -128,6 +134,7 @@ export const TRAVEL_FILTER_FIELDS: FilterFieldConfig[] = [
 		onLabel: "Yes",
 		offLabel: "No",
 		defaultOperator: "is",
+		icon: <Plane className="size-4" />,
 	},
 	{
 		key: "departure_time",
@@ -135,6 +142,7 @@ export const TRAVEL_FILTER_FIELDS: FilterFieldConfig[] = [
 		type: "time",
 		placeholder: "Select departure time...",
 		defaultOperator: "is",
+		icon: <Clock className="size-4" />,
 	},
 	{
 		key: "departure_time_range",
@@ -142,6 +150,7 @@ export const TRAVEL_FILTER_FIELDS: FilterFieldConfig[] = [
 		type: "time",
 		placeholder: "Select time range...",
 		defaultOperator: "between",
+		icon: <Clock className="size-4" />,
 	},
 ];
 
