@@ -83,7 +83,7 @@ function AirportCommandPalette({
 	};
 
 	return (
-		<Command>
+		<Command shouldFilter={false}>
 			<CommandInput value={searchTerm} onValueChange={setSearchTerm} />
 			<div className="h-[300px]">
 				<SearchResults
