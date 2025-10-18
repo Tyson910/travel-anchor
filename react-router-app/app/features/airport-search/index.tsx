@@ -1,4 +1,4 @@
-import type { MockDestination } from "~/features/airport-search/travel-filters";
+import type { MockDestination } from "~/lib/travel-filters";
 
 import { MapPin } from "lucide-react";
 
