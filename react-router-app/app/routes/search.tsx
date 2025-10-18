@@ -2,12 +2,11 @@ import type { Route } from "./+types/search";
 
 import { parseResponse } from "hono/client";
 
-import {
-	MutualDestinationsList,
-	OriginCitiesDisplay,
-} from "~/features/airport-search";
+import { OriginCitiesDisplay } from "~/features/airport-search";
+import { AirportsMap } from "~/features/airport-search/components/AirportsMap.client";
 import { getIATACodesFromSearchParams } from "~/features/airport-search/hooks/use-airport-search-params";
 import { honoClient } from "~/lib/hono-client";
+import { isBrowser } from "~/lib/utils";
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const requestURLObject = new URL(request.url);
@@ -45,7 +44,7 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 					<OriginCitiesDisplay />
 				</div>
 
-				<MutualDestinationsList />
+				{isBrowser && <AirportsMap airports={[]} />}
 			</div>
 		</div>
 	);
