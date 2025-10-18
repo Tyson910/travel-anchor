@@ -98,7 +98,9 @@ const DataGridContext = createContext<
 >(undefined);
 
 function useDataGrid<TData extends object>() {
-	const context = useContext(DataGridContext) as DataGridContextProps<TData> | undefined;
+	const context = useContext(DataGridContext) as
+		| DataGridContextProps<TData>
+		| undefined;
 	if (!context) {
 		throw new Error("useDataGrid must be used within a DataGridProvider");
 	}
