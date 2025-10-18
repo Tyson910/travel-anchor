@@ -1,16 +1,11 @@
-import type { App } from "@travel-anchor/hono-api";
-
 import {
 	type DetailedError,
-	hc,
 	type InferResponseType,
 	parseResponse,
 } from "hono/client";
 import useSWR from "swr";
 
-const honoClient = () => {
-	return hc<App>(`http://localhost:3000`);
-};
+import { honoClient } from "~/lib/hono-client";
 
 const airportEndpoint = honoClient().v1.airport.$get;
 export type AirportSearchQueryResult = InferResponseType<
