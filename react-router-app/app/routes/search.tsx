@@ -23,6 +23,8 @@ export async function loader({ request }: Route.LoaderArgs) {
 	return await parseResponse(endpoint);
 }
 
+export type SearchPageLoaderResponse = Awaited<ReturnType<typeof loader>>;
+
 export function meta() {
 	return [
 		{ title: "Mutual Flight Destinations - Travel Anchor" },
