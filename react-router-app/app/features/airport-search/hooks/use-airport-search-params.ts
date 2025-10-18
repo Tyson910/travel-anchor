@@ -9,7 +9,7 @@ const querySchema = z.object({
 	view: z.enum(["grid", "map"]).optional().default("grid"),
 });
 
-function getIATACodesFromSearchParams(searchParams: URLSearchParams) {
+export function getIATACodesFromSearchParams(searchParams: URLSearchParams) {
 	const codesParam = searchParams.getAll("codes");
 	const validationResult = querySchema.shape.codes.safeParse(codesParam);
 

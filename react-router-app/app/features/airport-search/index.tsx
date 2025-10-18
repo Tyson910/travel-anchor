@@ -17,24 +17,7 @@ export function MutualDestinationsList() {
 		({ destination_airport }) => destination_airport,
 	);
 
-	const totalDestinations = destinations.length;
-	return (
-		<>
-			<div className="mb-6">
-				<div className="flex items-center justify-between mb-4">
-					<h2 className="text-xl font-semibold">
-						Destinations ({destinations.length})
-					</h2>
-					{destinations.length < totalDestinations && (
-						<p className="text-sm text-muted-foreground">
-							Filtered from {totalDestinations} total destinations
-						</p>
-					)}
-				</div>
-			</div>
-			<FilteredResults destinations={destinations} />
-		</>
-	);
+	return <FilteredResults destinations={destinations} />;
 }
 
 export function OriginCitiesDisplay() {
