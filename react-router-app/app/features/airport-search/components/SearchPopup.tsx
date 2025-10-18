@@ -1,7 +1,13 @@
 import { AlertCircleIcon, SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import {
+	Alert,
+	AlertContent,
+	AlertDescription,
+	AlertIcon,
+	AlertTitle,
+} from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import {
 	Command,
@@ -103,12 +109,17 @@ function SearchResults({
 
 	if (error) {
 		return (
-			<Alert variant="destructive">
-				<AlertCircleIcon />
-				<AlertTitle>Unable to process your search</AlertTitle>
-				<AlertDescription>
-					<p>{error.message}</p>
-				</AlertDescription>
+			<Alert variant="destructive" appearance="light" className="mt-5">
+				<AlertIcon>
+					<AlertCircleIcon />
+				</AlertIcon>
+
+				<AlertContent>
+					<AlertTitle>Unable to process your search</AlertTitle>
+					<AlertDescription>
+						<p>{error.message}</p>
+					</AlertDescription>
+				</AlertContent>
 			</Alert>
 		);
 	}
