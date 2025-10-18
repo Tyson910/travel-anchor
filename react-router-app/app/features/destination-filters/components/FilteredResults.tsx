@@ -1,4 +1,4 @@
-import type { MockDestination } from "~/lib/travel-filters";
+import type { Destination } from "../types";
 
 import { Plane } from "lucide-react";
 
@@ -7,14 +7,10 @@ import { Card, CardContent } from "~/components/ui/card";
 import { DestinationCard } from "./DestinationCard";
 
 interface FilteredResultsProps {
-	destinations: MockDestination[];
-	onClearFilters?: () => void;
+	destinations: Destination[];
 }
 
-export function FilteredResults({
-	destinations,
-	onClearFilters,
-}: FilteredResultsProps) {
+export function FilteredResults({ destinations }: FilteredResultsProps) {
 	if (destinations.length === 0) {
 		return (
 			<Card>
@@ -24,9 +20,7 @@ export function FilteredResults({
 					<p className="text-muted-foreground mb-4">
 						Try adjusting your filters to see more results
 					</p>
-					<Button variant="outline" onClick={onClearFilters}>
-						Clear Filters
-					</Button>
+					<Button variant="outline">Clear Filters</Button>
 				</CardContent>
 			</Card>
 		);
@@ -35,7 +29,10 @@ export function FilteredResults({
 	return (
 		<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{destinations.map((destination) => (
-				<DestinationCard key={destination.id} destination={destination} />
+				<DestinationCard
+					key={destination.iata_code}
+					destination={destination}
+				/>
 			))}
 		</div>
 	);

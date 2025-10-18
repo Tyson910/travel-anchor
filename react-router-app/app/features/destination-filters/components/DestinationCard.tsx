@@ -1,5 +1,5 @@
 import type { FilterFieldConfig, FilterOption } from "~/components/ui/filters";
-import type { MockDestination } from "~/lib/travel-filters";
+import type { Destination } from "../types";
 
 import { Clock, DollarSign, MapPin, Plane, Users } from "lucide-react";
 
@@ -14,7 +14,7 @@ import {
 } from "~/components/ui/card";
 
 interface DestinationCardProps {
-	destination: MockDestination;
+	destination: Destination;
 	travelFilterFieldsWithIcons?: FilterFieldConfig[];
 }
 
@@ -39,41 +39,31 @@ export function DestinationCard({
 			<CardHeader>
 				<div className="flex items-start justify-between">
 					<div>
-						<CardTitle className="text-lg">{destination.city}</CardTitle>
+						<CardTitle className="text-lg">{destination.city_name}</CardTitle>
 						<CardDescription className="flex items-center gap-1">
 							<MapPin className="size-3" />
-							{destination.airportCode} • {destination.state}
+							{destination.iata_code} • {destination.state_name}
 						</CardDescription>
 					</div>
-					{destination.directFlights && (
-						<Badge variant="primary" className="text-xs">
-							Direct
-						</Badge>
-					)}
+					<Badge variant="primary" className="text-xs">
+						Direct
+					</Badge>
 				</div>
 			</CardHeader>
 			<CardContent>
 				<p className="text-sm text-muted-foreground mb-4">
-					{destination.description}
+					{destination.timezone}
 				</p>
 
 				<div className="space-y-3">
-					{/* Price Range */}
-					<div className="flex items-center gap-2">
-						<DollarSign className="size-4 text-muted-foreground" />
-						<span className="text-sm">
-							${destination.priceRange.min} - ${destination.priceRange.max}
-						</span>
-					</div>
-
 					{/* Flight Duration */}
-					<div className="flex items-center gap-2">
+					{/* <div className="flex items-center gap-2">
 						<Clock className="size-4 text-muted-foreground" />
 						<span className="text-sm">{destination.flightDuration} hours</span>
-					</div>
+					</div> */}
 
 					{/* Airlines */}
-					<div className="flex items-center gap-2">
+					{/* <div className="flex items-center gap-2">
 						<Plane className="size-4 text-muted-foreground" />
 						<div className="flex flex-wrap gap-1">
 							{getAirlineNames(destination.airlines)
@@ -89,15 +79,7 @@ export function DestinationCard({
 								</Badge>
 							)}
 						</div>
-					</div>
-
-					{/* Flight Frequency */}
-					<div className="flex items-center gap-2">
-						<Users className="size-4 text-muted-foreground" />
-						<span className="text-sm capitalize">
-							{destination.flightFrequency}
-						</span>
-					</div>
+					</div> */}
 				</div>
 
 				<Button className="w-full mt-4" variant="outline">

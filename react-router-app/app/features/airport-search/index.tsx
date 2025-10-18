@@ -1,23 +1,23 @@
-import type { MockDestination } from "~/lib/travel-filters";
+import type { loader as SearchPageLoader } from "~/routes/search";
 
 import { MapPin, X } from "lucide-react";
+import { useLoaderData } from "react-router";
 
 import { Badge, BadgeButton } from "~/components/ui/badge";
 import { FilteredResults } from "../destination-filters";
 import { AirportSearch } from "./components/SearchPopup";
 import { useAirportSearchParamsState } from "./hooks/use-airport-search-params";
 
-interface MutualDestinationsListProps {
-	destinations: MockDestination[];
-	totalDestinations: number;
-}
-
 export { useAirportSearchParamsState } from "./hooks/use-airport-search-params";
 
-export function MutualDestinationsList({
-	destinations,
-	totalDestinations,
-}: MutualDestinationsListProps) {
+export function MutualDestinationsList() {
+	const { routes } = useLoaderData<typeof SearchPageLoader>();
+
+	const destinations = routes.map(
+		({ destination_airport }) => destination_airport,
+	);
+
+	const totalDestinations = destinations.length;
 	return (
 		<>
 			<div className="mb-6">
