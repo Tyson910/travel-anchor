@@ -9,6 +9,8 @@ interface MutualDestinationsListProps {
 	totalDestinations: number;
 }
 
+export { useAirportSearchParamsState } from "./hooks/use-airport-search-params";
+
 export function MutualDestinationsList({
 	destinations,
 	totalDestinations,

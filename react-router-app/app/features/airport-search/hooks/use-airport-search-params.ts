@@ -29,7 +29,7 @@ function getActiveViewFromSearchParams(searchParams: URLSearchParams) {
 	return validationResult.success ? validationResult.data.view : "grid";
 }
 
-export function useSearchParamsState() {
+export function useAirportSearchParamsState() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
 
