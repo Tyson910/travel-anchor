@@ -3,7 +3,7 @@
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
-import "@/styles/custom-leaftlet.css";
+import "../custom-leaftlet.css";
 
 import { useEffect } from "react";
 
