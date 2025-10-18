@@ -744,7 +744,7 @@ export type FilterFieldsConfig<T = unknown> =
 	| FilterFieldGroup<T>[];
 
 export interface FilterFieldConfig<T = unknown> {
-	key?: string;
+	key: string;
 	label?: string;
 	icon?: React.ReactNode;
 	type?:
@@ -2218,7 +2218,7 @@ export function Filters<T = unknown>({
 										)}
 										<CommandList>
 											<CommandEmpty>{mergedI18n.noFieldsFound}</CommandEmpty>
-											{fields.map((item, index) => {
+											{fields.map((item) => {
 												// Handle grouped fields (FilterFieldGroup structure)
 												if (isFieldGroup(item)) {
 													const groupFields = item.fields.filter((field) => {
@@ -2240,15 +2240,15 @@ export function Filters<T = unknown>({
 
 													return (
 														<CommandGroup
-															key={`group-${index}`}
+															key={`group-${JSON.stringify(item)}`}
 															heading={item.group || "Fields"}
 														>
-															{groupFields.map((field, fieldIndex) => {
+															{groupFields.map((field) => {
 																// Handle separator
 																if (field.type === "separator") {
 																	return (
 																		<CommandSeparator
-																			key={`separator-${fieldIndex}`}
+																			key={`separator-${field.key}`}
 																		/>
 																	);
 																}
@@ -2293,15 +2293,15 @@ export function Filters<T = unknown>({
 
 													return (
 														<CommandGroup
-															key={`group-${index}`}
+															key={`group-${item.key}`}
 															heading={item.group || "Fields"}
 														>
-															{groupFields.map((field, fieldIndex) => {
+															{groupFields.map((field) => {
 																// Handle separator
 																if (field.type === "separator") {
 																	return (
 																		<CommandSeparator
-																			key={`separator-${fieldIndex}`}
+																			key={`separator-${field.key}`}
 																		/>
 																	);
 																}
@@ -2329,7 +2329,7 @@ export function Filters<T = unknown>({
 												// Handle separator
 												if (field.type === "separator") {
 													return (
-														<CommandSeparator key={`separator-${index}`} />
+														<CommandSeparator key={`separator-${field.key}`} />
 													);
 												}
 
