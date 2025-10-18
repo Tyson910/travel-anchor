@@ -24,7 +24,12 @@ export function AirportsMap({ airports }: AirportsMapProps) {
 		fitBoundsToRoutes(airports);
 	}, [airports]);
 	return (
-		<MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+		<MapContainer
+			center={[51.505, -0.09]}
+			zoom={13}
+			scrollWheelZoom={false}
+			className=" size-full relative min-h-[400px]"
+		>
 			<TileLayer
 				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
