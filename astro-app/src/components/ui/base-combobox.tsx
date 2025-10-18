@@ -1,4 +1,3 @@
-
 import type * as React from "react";
 
 import { Combobox as ComboboxPrimitive } from "@base-ui-components/react/combobox";
