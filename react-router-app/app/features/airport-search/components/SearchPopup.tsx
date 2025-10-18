@@ -4,13 +4,20 @@ import { useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import {
-	CommandDialog,
+	Command,
 	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem,
 	CommandList,
 } from "~/components/ui/command";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "~/components/ui/dialog";
 import {
 	Empty,
 	EmptyDescription,
@@ -19,20 +26,37 @@ import {
 	EmptyTitle,
 } from "~/components/ui/empty";
 import { Skeleton } from "~/components/ui/skeleton";
+import { useAirportSearchParamsState } from "../hooks/use-airport-search-params";
 import {
 	type AirportSearchQueryResult,
 	useAirportSearchQuery,
 } from "../hooks/use-search";
 
-export function AirportSearch({
+export function AirportSearch() {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<Dialog open={open} onOpenChange={setOpen}>
+			<DialogTrigger asChild>
+				<Button>Add Airport</Button>
+			</DialogTrigger>
+			<DialogContent aria-describedby={undefined}>
+				<DialogHeader>
+					<DialogTitle className="text-center">Search Airports</DialogTitle>
+				</DialogHeader>
+				<AirportCommandPalette onAirportSelect={() => setOpen(false)} />
+			</DialogContent>
+		</Dialog>
+	);
+}
+
+function AirportCommandPalette({
 	onAirportSelect,
 }: {
 	onAirportSelect: (
 		airport: AirportSearchQueryResult["airports"][number],
 	) => void;
 }) {
-	const [open, setOpen] = useState(false);
-
 	const [searchTerm, setSearchTerm] = useState("");
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
@@ -49,27 +73,19 @@ export function AirportSearch({
 		airport: AirportSearchQueryResult["airports"][number],
 	) => {
 		onAirportSelect(airport);
-		setOpen(false);
 		setSearchTerm("");
 	};
 
 	return (
-		<>
-			<Button onClick={() => setOpen(true)}>Add</Button>
-			<CommandDialog open={open} onOpenChange={setOpen}>
-				<CommandInput
-					placeholder="Type a command or search..."
-					value={searchTerm}
-					onValueChange={setSearchTerm}
+		<Command>
+			<CommandInput value={searchTerm} onValueChange={setSearchTerm} />
+			<div className="h-[300px]">
+				<SearchResults
+					searchTerm={debouncedSearchTerm}
+					onAirportSelect={handleAirportSelect}
 				/>
-				<div className="h-[300px]">
-					<SearchResults
-						searchTerm={debouncedSearchTerm}
-						onAirportSelect={handleAirportSelect}
-					/>
-				</div>
-			</CommandDialog>
-		</>
+			</div>
+		</Command>
 	);
 }
 
@@ -83,6 +99,7 @@ function SearchResults({
 	) => void;
 }) {
 	const { data, error, isLoading } = useAirportSearchQuery(searchTerm);
+	const { addAirport } = useAirportSearchParamsState();
 
 	if (error) {
 		return (
@@ -108,6 +125,10 @@ function SearchResults({
 
 	const airports = data?.airports ?? [];
 
+	if (!searchTerm && airports.length == 0) {
+		return null;
+	}
+
 	return (
 		<CommandList>
 			<CommandEmpty>
@@ -130,8 +151,9 @@ function SearchResults({
 						<CommandItem
 							key={airport.iata_code}
 							value={airport.iata_code}
-							onSelect={() => {
+							onSelect={async () => {
 								onAirportSelect(airport);
+								await addAirport(airport.iata_code);
 							}}
 						>
 							<span>{airport.name}</span>
