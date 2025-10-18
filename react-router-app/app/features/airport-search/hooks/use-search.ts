@@ -33,26 +33,3 @@ export const useAirportSearchQuery = (
 		opts,
 	);
 };
-
-// export const useFlightRoutesQuery = (iataCode: string) => {
-// 	const fetcher = async () => {
-// 		const client = honoClient();
-// 		const result = await parseResponse(
-// 			client.v1["flight-route"].$get({
-// 				query: {
-// 					IATA: iataCode,
-// 				},
-// 			}),
-// 		);
-// 		return result;
-// 	};
-
-// 	return useSWR(
-// 		iataCode ? `flight-routes-${iataCode}` : null,
-// 		iataCode ? fetcher : null,
-// 	);
-// };
-
-// export type UseFlightRoutesQuery = Awaited<
-// 	ReturnType<typeof useFlightRoutesQuery>
-// >;
