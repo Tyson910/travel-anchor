@@ -821,13 +821,15 @@ const flattenFields = <T = unknown>(
 ): FilterFieldConfig<T>[] => {
 	return fields.reduce<FilterFieldConfig<T>[]>((acc, item) => {
 		if (isFieldGroup(item)) {
-			return [...acc, ...item.fields];
+			acc.push(...item.fields);
 		}
 		// Handle group-level fields (new structure)
-		if (isGroupLevelField(item)) {
-			return [...acc, ...item.fields!];
+		else if (isGroupLevelField(item)) {
+			acc.push(...(item.fields ?? []));
+		} else {
+			acc.push(item);
 		}
-		return [...acc, item];
+		return acc;
 	}, []);
 };
 
@@ -1998,7 +2000,7 @@ export function Filters<T = unknown>({
 	const addFilter = useCallback(
 		(fieldKey: string) => {
 			const field = fieldsMap[fieldKey];
-			if (field && field.key) {
+			if (field?.key) {
 				// For select and multiselect types, show options directly
 				if (field.type === "select" || field.type === "multiselect") {
 					setSelectedFieldForOptions(field);
@@ -2164,6 +2166,7 @@ export function Filters<T = unknown>({
 								addButton
 							) : (
 								<button
+									type="button"
 									className={cn(
 										filterAddButtonVariants({
 											variant: variant,
@@ -2269,20 +2272,22 @@ export function Filters<T = unknown>({
 
 												// Handle group-level fields (new FilterFieldConfig structure with group property)
 												if (isGroupLevelField(item)) {
-													const groupFields = item.fields!.filter((field) => {
-														// Include separators and labels for display
-														if (field.type === "separator") {
-															return true;
-														}
-														// If allowMultiple is true, don't filter out fields that already have filters
-														if (allowMultiple) {
-															return true;
-														}
-														// Filter out fields that already have filters (default behavior)
-														return !filters.some(
-															(filter) => filter.field === field.key,
-														);
-													});
+													const groupFields = (item.fields ?? []).filter(
+														(field) => {
+															// Include separators and labels for display
+															if (field.type === "separator") {
+																return true;
+															}
+															// If allowMultiple is true, don't filter out fields that already have filters
+															if (allowMultiple) {
+																return true;
+															}
+															// Filter out fields that already have filters (default behavior)
+															return !filters.some(
+																(filter) => filter.field === field.key,
+															);
+														},
+													);
 
 													if (groupFields.length === 0) return null;
 
