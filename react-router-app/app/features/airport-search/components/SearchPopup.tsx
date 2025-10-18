@@ -116,8 +116,9 @@ function SearchResults({
 	if (isLoading) {
 		return (
 			<div className="flex flex-col py-3 gap-y-3">
-				{Array.from({ length: 5 }).map(() => (
-					<Skeleton className="h-10" />
+				{Array.from({ length: 5 }).map((_, i) => (
+					// biome-ignore lint/suspicious/noArrayIndexKey: dont need one
+					<Skeleton key={i} className="h-10" />
 				))}
 			</div>
 		);
@@ -153,7 +154,7 @@ function SearchResults({
 							value={airport.iata_code}
 							onSelect={async () => {
 								onAirportSelect(airport);
-								await addAirport(airport.iata_code);
+								addAirport(airport.iata_code);
 							}}
 						>
 							<span>{airport.name}</span>
