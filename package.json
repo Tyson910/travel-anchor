@@ -21,7 +21,8 @@
 			"hono-api",
 			"nuxt-app",
 			"svelte-kit-app",
-			"astro-app"
+			"astro-app",
+			"react-router-app"
 		],
 		"catalog": {
 			"@types/bun": "^1.2.23",
