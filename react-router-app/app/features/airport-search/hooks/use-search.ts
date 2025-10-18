@@ -13,7 +13,9 @@ const honoClient = () => {
 };
 
 const airportEndpoint = honoClient().v1.airport.$get;
-type AirportSearchQueryResult = InferResponseType<typeof airportEndpoint>;
+export type AirportSearchQueryResult = InferResponseType<
+	typeof airportEndpoint
+>;
 
 export const useAirportSearchQuery = (searchQuery: string) => {
 	const fetcher = async (searchTerm: string) => {
