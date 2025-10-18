@@ -20,7 +20,7 @@ function getIATACodesFromSearchParams(searchParams: URLSearchParams) {
 	if (typeof validationResult.data === "string") {
 		return [validationResult.data];
 	}
-	return validationResult.data;
+	return [...new Set(validationResult.data)];
 }
 
 function getActiveViewFromSearchParams(searchParams: URLSearchParams) {
