@@ -8,7 +8,7 @@ pg.types.setTypeParser(1700, (val) => parseFloat(val));
 
 const dialect = new PostgresDialect({
 	pool: new pg.Pool({
-		connectionString: import.meta.env.DATABASE_URL,
+		connectionString: process.env.DATABASE_URL,
 		max: 10,
 	}),
 });
