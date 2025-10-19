@@ -55,6 +55,26 @@ export function AirportSearch() {
 	);
 }
 
+function useDebounce(value: string, delay = 300) {
+	const [debouncedValue, setDebouncedValue] = useState(value);
+	const isDebouncing = debouncedValue != value;
+
+	useEffect(() => {
+		const handler = setTimeout(() => {
+			setDebouncedValue(value);
+		}, delay);
+
+		return () => {
+			clearTimeout(handler);
+		};
+	}, [value, delay]);
+
+	return {
+		debouncedValue,
+		isDebouncing,
+	};
+}
+
 function AirportCommandPalette({
 	onAirportSelect,
 }: {
@@ -63,17 +83,10 @@ function AirportCommandPalette({
 	) => void;
 }) {
 	const [searchTerm, setSearchTerm] = useState("");
-	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-	const { isLoading } = useAirportSearchQuery(searchTerm);
+	const { debouncedValue: debouncedSearchTerm, isDebouncing } =
+		useDebounce(searchTerm);
 
-	// Debounce search term
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setDebouncedSearchTerm(searchTerm);
-		}, 200);
-
-		return () => clearTimeout(timer);
-	}, [searchTerm]);
+	const { isLoading } = useAirportSearchQuery(debouncedSearchTerm);
 
 	const handleAirportSelect = (
 		airport: AirportSearchQueryResult["airports"][number],
@@ -88,7 +101,7 @@ function AirportCommandPalette({
 				value={searchTerm}
 				onValueChange={setSearchTerm}
 				className="grow w-full"
-				isLoading={isLoading || searchTerm != debouncedSearchTerm}
+				isLoading={isLoading || isDebouncing}
 			/>
 
 			<div className="h-[300px]">
