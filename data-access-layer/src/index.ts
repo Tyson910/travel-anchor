@@ -1,4 +1,9 @@
-export * from "./shared/database/index.ts";
+export type * from "./shared/database/types.ts";
+
+// kyesly goodies
+export { NoResultError, type Selectable } from "kysely";
+
+export * from "./domains/airport/service.ts";
+export * from "./domains/flight-route/service.ts";
 export * from "./shared/schemas.ts";
 export * from "./shared/utils/errors.ts";
-export * from "./shared/utils/logger.ts";
