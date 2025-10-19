@@ -20,7 +20,8 @@
 		"packages": [
 			"hono-api",
 			"nuxt-app",
-			"react-router-app"
+			"react-router-app",
+			"data-access-layer"
 		],
 		"catalog": {
 			"@types/bun": "^1.2.23",
