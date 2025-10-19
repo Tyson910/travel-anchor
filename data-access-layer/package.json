@@ -20,7 +20,7 @@
 		"check": "tsc --noEmit",
 		"test": "bun test",
 		"test:watch": "bun test --watch",
-		"db:inspect": "kysely-codegen --out-file ./src/shared/database/types.ts --dialect postgres --exclude-pattern **/*migrations*"
+		"db:inspect": "kysely-codegen --out-file ./src/shared/database/types.ts --dialect postgres --exclude-pattern **/*migrations* --numeric-parser number"
 	},
 	"dependencies": {
 		"kysely": "^0.28.5",
