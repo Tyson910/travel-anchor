@@ -4,7 +4,7 @@ import type { DialogProps } from "@radix-ui/react-dialog";
 import type React from "react";
 
 import { Command as CommandPrimitive } from "cmdk";
-import { Check, type LucideIcon, Search } from "lucide-react";
+import { Check, LoaderCircle, type LucideIcon, SearchIcon } from "lucide-react";
 
 import { Dialog, DialogContent, DialogTitle } from "~/components/ui/dialog";
 import { cn } from "~/lib/utils";
@@ -45,15 +45,23 @@ const CommandDialog = ({
 
 function CommandInput({
 	className,
+	isLoading = false,
+
 	...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+}: React.ComponentProps<typeof CommandPrimitive.Input> & {
+	isLoading?: boolean;
+}) {
 	return (
 		<div
 			className="flex items-center border-border border-b px-3"
 			cmdk-input-wrapper=""
 			data-slot="command-input"
 		>
-			<Search className="me-2 h-4 w-4 shrink-0 opacity-50" />
+			{isLoading ? (
+				<LoaderCircle className="size-4 shrink-0 opacity-50 animate-spin" />
+			) : (
+				<SearchIcon className="size-4 shrink-0 opacity-50" />
+			)}
 			<CommandPrimitive.Input
 				className={cn(
 					"flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-hidden text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
