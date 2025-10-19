@@ -5,6 +5,7 @@ import {
 	DatabaseError,
 	handlePostgresError,
 } from "@travel-anchor/data-access-layer";
+import { data } from "react-router";
 import * as z from "zod";
 
 import {
@@ -18,7 +19,7 @@ const airportSearchQuerySchema = z.object({
 
 export async function loader(params: Route.LoaderArgs) {
 	if (!URL.canParse(params.request.url)) {
-		return Response.json(
+		return data(
 			{ message: `Invalid request url: ${params.request.url}` },
 			{
 				status: 400,
@@ -32,7 +33,7 @@ export async function loader(params: Route.LoaderArgs) {
 		airportSearchQuerySchema.safeParse(reqSearchParams);
 
 	if (searchParamValidationResult.error) {
-		return Response.json(
+		return data(
 			{ message: searchParamValidationResult.error.message },
 			{
 				status: 400,
@@ -45,12 +46,12 @@ export async function loader(params: Route.LoaderArgs) {
 		const airports = await airportService.searchAirports(
 			searchParamValidationResult.data.query,
 		);
-		return Response.json({ airports }, { status: 200, statusText: "Success" });
+		return data({ airports }, { status: 200, statusText: "Success" });
 	} catch (error) {
 		if (error instanceof DatabaseError) {
 			const { statusCode, message, logLevel } = handlePostgresError(error);
 			console[logLevel](message);
-			return Response.json(
+			return data(
 				{ message },
 				{
 					status: statusCode,
@@ -61,7 +62,7 @@ export async function loader(params: Route.LoaderArgs) {
 
 		const { INTERNAL_SERVER_ERROR } = HTTP_SERVER_ERROR_CODES;
 		console.error(error);
-		return Response.json(
+		return data(
 			{ message: INTERNAL_SERVER_ERROR.message },
 			{
 				status: INTERNAL_SERVER_ERROR.statusCode,
@@ -70,3 +71,5 @@ export async function loader(params: Route.LoaderArgs) {
 		);
 	}
 }
+
+export type AirportSearchEndpointLoader = Awaited<ReturnType<typeof loader>>;
