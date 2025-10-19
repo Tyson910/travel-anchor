@@ -1,9 +1,9 @@
 import { type ExpressionBuilder, sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/sqlite";
 
-import { type DB, kyselyDriver } from "#database";
-import { airportColumns } from "#domains/airport/repository.ts";
-import { logger } from "#logger";
+import { type DB, kyselyDriver } from "../../shared/database";
+import { logger } from "../../shared/utils/logger.ts";
+import { airportColumns } from "../airport/repository.ts";
 
 const originAirportWhereClause = (
 	eb: ExpressionBuilder<DB, "route">,
