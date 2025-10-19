@@ -16,7 +16,7 @@
 		"#logger": "./src/shared/utils/logger.ts"
 	},
 	"scripts": {
-    "build": "tsc",
+		"build": "tsc",
 		"check": "tsc --noEmit",
 		"test": "bun test",
 		"test:watch": "bun test --watch",
