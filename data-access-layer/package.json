@@ -3,7 +3,7 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./src/index.ts",
+			"types": "./dist/index.d.ts",
 			"default": "./src/index.ts"
 		}
 	},
@@ -16,6 +16,7 @@
 		"#logger": "./src/shared/utils/logger.ts"
 	},
 	"scripts": {
+    "build": "tsc",
 		"check": "tsc --noEmit",
 		"test": "bun test",
 		"test:watch": "bun test --watch",
