@@ -4,7 +4,7 @@ import { parseResponse } from "hono/client";
 
 import { OriginCitiesDisplay } from "~/features/airport-search";
 import { AirportsMap } from "~/features/airport-search/components/AirportsMap.client";
-import { DestinationListView } from "~/features/airport-search/components/ResultListView";
+import { DestinationListView } from "~/features/airport-search/components/DestinationListView.tsx";
 import { getIATACodesFromSearchParams } from "~/features/airport-search/hooks/use-airport-search-params";
 import { honoClient } from "~/lib/hono-client";
 import { isBrowser } from "~/lib/utils";
