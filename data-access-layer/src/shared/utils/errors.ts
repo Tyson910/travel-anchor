@@ -8,13 +8,13 @@ import { DatabaseError as PostgresError } from "pg";
  * All PG error codes are available at [the postgres errors appendix](https://www.postgresql.org/docs/current/errcodes-appendix.html)
  * @param {Object} error - The database error object.
  * @param {string} [error.code] - The PostgreSQL error code.
- * @returns {{ statusCode: number; message: string; logLevel: 'warning' | 'error' }} An object containing the HTTP status code, message, and log level.
+ * @returns {{ statusCode: number; message: string; logLevel: 'warn' | 'error' }} An object containing the HTTP status code, message, and log level.
  *
  */
 export function handlePostgresError(err: PostgresError): {
 	statusCode: 400 | 403 | 409 | 500 | 503;
 	message: string;
-	logLevel: "warning" | "error";
+	logLevel: "warn" | "error";
 } {
 	// Handle non PostgresError cases just in case we slip up somewhere
 	if (!(err instanceof PostgresError)) {
@@ -43,7 +43,7 @@ export function handlePostgresError(err: PostgresError): {
 			return {
 				statusCode: 400,
 				message: "Invalid data input. Please check your entries and try again.",
-				logLevel: "warning",
+				logLevel: "warn",
 			};
 
 		case "23": // Integrity constraint violations
@@ -72,28 +72,28 @@ export function handlePostgresError(err: PostgresError): {
 			return {
 				statusCode: 400,
 				message: "The request is too complex. Please simplify and try again.",
-				logLevel: "warning",
+				logLevel: "warn",
 			};
 
 		case "57": // Operator intervention
 			return {
 				statusCode: 403,
 				message: "The operation was interrupted. Please try again.",
-				logLevel: "warning",
+				logLevel: "warn",
 			};
 
 		case "44": // WITH CHECK OPTION violation
 			return {
 				statusCode: 403,
 				message: "A security constraint prevents this action.",
-				logLevel: "warning",
+				logLevel: "warn",
 			};
 
 		case "40": // Transaction rollback
 			return {
 				statusCode: 409,
 				message: "The transaction was rolled back due to a conflict.",
-				logLevel: "warning",
+				logLevel: "warn",
 			};
 
 		//   case 'XX': // Internal errors
