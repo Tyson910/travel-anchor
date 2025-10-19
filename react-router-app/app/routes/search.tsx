@@ -2,7 +2,7 @@ import type { Route } from "./+types/search";
 
 import { parseResponse } from "hono/client";
 
-import { OriginCitiesDisplay } from "~/features/airport-search";
+import { OriginCitiesFilter } from "~/features/airport-search";
 import { AirportsMap } from "~/features/airport-search/components/AirportsMap.client";
 import { DestinationListView } from "~/features/airport-search/components/DestinationListView.tsx";
 import { getIATACodesFromSearchParams } from "~/features/airport-search/hooks/use-airport-search-params";
@@ -44,7 +44,7 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 					<h1 className="text-3xl font-bold text-foreground mb-2">
 						{loaderData.routes.length} Mutual Flight Destinations
 					</h1>
-					<OriginCitiesDisplay />
+					<OriginCitiesFilter />
 				</div>
 
 				{isBrowser && (
