@@ -1,12 +1,11 @@
 import type { Route } from "./+types/search";
 
-import { parseResponse } from "hono/client";
+import { flightRouteService } from "@travel-anchor/data-access-layer";
 
 import { OriginCitiesFilter } from "~/features/airport-search";
 import { AirportsMap } from "~/features/airport-search/components/AirportsMap.client";
 import { DestinationListView } from "~/features/airport-search/components/DestinationListView.tsx";
 import { getIATACodesFromSearchParams } from "~/features/airport-search/hooks/use-airport-search-params";
-import { honoClient } from "~/lib/hono-client";
 import { isBrowser } from "~/lib/utils";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -16,12 +15,12 @@ export async function loader({ request }: Route.LoaderArgs) {
 	if (iataCodes.length < 2) {
 		return { routes: [] };
 	}
-	const endpoint = honoClient().v1["flight-route"].$get({
-		query: {
-			IATA: iataCodes,
-		},
-	});
-	return await parseResponse(endpoint);
+
+	const routes = await flightRouteService.getAirportRoutesByIATA(iataCodes);
+
+	return {
+		routes,
+	};
 }
 
 export type SearchPageLoaderResponse = Awaited<ReturnType<typeof loader>>;
