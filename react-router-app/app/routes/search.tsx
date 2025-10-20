@@ -4,6 +4,8 @@ import { flightRouteService } from "@travel-anchor/data-access-layer";
 import React from "react";
 import { Await } from "react-router";
 
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
 import {
 	DestinationListView,
@@ -58,7 +60,7 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 					<OriginCitiesFilter />
 					<ViewToggle />
 				</div>
-				<React.Suspense fallback={<Skeleton className="size-64" />}>
+				<React.Suspense fallback={<LoadingSkeleton />}>
 					<Await resolve={loaderData.routes} errorElement={<ErrorElement />}>
 						{(routes) => {
 							if (activeView == "grid") {
@@ -77,6 +79,53 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 						}}
 					</Await>
 				</React.Suspense>
+			</div>
+		</div>
+	);
+}
+
+function LoadingSkeleton() {
+	const { activeView, iataCodes } = useAirportSearchParamsState();
+	if (activeView === "map") {
+		return (
+			<div className="space-y-4">
+				<div className="text-center text-muted-foreground">
+					Loading map destinations...
+				</div>
+				<Skeleton className="h-96 w-full rounded-lg" />
+			</div>
+		);
+	}
+
+	return (
+		<div className="space-y-4">
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+				{Array.from({ length: 4 }).map((_, idx) => (
+					// biome-ignore lint/suspicious/noArrayIndexKey: no other option
+					<Card key={idx} className="w-full">
+						<CardHeader>
+							<CardTitle className="flex items-center justify-between">
+								<div className="space-y-2 w-full">
+									<Skeleton className="h-6 w-1/2" />
+									<Skeleton className="h-4 w-1/4" />
+								</div>
+							</CardTitle>
+						</CardHeader>
+						<Separator />
+						<CardContent className="space-y-4 mt-4">
+							<div className="space-y-2">
+								{iataCodes.map((code, index) => (
+									<div key={code}>
+										<Skeleton className="h-28 w-full" />
+										{index < iataCodes.length - 1 && (
+											<Separator className="my-3" />
+										)}
+									</div>
+								))}
+							</div>
+						</CardContent>
+					</Card>
+				))}
 			</div>
 		</div>
 	);
