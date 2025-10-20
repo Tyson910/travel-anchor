@@ -1,4 +1,4 @@
-import { logger } from "../../shared/utils/logger.ts";
+import { logger } from "#logger";
 import { getAirportRoutesByIATA } from "./repository.ts";
 
 export const flightRouteService = {
