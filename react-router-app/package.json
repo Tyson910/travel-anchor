@@ -1,5 +1,5 @@
 {
-	"name": "react-router-app",
+	"name": "@travel-anchor/react-router-app",
 	"private": true,
 	"type": "module",
 	"scripts": {
