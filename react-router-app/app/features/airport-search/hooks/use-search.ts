@@ -21,11 +21,11 @@ export const useAirportSearchQuery = (
 	searchQuery: string,
 	opts?: SWRConfiguration<AirportSearchQueryResult, DetailedError>,
 ) => {
-	const fetcher = async (searchTerm: string) => {
+	const fetcher = async () => {
 		const result = await parseResponse(
 			airportEndpoint({
 				query: {
-					query: searchTerm,
+					query: searchQuery,
 				},
 			}),
 		);
@@ -33,7 +33,7 @@ export const useAirportSearchQuery = (
 	};
 
 	return useSWR<AirportSearchQueryResult, DetailedError>(
-		searchQuery,
+		searchQuery || "N/a",
 		fetcher,
 		opts,
 	);
