@@ -16,6 +16,32 @@ import { logger } from "#logger";
 import { timing } from "#middleware/timing.ts";
 
 const app = new OpenAPIHono()
+	.onError((err, c) => {
+		if (err instanceof HTTPException) {
+			logger.error(err.message);
+			return err.getResponse();
+		} else if (err instanceof DatabaseError) {
+			const { message, statusCode } = handlePostgresError(err);
+			return c.json({ message }, statusCode);
+		}
+		logger.error(err.message);
+		return c.json({ error: "Internal Server Error" }, 500);
+	})
+	.use(prettyJSON())
+	.use(
+		cors({
+			origin: ["http://localhost:3001"],
+		}),
+	)
+	.use(secureHeaders())
+	.use(
+		bodyLimit({
+			maxSize: 1024,
+		}),
+	)
+	.use(etag())
+	.use(timing)
+
 	.route("/v1/airport", airportRoutes)
 	.route("/v1/flight-route", flightRouteRoutes);
 
@@ -27,36 +53,13 @@ app.get("/health", (c) => {
 	});
 });
 
-app.use(timing);
-app.use(prettyJSON());
-app.use(cors());
-app.use(secureHeaders());
-app.use(
-	bodyLimit({
-		maxSize: 1024,
-	}),
-);
-app.use(etag());
-
-app.doc("/openapi.json", {
-	openapi: "3.0.0",
-	info: {
-		version: "1.0.0",
-		title: "Travel API",
-	},
-});
-
-app.onError((err, c) => {
-	if (err instanceof HTTPException) {
-		logger.error(err.message);
-		return err.getResponse();
-	} else if (err instanceof DatabaseError) {
-		const { message, statusCode } = handlePostgresError(err);
-		return c.json({ message }, statusCode);
-	}
-	logger.error(err.message);
-	return c.json({ error: "Internal Server Error" }, 500);
-});
+// app.doc("/openapi.json", {
+// 	openapi: "3.0.0",
+// 	info: {
+// 		version: "1.0.0",
+// 		title: "Travel API",
+// 	},
+// });
 
 export { app };
 
