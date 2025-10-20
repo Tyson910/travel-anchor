@@ -4,7 +4,12 @@ import { Badge, BadgeButton } from "~/components/ui/badge";
 import { AirportSearch } from "./components/SearchPopup";
 import { useAirportSearchParamsState } from "./hooks/use-airport-search-params";
 
-export { useAirportSearchParamsState } from "./hooks/use-airport-search-params";
+export { DestinationListView } from "./components/DestinationListView";
+export { ViewToggle } from "./components/ViewToggle";
+export {
+	getIATACodesFromSearchParams,
+	useAirportSearchParamsState,
+} from "./hooks/use-airport-search-params";
 
 export function OriginCitiesFilter() {
 	const { iataCodes, removeAirport } = useAirportSearchParamsState();

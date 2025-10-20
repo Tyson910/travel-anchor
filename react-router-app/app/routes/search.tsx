@@ -2,10 +2,14 @@ import type { Route } from "./+types/search";
 
 import { flightRouteService } from "@travel-anchor/data-access-layer";
 
-import { OriginCitiesFilter } from "~/features/airport-search";
+import {
+	DestinationListView,
+	getIATACodesFromSearchParams,
+	OriginCitiesFilter,
+	useAirportSearchParamsState,
+	ViewToggle,
+} from "~/features/airport-search";
 import { AirportsMap } from "~/features/airport-search/components/AirportsMap.client";
-import { DestinationListView } from "~/features/airport-search/components/DestinationListView.tsx";
-import { getIATACodesFromSearchParams } from "~/features/airport-search/hooks/use-airport-search-params";
 import { isBrowser } from "~/lib/utils";
 
 export async function loader({ request }: Route.LoaderArgs) {
