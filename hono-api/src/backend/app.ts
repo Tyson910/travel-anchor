@@ -1,6 +1,8 @@
-import type { ContentfulStatusCode } from "hono/utils/http-status";
-
 import { OpenAPIHono } from "@hono/zod-openapi";
+import {
+	DatabaseError,
+	handlePostgresError,
+} from "@travel-anchor/data-access-layer";
 import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
 import { etag } from "hono/etag";
@@ -12,8 +14,6 @@ import { airportRoutes } from "#domains/airport/routes.ts";
 import { flightRouteRoutes } from "#domains/flight-route/routes.ts";
 import { logger } from "#logger";
 import { timing } from "#middleware/timing.ts";
-import { handleSQLiteError } from "#utils/errors.ts";
-import { SQLiteError } from "bun:sqlite";
 
 const app = new OpenAPIHono()
 	.route("/v1/airport", airportRoutes)
@@ -50,9 +50,9 @@ app.onError((err, c) => {
 	if (err instanceof HTTPException) {
 		logger.error(err.message);
 		return err.getResponse();
-	} else if (err instanceof SQLiteError) {
-		const { message, statusCode } = handleSQLiteError(err);
-		return c.json({ message }, statusCode as ContentfulStatusCode);
+	} else if (err instanceof DatabaseError) {
+		const { message, statusCode } = handlePostgresError(err);
+		return c.json({ message }, statusCode);
 	}
 	logger.error(err.message);
 	return c.json({ error: "Internal Server Error" }, 500);

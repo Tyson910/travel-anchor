@@ -1,6 +1,9 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
+import {
+	airportService,
+	flightRouteService,
+} from "@travel-anchor/data-access-layer";
 
-import { flightRouteService } from "#domains/flight-route/service.ts";
 import { logger } from "#logger";
 import { notFoundUtils } from "#utils/errors.ts";
 import {
@@ -8,7 +11,6 @@ import {
 	getAirportRoutesRoute,
 	searchAirportsRoute,
 } from "./schemas.ts";
-import { airportService } from "./service.ts";
 
 export const airportRoutes = new OpenAPIHono()
 	.openapi(searchAirportsRoute, async (c) => {

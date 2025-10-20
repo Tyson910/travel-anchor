@@ -1,18 +1,7 @@
-import type {
-	AnyColumnWithTable,
-	Expression,
-	Selectable,
-	SqlBool,
-} from "kysely";
+import type { AnyColumnWithTable, Expression, SqlBool } from "kysely";
 
-import {
-	type DB,
-	kyselyDriver,
-	type Airport as RawAirportTable,
-} from "#database";
+import { type DB, kyselyDriver } from "#database";
 import { logger } from "#logger";
-
-type Airport = Selectable<RawAirportTable>;
 
 export const airportColumns = [
 	"airport.city_name",
@@ -25,10 +14,7 @@ export const airportColumns = [
 	"airport.iata_code",
 ] as const satisfies AnyColumnWithTable<DB, "airport">[];
 
-export async function getAirportByIATA(
-	IATA: string,
-	db = kyselyDriver,
-): Promise<Omit<Airport, "viator_url" | "icao_code" | "state_id">> {
+export async function getAirportByIATA(IATA: string, db = kyselyDriver) {
 	logger.debug("Finding airport: %s", IATA);
 	return await db
 		.selectFrom("airport")
