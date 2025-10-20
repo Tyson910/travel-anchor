@@ -63,7 +63,10 @@ export function useAirportSearchParamsState() {
 		});
 
 	const setView = (view: "grid" | "map") => {
-		setSearchParams({ view });
+		setSearchParams((prev) => {
+			prev.set("view", view);
+			return prev;
+		});
 	};
 
 	const getPopularCombinationURL = (codes: string[]) => {
