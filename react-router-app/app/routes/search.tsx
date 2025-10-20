@@ -1,7 +1,10 @@
 import type { Route } from "./+types/search";
 
 import { flightRouteService } from "@travel-anchor/data-access-layer";
+import React from "react";
+import { Await } from "react-router";
 
+import { Skeleton } from "~/components/ui/skeleton";
 import {
 	DestinationListView,
 	getIATACodesFromSearchParams,
@@ -20,7 +23,9 @@ export async function loader({ request }: Route.LoaderArgs) {
 		return { routes: [] };
 	}
 
-	const routes = await flightRouteService.getAirportRoutesByIATA(iataCodes);
+	const routes = new Promise<
+		Awaited<ReturnType<typeof flightRouteService.getAirportRoutesByIATA>>
+	>((res) => res(flightRouteService.getAirportRoutesByIATA(iataCodes)));
 
 	return {
 		routes,
@@ -40,25 +45,43 @@ export function meta() {
 }
 
 export default function SearchPage({ loaderData }: Route.ComponentProps) {
+	const { activeView } = useAirportSearchParamsState();
+
 	return (
 		<div className="min-h-screen bg-background">
 			<div className="container mx-auto px-4 py-8">
 				<div className="mb-8">
 					<h1 className="text-3xl font-bold text-foreground mb-2">
-						{loaderData.routes.length} Mutual Flight Destinations
+						{/* {loaderData.routes.length} */}
+						Mutual Flight Destinations
 					</h1>
 					<OriginCitiesFilter />
+					<ViewToggle />
 				</div>
-
-				{isBrowser && (
-					<AirportsMap
-						airports={loaderData.routes.map(
-							({ destination_airport }) => destination_airport,
-						)}
-					/>
-				)}
-				<DestinationListView routes={loaderData.routes} />
+				<React.Suspense fallback={<Skeleton className="size-64" />}>
+					<Await resolve={loaderData.routes} errorElement={<ErrorElement />}>
+						{(routes) => {
+							if (activeView == "grid") {
+								return <DestinationListView routes={routes} />;
+							}
+							if (!isBrowser) {
+								return null;
+							}
+							return (
+								<AirportsMap
+									airports={routes.map(
+										({ destination_airport }) => destination_airport,
+									)}
+								/>
+							);
+						}}
+					</Await>
+				</React.Suspense>
 			</div>
 		</div>
 	);
+}
+
+function ErrorElement() {
+	return <div>Error loading routes</div>;
 }
