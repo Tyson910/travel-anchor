@@ -4,7 +4,7 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"default": "./src/index.ts"
+			"default": "./dist/index.js"
 		}
 	},
 	"imports": {
@@ -16,7 +16,7 @@
 		"#logger": "./src/shared/utils/logger.ts"
 	},
 	"scripts": {
-		"build": "rm -rf dist && tsc",
+		"build": "rm -rf dist && tsc && bun build ./src/index.ts --outdir ./dist --target node",
 		"check": "tsc --noEmit",
 		"test": "bun test",
 		"test:watch": "bun test --watch",
