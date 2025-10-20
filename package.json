@@ -19,7 +19,6 @@
 	"workspaces": {
 		"packages": [
 			"hono-api",
-			"nuxt-app",
 			"react-router-app",
 			"data-access-layer"
 		],
