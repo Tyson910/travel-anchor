@@ -8,6 +8,7 @@ import {
 	AlertIcon,
 	AlertTitle,
 } from "~/components/ui/alert";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
 	Command,
@@ -36,7 +37,6 @@ import {
 	type AirportSearchQueryResult,
 	useAirportSearchQuery,
 } from "../hooks/use-search";
-import { Badge } from "~/components/ui/badge";
 
 export function AirportSearch() {
 	const [open, setOpen] = useState(false);
