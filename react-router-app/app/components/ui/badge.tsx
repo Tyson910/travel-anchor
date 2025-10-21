@@ -28,6 +28,14 @@ const badgeVariants = cva(
 			variant: {
 				primary: "bg-primary text-primary-foreground",
 				secondary: "bg-secondary text-secondary-foreground",
+				technical:
+					"bg-foreground text-background font-sans font-light text-xs tracking-tighter border border rounded-xs",
+				iata: "bg-foreground text-accent font-sans font-light text-xs tracking-tighter border border rounded-xs uppercase",
+				status:
+					"bg-background text-foreground font-sans font-medium text-xs tracking-wide border border rounded-xs uppercase",
+				error:
+					"bg-red-500 text-white font-sans font-medium text-xs tracking-wide border border-red-500 rounded-xs uppercase",
+				live: "bg-accent text-accent-foreground font-sans font-semibold text-xs tracking-wide border border rounded-xs uppercase animate-pulse",
 				success:
 					"bg-[var(--color-success-accent,var(--color-green-500))] text-[var(--color-success-foreground,var(--color-white))]",
 				warning:
@@ -51,6 +59,8 @@ const badgeVariants = cva(
 				md: "rounded-md px-[0.45rem] h-6 min-w-6 gap-1.5 text-xs [&_svg]:size-3.5 ",
 				sm: "rounded-sm px-[0.325rem] h-5 min-w-5 gap-1 text-[0.6875rem] leading-[0.75rem] [&_svg]:size-3",
 				xs: "rounded-sm px-[0.25rem] h-4 min-w-4 gap-1 text-[0.625rem] leading-[0.5rem] [&_svg]:size-3",
+				technical:
+					"rounded-xs px-2 py-1 min-w-8 gap-1 text-xs font-sans tracking-tighter [&_svg]:size-3",
 			},
 			shape: {
 				default: "",

@@ -17,6 +17,11 @@ const alertVariants = cva(
 				info: "",
 				mono: "",
 				warning: "",
+				technical:
+					"font-sans font-light text-xs tracking-tighter border bg-foreground text-background",
+				status:
+					"font-sans font-medium text-xs tracking-wide border bg-background text-foreground",
+				live: "font-sans font-semibold text-xs tracking-wide border bg-accent text-accent-foreground animate-pulse",
 			},
 			icon: {
 				primary: "",

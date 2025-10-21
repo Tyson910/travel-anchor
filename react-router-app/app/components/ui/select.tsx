@@ -50,22 +50,32 @@ function SelectValue({
 // Define size variants for SelectTrigger
 const selectTriggerVariants = cva(
 	`
-    flex bg-background w-full items-center justify-between outline-none border border-input shadow-xs shadow-black/5 transition-shadow 
-    text-foreground data-placeholder:text-muted-foreground focus-visible:border-ring focus-visible:outline-none focus-visible:ring-[3px] 
-    focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 
+    flex bg-background w-full items-center justify-between outline-none border shadow-xs shadow-black/5 transition-all duration-200 
+    text-foreground data-placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[3px] 
+    disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 
     aria-invalid:border-destructive/60 aria-invalid:ring-destructive/10 dark:aria-invalid:border-destructive dark:aria-invalid:ring-destructive/20
     [[data-invalid=true]_&]:border-destructive/60 [[data-invalid=true]_&]:ring-destructive/10  dark:[[data-invalid=true]_&]:border-destructive dark:[[data-invalid=true]_&]:ring-destructive/20
   `,
 	{
 		variants: {
+			variant: {
+				default:
+					"border-input focus-visible:border-ring focus-visible:ring-ring/30",
+				technical:
+					"border bg-background font-sans focus-visible:border-primary focus-visible:ring-primary/30 hover:border-border/80",
+				terminal:
+					"border bg-foreground text-background font-sans font-light text-xs tracking-tighter focus-visible:border-accent focus-visible:ring-accent/30 hover:border-border/80",
+			},
 			size: {
 				xs: "h-7 px-2 text-xs gap-1 rounded-md",
 				sm: "h-8 px-2.5 text-xs gap-1 rounded-md",
 				md: "h-9 px-3 text-sm gap-1 rounded-md",
 				lg: "h-10 px-4 text-sm gap-1.5 rounded-md",
+				technical: "h-9 px-3 text-sm gap-1 rounded-technical",
 			},
 		},
 		defaultVariants: {
+			variant: "default",
 			size: "md",
 		},
 	},
@@ -79,12 +89,13 @@ function SelectTrigger({
 	className,
 	children,
 	size,
+	variant,
 	...props
 }: SelectTriggerProps) {
 	return (
 		<SelectPrimitive.Trigger
 			data-slot="select-trigger"
-			className={cn(selectTriggerVariants({ size }), className)}
+			className={cn(selectTriggerVariants({ size, variant }), className)}
 			{...props}
 		>
 			{children}

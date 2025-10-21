@@ -27,6 +27,10 @@ const accordionItemVariants = cva("", {
 			default: "border-b border-border",
 			outline: "border border-border rounded-lg px-4",
 			solid: "rounded-lg bg-accent/70 px-4",
+			technical:
+				"border rounded-technical bg-background shadow-technical hover:border-border/80 transition-all duration-200",
+			module:
+				"border rounded-module bg-background shadow-module hover:border-border/80 hover:shadow-container transition-all duration-200",
 		},
 	},
 	defaultVariants: {
@@ -42,6 +46,10 @@ const accordionTriggerVariants = cva(
 				default: "",
 				outline: "",
 				solid: "",
+				technical:
+					"font-sans font-medium tracking-tight text-foreground hover:text-primary",
+				module:
+					"font-sans font-semibold tracking-tight text-foreground hover:text-primary",
 			},
 			indicator: {
 				arrow: "",

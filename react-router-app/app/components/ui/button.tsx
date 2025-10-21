@@ -14,6 +14,12 @@ const buttonVariants = cva(
 				primary:
 					"bg-primary text-primary-foreground hover:bg-primary/90 data-[state=open]:bg-primary/90",
 				mono: "bg-zinc-950 text-white dark:bg-zinc-300 dark:text-black hover:bg-zinc-950/90 dark:hover:bg-zinc-300/90 data-[state=open]:bg-zinc-950/90 dark:data-[state=open]:bg-zinc-300/90",
+				technical:
+					"bg-primary text-primary-foreground font-sans font-medium border border rounded-xs shadow-sm hover:bg-primary/90 hover:border-border/80 data-[state=open]:bg-primary/90 transition-all duration-200",
+				terminal:
+					"bg-foreground text-background font-sans font-light text-xs tracking-tighter border border rounded-xs shadow-sm hover:bg-foreground/80 hover:border-border/80 data-[state=open]:bg-foreground/80 transition-all duration-200",
+				analyze:
+					"bg-secondary text-secondary-foreground font-sans font-semibold tracking-tight border border rounded-xs shadow-md hover:bg-secondary/90 hover:shadow-lg data-[state=open]:bg-secondary/90 transition-all duration-300",
 				destructive:
 					"bg-destructive text-destructive-foreground hover:bg-destructive/90 data-[state=open]:bg-destructive/90",
 				secondary:
@@ -54,6 +60,9 @@ const buttonVariants = cva(
 			radius: {
 				md: "rounded-md",
 				full: "rounded-full",
+				technical: "rounded-xs",
+				module: "rounded-sm",
+				container: "rounded-md",
 			},
 			mode: {
 				default:
