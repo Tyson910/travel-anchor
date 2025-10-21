@@ -57,7 +57,7 @@ function DestinationCard({ route }: { route: Route }) {
 			<CardHeader>
 				<CardTitle className="flex items-center justify-between">
 					<div>
-						<div className="font-semibold tracking-tight">
+						<div className="text-xl font-bold tracking-tight">
 							{route.destination_airport.name}
 						</div>
 						<CardDescription className="text-sm">
@@ -100,9 +100,11 @@ function OriginAirportsList({
 			{origins.map((origin, index) => (
 				<div key={`${origin.iata_code}-${index}`}>
 					<div className="flex gap-x-3 items-center w-full">
-						<span className="font-medium">{destination.iata_code}</span>
-						<ArrowRightIcon className="size-3" />
-						<span className="font-medium">{origin.iata_code}</span>
+						<span className="text-lg font-semibold">
+							{destination.iata_code}
+						</span>
+						<ArrowRightIcon className="size-4" />
+						<span className="text-lg font-semibold">{origin.iata_code}</span>
 					</div>
 					<OriginDisplay origin={origin} />
 					{index < origins.length - 1 && <Separator className="my-4" />}
@@ -149,10 +151,10 @@ function OriginDisplay({
 	origin: Route["origin_airport_options"][number];
 }) {
 	return (
-		<div className="space-y-2 mt-2 text-sm">
+		<div className="space-y-2 mt-2">
 			<div className="flex flex-row items-center gap-x-2">
 				<TimerIcon className="size-4 text-muted-foreground" />
-				<span>
+				<span className="text-sm text-muted-foreground">
 					{origin.duration_min
 						? getRouteDurationStr(origin.duration_min)
 						: "N/A"}
@@ -162,7 +164,9 @@ function OriginDisplay({
 			{origin.distance_km && (
 				<div className="flex flex-row items-center gap-x-2">
 					<RulerIcon className="size-4 text-muted-foreground" />
-					<span>{convertKMtoMiles(origin.distance_km)} miles</span>
+					<span className="text-sm text-muted-foreground">
+						{convertKMtoMiles(origin.distance_km)} miles
+					</span>
 				</div>
 			)}
 
