@@ -19,7 +19,7 @@ import {
 } from "~/components/ui/empty";
 import { Separator } from "~/components/ui/separator";
 
-type Route = SearchPageLoaderResponse["routes"][number];
+type Route = SearchPageLoaderResponse[number];
 
 export function DestinationListView({ routes }: { routes: Route[] }) {
 	if (routes.length == 0) {

@@ -34,7 +34,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 	};
 }
 
-export type SearchPageLoaderResponse = Awaited<ReturnType<typeof loader>>;
+export type SearchPageLoaderResponse = Awaited<ReturnType<typeof flightRouteService.getAirportRoutesByIATA>>;
 
 export function meta() {
 	return [
