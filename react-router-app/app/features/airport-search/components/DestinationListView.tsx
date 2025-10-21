@@ -57,7 +57,7 @@ function DestinationCard({ route }: { route: Route }) {
 			<CardHeader>
 				<CardTitle className="flex items-center justify-between">
 					<div>
-						<div className="text-lg font-semibold">
+						<div className="font-semibold tracking-tight">
 							{route.destination_airport.name}
 						</div>
 						<CardDescription className="text-sm">
@@ -99,13 +99,13 @@ function OriginAirportsList({
 		<div className="space-y-2">
 			{origins.map((origin, index) => (
 				<div key={`${origin.iata_code}-${index}`}>
-					<div className="flex gap-x-2 items-center w-full">
+					<div className="flex gap-x-3 items-center w-full">
 						<span className="font-medium">{destination.iata_code}</span>
 						<ArrowRightIcon className="size-3" />
 						<span className="font-medium">{origin.iata_code}</span>
 					</div>
 					<OriginDisplay origin={origin} />
-					{index < origins.length - 1 && <Separator className="my-3" />}
+					{index < origins.length - 1 && <Separator className="my-4" />}
 				</div>
 			))}
 		</div>
@@ -167,14 +167,12 @@ function OriginDisplay({
 			)}
 
 			{origin.airline_options && origin.airline_options.length > 0 && (
-				<div className="flex flex-col gap-x-3">
-					<div className="flex flex-wrap gap-1">
-						{origin.airline_options.map((airline) => (
-							<Badge key={airline.iata_code} variant="secondary" size="sm">
-								{airline.name}
-							</Badge>
-						))}
-					</div>
+				<div className="flex flex-wrap gap-1 mt-4 not-last:mb-2">
+					{origin.airline_options.map((airline) => (
+						<Badge key={airline.iata_code} variant="secondary" size="sm">
+							{airline.name}
+						</Badge>
+					))}
 				</div>
 			)}
 		</div>

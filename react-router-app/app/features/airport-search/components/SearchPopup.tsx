@@ -43,7 +43,9 @@ export function AirportSearch() {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>Add Airport</Button>
+				<Button variant="terminal" size="sm">
+					ADD AIRPORT
+				</Button>
 			</DialogTrigger>
 			<DialogContent aria-describedby={undefined}>
 				<DialogHeader>
@@ -100,7 +102,7 @@ function AirportCommandPalette({
 			<CommandInput
 				value={searchTerm}
 				onValueChange={setSearchTerm}
-				className="grow w-full"
+				className="grow w-full font-light text-xs tracking-tighter"
 				isLoading={isLoading || isDebouncing}
 			/>
 
@@ -175,7 +177,10 @@ function SearchResults({
 								addAirport(airport.iata_code);
 							}}
 						>
-							<span>{airport.name}</span>
+							<div className="flex items-center justify-between w-full">
+								<span className="font-sans font-normal">{airport.name}</span>
+								<span>{airport.iata_code}</span>
+							</div>
 						</CommandItem>
 					);
 				})}

@@ -86,7 +86,7 @@ function DialogContent({
 	children,
 	showCloseButton = true,
 	overlay = true,
-	variant = 'default',
+	variant = "default",
 	...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> &
 	VariantProps<typeof dialogContentVariants> & {

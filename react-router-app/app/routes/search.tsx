@@ -34,7 +34,9 @@ export async function loader({ request }: Route.LoaderArgs) {
 	};
 }
 
-export type SearchPageLoaderResponse = Awaited<ReturnType<typeof flightRouteService.getAirportRoutesByIATA>>;
+export type SearchPageLoaderResponse = Awaited<
+	ReturnType<typeof flightRouteService.getAirportRoutesByIATA>
+>;
 
 export function meta() {
 	return [
@@ -53,7 +55,7 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 		<div className="min-h-screen bg-background">
 			<div className="container mx-auto px-4 py-8">
 				<div className="mb-8">
-					<h1 className="text-3xl font-bold text-foreground mb-2">
+					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
 						{/* {loaderData.routes.length} */}
 						Mutual Flight Destinations
 					</h1>
@@ -106,8 +108,8 @@ function LoadingSkeleton() {
 						<CardHeader>
 							<CardTitle className="flex items-center justify-between">
 								<div className="space-y-2 w-full">
-									<Skeleton className="h-6 w-1/2" />
-									<Skeleton className="h-4 w-1/4" />
+									<Skeleton variant="grid" className="h-6 w-1/2" />
+									<Skeleton variant="grid" className="h-4 w-1/4" />
 								</div>
 							</CardTitle>
 						</CardHeader>
@@ -116,7 +118,7 @@ function LoadingSkeleton() {
 							<div className="space-y-2">
 								{iataCodes.map((code, index) => (
 									<div key={code}>
-										<Skeleton className="h-28 w-full" />
+										<Skeleton variant="grid" className="h-28 w-full" />
 										{index < iataCodes.length - 1 && (
 											<Separator className="my-3" />
 										)}
