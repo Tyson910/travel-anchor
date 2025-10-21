@@ -31,6 +31,8 @@ const badgeVariants = cva(
 				technical:
 					"bg-foreground text-background font-sans font-light text-xs tracking-tighter border border rounded-xs",
 				iata: "bg-foreground text-accent font-sans font-light text-xs tracking-tighter border border rounded-xs uppercase",
+				airport:
+					"bg-blue-50 text-blue-700 border border-blue-200 font-mono text-sm uppercase tracking-wider",
 				status:
 					"bg-background text-foreground font-sans font-medium text-xs tracking-wide border border rounded-xs uppercase",
 				error:

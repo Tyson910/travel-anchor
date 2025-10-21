@@ -5,7 +5,7 @@ import { cn } from "~/lib/utils";
 const Card = React.forwardRef<
 	HTMLDivElement,
 	React.HTMLAttributes<HTMLDivElement> & {
-		variant?: "default" | "technical" | "blueprint" | "module";
+		variant?: "default" | "technical" | "blueprint" | "module" | "minimal";
 		size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 	}
 >(({ className, variant = "default", size = "md", ...props }, ref) => (
@@ -20,6 +20,8 @@ const Card = React.forwardRef<
 				"rounded-sm border shadow-md bg-background relative overflow-hidden hover:border-border/80 hover:shadow-lg",
 			variant === "module" &&
 				"rounded-md border shadow-md bg-background hover:border-border/80 hover:shadow-lg",
+			variant === "minimal" &&
+				"rounded-lg border-gray-200 bg-white shadow-sm hover:shadow-md",
 			size === "xs" && "p-3",
 			size === "sm" && "p-4",
 			size === "md" && "p-6",
