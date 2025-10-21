@@ -62,7 +62,7 @@ function DestinationCard({ route }: { route: Route }) {
 						</div>
 						<CardDescription className="text-sm">
 							{route.destination_airport.city_name}{" "}
-							{route.destination_airport.state_name},{" "}
+							{route.destination_airport.state_name}{" "}
 							{route.destination_airport.country_name}
 						</CardDescription>
 					</div>
@@ -169,7 +169,7 @@ function OriginDisplay({
 			{origin.airline_options && origin.airline_options.length > 0 && (
 				<div className="flex flex-wrap gap-1 mt-4 not-last:mb-2">
 					{origin.airline_options.map((airline) => (
-						<Badge key={airline.iata_code} variant="secondary" size="sm">
+						<Badge key={airline.iata_code} variant="outline" size="sm">
 							{airline.name}
 						</Badge>
 					))}
