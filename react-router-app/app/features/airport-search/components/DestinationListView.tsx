@@ -1,6 +1,6 @@
 import type { SearchPageLoaderResponse } from "~/routes/search";
 
-import { ArrowRightIcon, PlaneIcon } from "lucide-react";
+import { ArrowRightIcon, PlaneIcon, RulerIcon, TimerIcon } from "lucide-react";
 
 import { Badge } from "~/components/ui/badge";
 import {
@@ -53,7 +53,7 @@ export function DestinationListView({ routes }: { routes: Route[] }) {
 
 function DestinationCard({ route }: { route: Route }) {
 	return (
-		<Card className="w-full">
+		<Card className="w-full p-0">
 			<CardHeader>
 				<CardTitle className="flex items-center justify-between">
 					<div>
@@ -149,9 +149,9 @@ function OriginDisplay({
 	origin: Route["origin_airport_options"][number];
 }) {
 	return (
-		<div className="space-y-2 text-sm">
-			<div className="flex flex-row gap-x-2">
-				<span className="text-muted-foreground">Duration:</span>
+		<div className="space-y-2 mt-2 text-sm">
+			<div className="flex flex-row items-center gap-x-2">
+				<TimerIcon className="size-4 text-muted-foreground" />
 				<span>
 					{origin.duration_min
 						? getRouteDurationStr(origin.duration_min)
@@ -160,8 +160,8 @@ function OriginDisplay({
 			</div>
 
 			{origin.distance_km && (
-				<div className="flex flex-row gap-x-2">
-					<span className="text-muted-foreground">Distance:</span>
+				<div className="flex flex-row items-center gap-x-2">
+					<RulerIcon className="size-4 text-muted-foreground" />
 					<span>{convertKMtoMiles(origin.distance_km)} miles</span>
 				</div>
 			)}
