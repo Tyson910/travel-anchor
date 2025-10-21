@@ -10,20 +10,22 @@ export function ViewToggle() {
 			<Button
 				variant={activeView === "grid" ? "primary" : "ghost"}
 				size="sm"
-				mode="icon"
+				selected={activeView === "grid"}
 				onClick={() => setView("grid")}
-				className="size-8"
+				className="gap-2"
 			>
 				<List className="size-4" />
+				<span>List</span>
 			</Button>
 			<Button
 				variant={activeView === "map" ? "primary" : "ghost"}
 				size="sm"
-				mode="icon"
+				selected={activeView === "map"}
 				onClick={() => setView("map")}
-				className="size-8"
+				className="gap-2"
 			>
 				<MapIcon className="size-4" />
+				<span>Map</span>
 			</Button>
 		</div>
 	);
