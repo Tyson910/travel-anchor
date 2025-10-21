@@ -36,6 +36,7 @@ import {
 	type AirportSearchQueryResult,
 	useAirportSearchQuery,
 } from "../hooks/use-search";
+import { Badge } from "~/components/ui/badge";
 
 export function AirportSearch() {
 	const [open, setOpen] = useState(false);
@@ -179,7 +180,7 @@ function SearchResults({
 						>
 							<div className="flex items-center justify-between w-full">
 								<span className="font-sans font-normal">{airport.name}</span>
-								<span>{airport.iata_code}</span>
+								<Badge variant="iata">{airport.iata_code}</Badge>
 							</div>
 						</CommandItem>
 					);
