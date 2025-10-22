@@ -1,6 +1,5 @@
-import { describe, expect, it } from "bun:test";
-
 import { sortRoutes } from "./sorting-utils";
+import { describe, expect, it } from "bun:test";
 
 type MockRoute = {
 	destination_airport: { name: string };
