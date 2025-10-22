@@ -8,6 +8,7 @@ This document outlines the essential commands and code style guidelines for AI a
 - This project uses `Biome` for code formatting & linting. Always run `bun run lint` from the root before committing changes to ensure consistent formatting.
 
 ### General Guidelines
+- Dev servers: Make sure you close any dev servers you opened while completing tasks
 - **Imports**: Follow existing import patterns. Generally, absolute imports are preferred for internal modules, and relative imports for sibling modules.
 - **Naming Conventions**: Adhere to `camelCase` for variables and functions, `PascalCase` for types and interfaces, and `SCREAMING_SNAKE_CASE` for constants.
 - **Error Handling**: Implement robust error handling using `try...catch` blocks where appropriate, especially for I/O operations and API calls.
