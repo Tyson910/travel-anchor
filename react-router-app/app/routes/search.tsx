@@ -15,6 +15,8 @@ import {
 } from "~/features/airport-search";
 import { AirportsMap } from "~/features/airport-search/components/AirportsMap.client";
 import { AirportSearchCombobox } from "~/features/airport-search/components/SearchBar";
+import { SortSelect } from "~/features/airport-search/components/SortSelect";
+import { sortRoutes } from "~/features/airport-search/sorting-utils";
 import { isBrowser } from "~/lib/utils";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -49,7 +51,7 @@ export function meta() {
 }
 
 export default function SearchPage({ loaderData }: Route.ComponentProps) {
-	const { activeView } = useAirportSearchParamsState();
+	const { activeView, activeSort } = useAirportSearchParamsState();
 
 	return (
 		<div className="min-h-screen bg-background">
@@ -59,23 +61,29 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 						{/* {loaderData.routes.length} */}
 						Mutual Flight Destinations
 					</h1>
-					<div className="flex flex-row justify-between items-center">
+					<div className="flex flex-row justify-between items-end">
 						<AirportSearchCombobox />
-						<ViewToggle />
+						<div className="flex flex-row items-end gap-4">
+							{activeView == "grid" ? <SortSelect /> : null}
+
+							<ViewToggle />
+						</div>
 					</div>
 				</div>
 				<React.Suspense fallback={<LoadingSkeleton />}>
 					<Await resolve={loaderData.routes} errorElement={<ErrorElement />}>
 						{(routes) => {
+							const sortedRoutes = sortRoutes(routes, activeSort);
+
 							if (activeView == "grid") {
-								return <DestinationListView routes={routes} />;
+								return <DestinationListView routes={sortedRoutes} />;
 							}
 							if (!isBrowser) {
 								return null;
 							}
 							return (
 								<AirportsMap
-									airports={routes.map(
+									airports={sortedRoutes.map(
 										({ destination_airport }) => destination_airport,
 									)}
 								/>
