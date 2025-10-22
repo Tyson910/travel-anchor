@@ -2,7 +2,6 @@ import type { SearchPageLoaderResponse } from "~/routes/search";
 
 import { ArrowRightIcon, PlaneIcon, RulerIcon, TimerIcon } from "lucide-react";
 
-import { AirlineLogo } from "~/components/ui/airline-logo";
 import {
 	Card,
 	CardContent,
@@ -18,6 +17,7 @@ import {
 	EmptyTitle,
 } from "~/components/ui/empty";
 import { Separator } from "~/components/ui/separator";
+import { AirlineLogo } from "./airline-logo";
 
 type Route = SearchPageLoaderResponse[number];
 
