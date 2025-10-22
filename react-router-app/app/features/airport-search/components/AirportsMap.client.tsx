@@ -52,9 +52,9 @@ export function AirportsMap({ airports }: AirportsMapProps) {
 }
 
 function fitBoundsToRoutes(airports: Airport[]) {
+	const map = useMap();
 	if (airports.length === 0) return;
 
-	const map = useMap();
 	const bounds: [number, number][] = [];
 
 	airports.forEach((airport) => {
