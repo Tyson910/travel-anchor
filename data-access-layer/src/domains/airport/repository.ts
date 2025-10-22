@@ -32,11 +32,9 @@ export async function searchAirport(query: string, db = kyselyDriver) {
 		.selectFrom("airport")
 		.where((eb) => {
 			const ors: Expression<SqlBool>[] = [];
-			if (query.length == 3) {
-				ors.push(eb("airport.iata_code", "=", query.toUpperCase()));
-			}
-			ors.push(eb("airport.city_name", "like", `%${query.toLowerCase()}%`));
-			ors.push(eb("airport.name", "like", `%${query.toLowerCase()}%`));
+			ors.push(eb("airport.iata_code", "ilike", `%${query}%`));
+			ors.push(eb("airport.city_name", "ilike", `%${query}%`));
+			ors.push(eb("airport.name", "ilike", `%${query}%`));
 			return eb.or(ors);
 		})
 		.leftJoin("country", "country.country_code", "airport.country_code")

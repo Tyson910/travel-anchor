@@ -40,4 +40,10 @@ describe("Airport Repository Smoke Tests", () => {
 		const result = await searchAirport("Los Angeles", kyselyDriver);
 		expect(Array.isArray(result)).toBe(true);
 	});
+
+		test("searchAirport - should find a city by name", async () => {
+		const result = await searchAirport("phoenix");
+		expect(Array.isArray(result)).toBe(true);
+		expect(result).toHaveLength(2)
+	});
 });
