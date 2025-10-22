@@ -2,7 +2,7 @@ import type { SearchPageLoaderResponse } from "~/routes/search";
 
 import { ArrowRightIcon, PlaneIcon, RulerIcon, TimerIcon } from "lucide-react";
 
-import { Badge } from "~/components/ui/badge";
+import { AirlineLogo } from "~/components/ui/airline-logo";
 import {
 	Card,
 	CardContent,
@@ -96,18 +96,16 @@ function OriginAirportsList({
 	}
 
 	return (
-		<div className="space-y-2">
+		<div className="space-y-4">
 			{origins.map((origin, index) => (
-				<div key={`${origin.iata_code}-${index}`}>
+				<div key={`${origin.iata_code}-${index}`} className="space-y-3">
 					<div className="flex gap-x-3 items-center w-full">
-						<span className="text-lg font-semibold">
-							{destination.iata_code}
-						</span>
-						<ArrowRightIcon className="size-4" />
-						<span className="text-lg font-semibold">{origin.iata_code}</span>
+						<span className="text-xl font-bold">{destination.iata_code}</span>
+						<ArrowRightIcon className="size-5" />
+						<span className="text-xl font-bold">{origin.iata_code}</span>
 					</div>
 					<OriginDisplay origin={origin} />
-					{index < origins.length - 1 && <Separator className="my-4" />}
+					{index < origins.length - 1 && <Separator className="my-6" />}
 				</div>
 			))}
 		</div>
@@ -153,8 +151,8 @@ function OriginDisplay({
 	return (
 		<div className="space-y-2 mt-2">
 			<div className="flex flex-row items-center gap-x-2">
-				<TimerIcon className="size-4 text-muted-foreground" />
-				<span className="text-sm text-muted-foreground">
+				<TimerIcon className="size-3 text-muted-foreground" />
+				<span className="text-xs text-muted-foreground">
 					{origin.duration_min
 						? getRouteDurationStr(origin.duration_min)
 						: "N/A"}
@@ -163,19 +161,22 @@ function OriginDisplay({
 
 			{origin.distance_km && (
 				<div className="flex flex-row items-center gap-x-2">
-					<RulerIcon className="size-4 text-muted-foreground" />
-					<span className="text-sm text-muted-foreground">
+					<RulerIcon className="size-3 text-muted-foreground" />
+					<span className="text-xs text-muted-foreground">
 						{convertKMtoMiles(origin.distance_km)} miles
 					</span>
 				</div>
 			)}
 
 			{origin.airline_options && origin.airline_options.length > 0 && (
-				<div className="flex flex-wrap gap-1 mt-4 not-last:mb-2">
+				<div className="flex flex-wrap gap-2 mt-4">
 					{origin.airline_options.map((airline) => (
-						<Badge key={airline.iata_code} variant="outline" size="sm">
-							{airline.name}
-						</Badge>
+						<AirlineLogo
+							key={airline.iata_code}
+							iataCode={airline.iata_code}
+							name={airline.name}
+							size="md"
+						/>
 					))}
 				</div>
 			)}
