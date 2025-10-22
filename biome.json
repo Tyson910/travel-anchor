@@ -22,7 +22,7 @@
 	"linter": {
 		"enabled": true,
 		"domains": {
-			"vue": "recommended"
+			"react": "all"
 		},
 		"rules": {
 			"recommended": true,
