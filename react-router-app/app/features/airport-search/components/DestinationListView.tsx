@@ -2,6 +2,7 @@ import type { SearchPageLoaderResponse } from "~/routes/search";
 
 import { ArrowRightIcon, PlaneIcon, RulerIcon, TimerIcon } from "lucide-react";
 
+import { Badge } from "~/components/ui/badge";
 import {
 	Card,
 	CardContent,
@@ -17,7 +18,6 @@ import {
 	EmptyTitle,
 } from "~/components/ui/empty";
 import { Separator } from "~/components/ui/separator";
-import { AirlineLogo } from "./airline-logo";
 
 type Route = SearchPageLoaderResponse[number];
 
@@ -171,12 +171,9 @@ function OriginDisplay({
 			{origin.airline_options && origin.airline_options.length > 0 && (
 				<div className="flex flex-wrap gap-2 mt-4">
 					{origin.airline_options.map((airline) => (
-						<AirlineLogo
-							key={airline.iata_code}
-							iataCode={airline.iata_code}
-							name={airline.name}
-							size="md"
-						/>
+						<Badge variant="outline" key={airline.iata_code} size="md">
+							{airline.name}
+						</Badge>
 					))}
 				</div>
 			)}
