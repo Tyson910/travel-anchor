@@ -41,9 +41,9 @@ describe("Airport Repository Smoke Tests", () => {
 		expect(Array.isArray(result)).toBe(true);
 	});
 
-		test("searchAirport - should find a city by name", async () => {
+	test("searchAirport - should find a city by name", async () => {
 		const result = await searchAirport("phoenix");
 		expect(Array.isArray(result)).toBe(true);
-		expect(result).toHaveLength(2)
+		expect(result).toHaveLength(2);
 	});
 });
