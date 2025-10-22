@@ -10,11 +10,11 @@ import { Skeleton } from "~/components/ui/skeleton";
 import {
 	DestinationListView,
 	getIATACodesFromSearchParams,
-	OriginCitiesFilter,
 	useAirportSearchParamsState,
 	ViewToggle,
 } from "~/features/airport-search";
 import { AirportsMap } from "~/features/airport-search/components/AirportsMap.client";
+import { AirportSearchCombobox } from "~/features/airport-search/components/SearchBar";
 import { isBrowser } from "~/lib/utils";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -54,13 +54,15 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 	return (
 		<div className="min-h-screen bg-background">
 			<div className="container mx-auto px-4 py-8">
-				<div className="mb-8">
+				<div className="pb-4 mb-4 border-b">
 					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
 						{/* {loaderData.routes.length} */}
 						Mutual Flight Destinations
 					</h1>
-					<OriginCitiesFilter />
-					<ViewToggle />
+					<div className="flex flex-row justify-between items-center">
+						<AirportSearchCombobox />
+						<ViewToggle />
+					</div>
 				</div>
 				<React.Suspense fallback={<LoadingSkeleton />}>
 					<Await resolve={loaderData.routes} errorElement={<ErrorElement />}>

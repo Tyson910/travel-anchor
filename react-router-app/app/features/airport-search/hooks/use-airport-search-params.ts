@@ -69,7 +69,7 @@ export function useAirportSearchParamsState() {
 		});
 	};
 
-	const getPopularCombinationURL = (codes: string[]) => {
+	const addListOfAirports = (codes: string[]) => {
 		const params = new URLSearchParams();
 
 		[...new Set(codes)].forEach((iata) => {
@@ -87,6 +87,6 @@ export function useAirportSearchParamsState() {
 		removeAirport,
 		clearAll,
 		setView,
-		getPopularCombinationURL,
+		addListOfAirports,
 	};
 }
