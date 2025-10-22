@@ -58,8 +58,16 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 			<div className="container mx-auto px-4 py-8">
 				<div className="pb-4 mb-4 border-b">
 					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
-						{/* {loaderData.routes.length} */}
-						Mutual Flight Destinations
+						<React.Suspense fallback={<div>Finding mutual routes...</div>}>
+							<Await
+								resolve={loaderData.routes}
+								errorElement={<ErrorElement />}
+							>
+								{(routes) => {
+									return <>Found {routes.length} mutual flight destinations</>;
+								}}
+							</Await>
+						</React.Suspense>
 					</h1>
 					<div className="flex flex-row justify-between items-end">
 						<AirportSearchCombobox />
