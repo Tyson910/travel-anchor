@@ -36,7 +36,6 @@
 		"zod": "catalog:"
 	},
 	"devDependencies": {
-		"@iconify-json/arcticons": "^1.2.38",
 		"@react-router/dev": "^7.9.2",
 		"@svgr/core": "^8.1.0",
 		"@svgr/plugin-jsx": "^8.1.0",
