@@ -37,6 +37,15 @@ export async function searchAirport(query: string, db = kyselyDriver) {
 			ors.push(eb("airport.name", "ilike", `%${query}%`));
 			return eb.or(ors);
 		})
+		.where((eb) =>
+			eb.exists(
+				eb
+					.selectFrom("route")
+					.whereRef("route.origin_iata", "=", "airport.iata_code")
+					.groupBy("route.origin_iata")
+					.having((eb) => eb.fn.count("route.id"), ">=", 3),
+			),
+		)
 		.leftJoin("country", "country.country_code", "airport.country_code")
 		.leftJoin("state", "state.state_id", "airport.state_id")
 		.select(airportColumns)
