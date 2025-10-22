@@ -19,7 +19,7 @@ export function SortSelect() {
 				value={activeSort}
 				onValueChange={(value: SortOption) => setSort(value)}
 			>
-				<SelectTrigger size="sm">
+				<SelectTrigger size={"lg"}>
 					<SelectValue>{SORT_OPTIONS[activeSort].label}</SelectValue>
 				</SelectTrigger>
 				<SelectContent>
