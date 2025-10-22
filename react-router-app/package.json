@@ -36,6 +36,7 @@
 		"zod": "catalog:"
 	},
 	"devDependencies": {
+		"@iconify-json/simple-icons": "^1.2.55",
 		"@react-router/dev": "^7.9.2",
 		"@svgr/core": "^8.1.0",
 		"@svgr/plugin-jsx": "^8.1.0",
