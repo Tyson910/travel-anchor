@@ -29,7 +29,7 @@ export function getIATACodesFromSearchParams(searchParams: URLSearchParams) {
 function getActiveViewFromSearchParams(searchParams: URLSearchParams) {
 	const rawQueryParamsObj = Object.fromEntries(searchParams.entries());
 	const validationResult = querySchema.safeParse(rawQueryParamsObj);
-	return validationResult.success ? validationResult.data.view : "grid";
+	return validationResult.success ? validationResult.data.view : "map";
 }
 
 function getActiveSortFromSearchParams(searchParams: URLSearchParams) {
