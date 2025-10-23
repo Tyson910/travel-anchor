@@ -1,13 +1,8 @@
 import type { Route } from "./+types/index";
 
-import { useId } from "react";
-
-import { CTASection } from "~/components/landing/CTASection";
-import { FeaturesSection } from "~/components/landing/FeaturesSection";
-import { Footer } from "~/components/landing/Footer";
-import { Header } from "~/components/landing/Header";
-import { HeroSection } from "~/components/landing/HeroSection";
-import { QuickExample } from "~/components/landing/QuickExample";
+import { AirportComboboxSelector } from "~/components/landing/AirportComboboxSelector";
+import { MinimalFooter } from "~/components/landing/MinimalFooter";
+import { MinimalHeader } from "~/components/landing/MinimalHeader";
 
 export const meta: Route.MetaFunction = () => {
 	return [
@@ -21,17 +16,13 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export default function Home() {
-	const featuresId = useId();
-	const aboutId = useId();
-
 	return (
-		<div className="min-h-screen bg-background">
-			<Header featuresId={featuresId} aboutId={aboutId} />
-			<HeroSection featuresId={featuresId} />
-			<QuickExample />
-			<FeaturesSection />
-			<CTASection />
-			<Footer featuresId={featuresId} />
+		<div className="min-h-screen bg-background flex flex-col">
+			<MinimalHeader />
+			<div className="flex-1">
+				<AirportComboboxSelector />
+			</div>
+			<MinimalFooter />
 		</div>
 	);
 }

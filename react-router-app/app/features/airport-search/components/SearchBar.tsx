@@ -1,5 +1,5 @@
 import { AlertCircleIcon, LoaderCircle, SearchIcon } from "lucide-react";
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 
 import {
 	Alert,
@@ -31,27 +31,8 @@ import {
 } from "~/components/ui/empty";
 import { Label } from "~/components/ui/label";
 import { useAirportSearchParamsState } from "../hooks/use-airport-search-params";
+import { useDebounce } from "../hooks/use-debounce";
 import { useAirportSearchQuery } from "../hooks/use-search";
-
-function useDebounce(value: string, delay = 300) {
-	const [debouncedValue, setDebouncedValue] = useState(value);
-	const isDebouncing = debouncedValue != value;
-
-	useEffect(() => {
-		const handler = setTimeout(() => {
-			setDebouncedValue(value);
-		}, delay);
-
-		return () => {
-			clearTimeout(handler);
-		};
-	}, [value, delay]);
-
-	return {
-		debouncedValue,
-		isDebouncing,
-	};
-}
 
 export function AirportSearchCombobox() {
 	const containerRef = useRef<HTMLDivElement | null>(null);
@@ -99,13 +80,13 @@ export function AirportSearchCombobox() {
 			</div>
 
 			<ComboboxContent anchor={containerRef}>
-				<SearchResults searchTerm={debouncedSearchTerm} />
+				<AirportSearchResults searchTerm={debouncedSearchTerm} />
 			</ComboboxContent>
 		</Combobox>
 	);
 }
 
-function SearchResults({ searchTerm }: { searchTerm: string }) {
+export function AirportSearchResults({ searchTerm }: { searchTerm: string }) {
 	const { data, error } = useAirportSearchQuery(searchTerm);
 
 	if (error) {
