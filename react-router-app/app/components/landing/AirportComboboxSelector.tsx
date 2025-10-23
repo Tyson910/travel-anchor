@@ -3,7 +3,6 @@ import { useId, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { Button } from "~/components/ui/button";
-import { Label } from "~/components/ui/label";
 import { useAirportSearchParamsState } from "~/features/airport-search";
 import { AirportSearchResults } from "~/features/airport-search/components/SearchBar";
 import { useDebounce } from "~/features/airport-search/hooks/use-debounce";
