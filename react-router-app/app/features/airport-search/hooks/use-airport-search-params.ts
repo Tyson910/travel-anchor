@@ -8,7 +8,7 @@ const querySchema = z.object({
 		z.string().length(3).toUpperCase(),
 		z.string().length(3).toUpperCase().array(),
 	]),
-	view: z.enum(["grid", "map"]).optional().default("grid"),
+	view: z.enum(["grid", "map"]).optional().default("map"),
 	sort: sortOptionsValidator.optional().default("time-difference"),
 });
 
