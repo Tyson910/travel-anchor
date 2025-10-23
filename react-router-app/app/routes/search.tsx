@@ -4,6 +4,8 @@ import { flightRouteService } from "@travel-anchor/data-access-layer";
 import React from "react";
 import { Await } from "react-router";
 
+import { MinimalFooter } from "~/components/landing/MinimalFooter";
+import { MinimalHeader } from "~/components/landing/MinimalHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -54,52 +56,58 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 	const { activeView, activeSort } = useAirportSearchParamsState();
 
 	return (
-		<div className="min-h-screen bg-background">
-			<div className="container mx-auto px-4 py-8">
-				<div className="pb-4 mb-4 border-b">
-					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
-						<React.Suspense fallback={<div>Finding mutual routes...</div>}>
-							<Await
-								resolve={loaderData.routes}
-								errorElement={<ErrorElement />}
-							>
-								{(routes) => {
-									return <>Found {routes.length} mutual flight destinations</>;
-								}}
-							</Await>
-						</React.Suspense>
-					</h1>
-					<div className="flex flex-row justify-between items-end">
-						<AirportSearchCombobox />
-						<div className="flex flex-row items-end gap-4">
-							{activeView == "grid" ? <SortSelect /> : null}
+		<div className="min-h-screen bg-background flex flex-col">
+			<MinimalHeader />
+			<div className="flex-1">
+				<div className="container mx-auto px-4 py-8">
+					<div className="pb-4 mb-4 border-b">
+						<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
+							<React.Suspense fallback={<div>Finding mutual routes...</div>}>
+								<Await
+									resolve={loaderData.routes}
+									errorElement={<ErrorElement />}
+								>
+									{(routes) => {
+										return (
+											<>Found {routes.length} mutual flight destinations</>
+										);
+									}}
+								</Await>
+							</React.Suspense>
+						</h1>
+						<div className="flex flex-row justify-between items-end">
+							<AirportSearchCombobox />
+							<div className="flex flex-row items-end gap-4">
+								{activeView == "grid" ? <SortSelect /> : null}
 
-							<ViewToggle />
+								<ViewToggle />
+							</div>
 						</div>
 					</div>
-				</div>
-				<React.Suspense fallback={<LoadingSkeleton />}>
-					<Await resolve={loaderData.routes} errorElement={<ErrorElement />}>
-						{(routes) => {
-							const sortedRoutes = sortRoutes(routes, activeSort);
+					<React.Suspense fallback={<LoadingSkeleton />}>
+						<Await resolve={loaderData.routes} errorElement={<ErrorElement />}>
+							{(routes) => {
+								const sortedRoutes = sortRoutes(routes, activeSort);
 
-							if (activeView == "grid") {
-								return <DestinationListView routes={sortedRoutes} />;
-							}
-							if (!isBrowser) {
-								return null;
-							}
-							return (
-								<AirportsMap
-									airports={sortedRoutes.map(
-										({ destination_airport }) => destination_airport,
-									)}
-								/>
-							);
-						}}
-					</Await>
-				</React.Suspense>
+								if (activeView == "grid") {
+									return <DestinationListView routes={sortedRoutes} />;
+								}
+								if (!isBrowser) {
+									return null;
+								}
+								return (
+									<AirportsMap
+										airports={sortedRoutes.map(
+											({ destination_airport }) => destination_airport,
+										)}
+									/>
+								);
+							}}
+						</Await>
+					</React.Suspense>
+				</div>
 			</div>
+			<MinimalFooter />
 		</div>
 	);
 }
