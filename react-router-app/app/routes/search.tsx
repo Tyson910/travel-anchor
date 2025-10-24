@@ -40,12 +40,35 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export type SearchPageLoaderResponse = Awaited<ReturnType<typeof loader>>;
 
-export const meta: Route.MetaFunction = () => {
+export const meta: Route.MetaFunction = ({ location }) => {
+	const searchParams = new URLSearchParams(location.search);
+	const iataCodes = getIATACodesFromSearchParams(searchParams);
+
 	return [
 		{ title: "Mutual Flight Destinations - Travel Anchor" },
 		{
 			name: "description",
 			content: "Find mutual direct-flight destinations for your group travel",
+		},
+		{
+			property: "og:image",
+			content: `${import.meta.env.VITE_PUBLIC_API_URL}/og-image${location.search}`,
+		},
+		{
+			property: "og:image:height",
+			content: "1200",
+		},
+		{
+			property: "og:image:width",
+			content: "630",
+		},
+		{
+			property: "og:image:alt",
+			content: `Mutual Flight Destinations for ${iataCodes.join(" , ")}`,
+		},
+		{
+			property: "og:image:type",
+			content: "image/svg",
 		},
 	];
 };
