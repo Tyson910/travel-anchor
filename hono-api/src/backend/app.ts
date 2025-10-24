@@ -11,7 +11,7 @@ import { prettyJSON } from "hono/pretty-json";
 import { secureHeaders } from "hono/secure-headers";
 
 import { airportRoutes } from "#domains/airport/routes.ts";
-import { flightRouteRoutes } from "#domains/flight-route/routes.ts";
+// import { flightRouteRoutes } from "#domains/flight-route/routes.ts";
 import { logger } from "#logger";
 import { timing } from "#middleware/timing.ts";
 
@@ -42,8 +42,8 @@ const app = new OpenAPIHono()
 	.use(etag())
 	.use(timing)
 
-	.route("/v1/airport", airportRoutes)
-	.route("/v1/flight-route", flightRouteRoutes);
+	.route("/v1/airport", airportRoutes);
+// .route("/v1/flight-route", flightRouteRoutes);
 
 app.get("/health", (c) => {
 	return c.json({
