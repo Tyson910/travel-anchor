@@ -5,6 +5,7 @@
 	"type": "module",
 	"private": "true",
 	"scripts": {
+		"build": "bun --filter './data-access-layer' build && bun --filter './hono-api' build && bun --filter './react-router-app' build",
 		"format": "bunx biome format --write",
 		"lint": "bunx biome check --write",
 		"test": "echo \"Error: no test specified\" && exit 1"
