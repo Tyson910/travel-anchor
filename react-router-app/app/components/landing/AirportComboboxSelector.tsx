@@ -42,7 +42,7 @@ export function AirportComboboxSelector() {
 			<div className="w-full max-w-2xl space-y-8">
 				<div className="text-center space-y-6">
 					<h1 className="text-2xl font-light tracking-tight">
-						Select airports to find mutual destinations
+						Select at least 2 airports to find mutual destinations
 					</h1>
 
 					<div className="space-y-4">
@@ -57,9 +57,9 @@ export function AirportComboboxSelector() {
 						</div>
 
 						<p className="text-sm text-muted-foreground">
-							{iataCodes.length === 0
-								? "Select at least 2 airports to find mutual destinations"
-								: `Find destinations that all airports can reach directly`}
+							{iataCodes.length >= 2
+								? `Find destinations that all airports can reach directly`
+								: null}
 						</p>
 					</div>
 				</div>
