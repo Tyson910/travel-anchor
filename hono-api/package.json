@@ -18,8 +18,7 @@
 	},
 	"scripts": {
 		"dev": "bun --watch src/index.ts",
-		"build": "bun build ./src/index.ts --outdir ./out --target node  --minify --sourcemap",
-		"build:client": "bun build ./src/client-rpc.ts --outdir ./dist --target browser",
+		"build": "rm -rf dist && tsc && bun build ./src/index.ts --outdir ./dist --target node --minify --sourcemap",
 		"check": "tsc --noEmit",
 		"start": "bun run ./out/index.js",
 		"test": "bun test",
