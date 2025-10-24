@@ -4,8 +4,6 @@ import { type InferResponseType, parseResponse } from "hono/client";
 import React from "react";
 import { Await } from "react-router";
 
-import { MinimalFooter } from "~/components/landing/MinimalFooter";
-import { MinimalHeader } from "~/components/landing/MinimalHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -19,6 +17,8 @@ import { AirportsMap } from "~/features/airport-search/components/AirportsMap.cl
 import { AirportSearchCombobox } from "~/features/airport-search/components/SearchBar";
 import { SortSelect } from "~/features/airport-search/components/SortSelect";
 import { sortRoutes } from "~/features/airport-search/sorting-utils";
+import { MinimalFooter } from "~/features/landing/MinimalFooter";
+import { MinimalHeader } from "~/features/landing/MinimalHeader";
 import { honoClient } from "~/lib/hono-client";
 import { isBrowser } from "~/lib/utils";
 

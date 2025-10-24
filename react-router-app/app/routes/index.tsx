@@ -1,8 +1,8 @@
 import type { Route } from "./+types/index";
 
-import { AirportComboboxSelector } from "~/components/landing/AirportComboboxSelector";
-import { MinimalFooter } from "~/components/landing/MinimalFooter";
-import { MinimalHeader } from "~/components/landing/MinimalHeader";
+import { AirportComboboxSelector } from "~/features/landing/AirportComboboxSelector";
+import { MinimalFooter } from "~/features/landing/MinimalFooter";
+import { MinimalHeader } from "~/features/landing/MinimalHeader";
 
 export const meta: Route.MetaFunction = () => {
 	return [

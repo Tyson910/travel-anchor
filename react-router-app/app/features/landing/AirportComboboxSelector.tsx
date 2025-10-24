@@ -15,7 +15,7 @@ import {
 	ComboboxContent,
 	ComboboxInput,
 	ComboboxValue,
-} from "../ui/base-combobox";
+} from "../../components/ui/base-combobox";
 
 export function AirportComboboxSelector() {
 	const navigate = useNavigate();
