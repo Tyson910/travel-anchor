@@ -59,7 +59,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export type SearchPageLoaderResponse = Awaited<ReturnType<typeof loader>>;
 
-export function meta() {
+export const meta: Route.MetaFunction = () => {
 	return [
 		{ title: "Mutual Flight Destinations - Travel Anchor" },
 		{
@@ -67,7 +67,7 @@ export function meta() {
 			content: "Find mutual direct-flight destinations for your group travel",
 		},
 	];
-}
+};
 
 export default function SearchPage({ loaderData }: Route.ComponentProps) {
 	const { activeView, activeSort } = useAirportSearchParamsState();
