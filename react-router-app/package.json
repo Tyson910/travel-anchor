@@ -6,7 +6,7 @@
 		"build": "react-router build",
 		"dev": "react-router dev",
 		"prepare": "react-router typegen",
-		"start": "react-router-serve ./build/server/index.js",
+		"start": "bun --env-file=.env run react-router-serve ./build/server/index.js",
 		"check": "react-router typegen && tsc"
 	},
 	"dependencies": {
