@@ -50,6 +50,9 @@ export function generateDynamicOGImage(
 		for (let i = 0; i < airportsToDraw; i++) {
 			const code = airportCodes[i];
 			const pos = layoutPositions[i];
+			if (!pos) {
+				throw new Error(`Invalid layoutPosition ${i}`);
+			}
 
 			dynamicAirportElements += `
         <!-- Airport ${i + 1}: ${code} -->
