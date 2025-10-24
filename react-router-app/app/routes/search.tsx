@@ -1,6 +1,6 @@
 import type { Route } from "./+types/search";
 
-import { type InferResponseType, parseResponse } from "hono/client";
+import { flightRouteService } from "@travel-anchor/data-access-layer";
 import React from "react";
 import { Await } from "react-router";
 
@@ -19,38 +19,19 @@ import { SortSelect } from "~/features/airport-search/components/SortSelect";
 import { sortRoutes } from "~/features/airport-search/sorting-utils";
 import { MinimalFooter } from "~/features/landing/MinimalFooter";
 import { MinimalHeader } from "~/features/landing/MinimalHeader";
-import { honoClient } from "~/lib/hono-client";
 import { isBrowser } from "~/lib/utils";
-
-type SuccessfulFlightRouteApiResponse = Exclude<
-	InferResponseType<
-		ReturnType<typeof honoClient>["v1"]["flight-route"]["$get"]
-	>,
-	| {
-			message: string;
-	  }
-	| { success: false }
->["routes"];
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const requestURLObject = new URL(request.url);
 	const iataCodes = getIATACodesFromSearchParams(requestURLObject.searchParams);
 
 	if (iataCodes.length < 2) {
-		return { routes: [] as SuccessfulFlightRouteApiResponse };
+		return { routes: [] };
 	}
 
-	const routes = new Promise<SuccessfulFlightRouteApiResponse>((res) =>
-		res(
-			parseResponse(
-				honoClient().v1["flight-route"].$get({
-					query: {
-						IATA: iataCodes,
-					},
-				}),
-			).then(({ routes }) => routes),
-		),
-	);
+	const routes = new Promise<
+		Awaited<ReturnType<typeof flightRouteService.getAirportRoutesByIATA>>
+	>((res) => res(flightRouteService.getAirportRoutesByIATA(iataCodes)));
 
 	return {
 		routes,
