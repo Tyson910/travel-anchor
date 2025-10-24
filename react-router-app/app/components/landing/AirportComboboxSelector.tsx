@@ -46,7 +46,10 @@ export function AirportComboboxSelector() {
 					</h1>
 
 					<div className="space-y-4">
-						<label htmlFor={id} className="text-sm text-muted-foreground sr-only">
+						<label
+							htmlFor={id}
+							className="text-sm text-muted-foreground sr-only"
+						>
 							Select airports to search from:
 						</label>
 						<div className="mt-4">
