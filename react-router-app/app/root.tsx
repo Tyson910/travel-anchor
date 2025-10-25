@@ -10,6 +10,9 @@ import {
 } from "react-router";
 import "./app.css";
 
+import { MinimalFooter } from "./components/layout/MinimalFooter";
+import { MinimalHeader } from "./components/layout/MinimalHeader";
+
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
 	{
@@ -33,12 +36,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 			</head>
 			<body>
-				{children}
+				<div className="min-h-screen bg-background flex flex-col">
+					<MinimalHeader />
+					<div className="flex-1">{children}</div>
+					<MinimalFooter />
+				</div>
 				<ScrollRestoration />
 				<Scripts />
 			</body>
 		</html>
 	);
+}
+
+export function HydrateFallback() {
+	return null;
 }
 
 export default function App() {

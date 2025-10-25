@@ -18,8 +18,6 @@ import { AirportsMap } from "~/features/airport-search/components/AirportsMap.cl
 import { AirportSearchCombobox } from "~/features/airport-search/components/SearchBar";
 import { SortSelect } from "~/features/airport-search/components/SortSelect";
 import { sortRoutes } from "~/features/airport-search/sorting-utils";
-import { MinimalFooter } from "~/features/landing/MinimalFooter";
-import { MinimalHeader } from "~/features/landing/MinimalHeader";
 import { honoClient } from "~/lib/hono-client";
 
 type ExpectedAPIResponse = InferResponseType<
@@ -91,58 +89,47 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 	const { activeView, activeSort } = useAirportSearchParamsState();
 
 	return (
-		<div className="min-h-screen bg-background flex flex-col">
-			<MinimalHeader />
-			<div className="flex-1">
-				<div className="container mx-auto px-4 py-8">
-					<div className="pb-4 mb-4 border-b">
-						<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
-							<React.Suspense fallback={<div>Finding mutual routes...</div>}>
-								<Await
-									resolve={loaderData.routes}
-									errorElement={<ErrorElement />}
-								>
-									{(routes) => {
-										return (
-											<>Found {routes.length} mutual flight destinations</>
-										);
-									}}
-								</Await>
-							</React.Suspense>
-						</h1>
-						<div className="flex flex-row justify-between items-end">
-							<AirportSearchCombobox />
-							<div className="flex flex-row items-end gap-4">
-								{activeView == "grid" ? <SortSelect /> : null}
-
-								<ViewToggle />
-							</div>
-						</div>
-					</div>
-					<React.Suspense fallback={<LoadingSkeleton />}>
+		<div className="container mx-auto px-4 py-8">
+			<div className="pb-4 mb-4 border-b">
+				<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
+					<React.Suspense fallback={<div>Finding mutual routes...</div>}>
 						<Await resolve={loaderData.routes} errorElement={<ErrorElement />}>
 							{(routes) => {
-								const sortedRoutes = sortRoutes(routes, activeSort);
-
-								if (activeView == "grid") {
-									return <DestinationListView routes={sortedRoutes} />;
-								}
-
-								return (
-									<ClientOnly>
-										<AirportsMap
-											airports={sortedRoutes.map(
-												({ destination_airport }) => destination_airport,
-											)}
-										/>
-									</ClientOnly>
-								);
+								return <>Found {routes.length} mutual flight destinations</>;
 							}}
 						</Await>
 					</React.Suspense>
+				</h1>
+				<div className="flex flex-row justify-between items-end">
+					<AirportSearchCombobox />
+					<div className="flex flex-row items-end gap-4">
+						{activeView == "grid" ? <SortSelect /> : null}
+
+						<ViewToggle />
+					</div>
 				</div>
 			</div>
-			<MinimalFooter />
+			<React.Suspense fallback={<LoadingSkeleton />}>
+				<Await resolve={loaderData.routes} errorElement={<ErrorElement />}>
+					{(routes) => {
+						const sortedRoutes = sortRoutes(routes, activeSort);
+
+						if (activeView == "grid") {
+							return <DestinationListView routes={sortedRoutes} />;
+						}
+
+						return (
+							<ClientOnly>
+								<AirportsMap
+									airports={sortedRoutes.map(
+										({ destination_airport }) => destination_airport,
+									)}
+								/>
+							</ClientOnly>
+						);
+					}}
+				</Await>
+			</React.Suspense>
 		</div>
 	);
 }
@@ -152,10 +139,7 @@ function LoadingSkeleton() {
 	if (activeView === "map") {
 		return (
 			<div className="space-y-4">
-				<div className="text-center text-muted-foreground">
-					Loading map destinations...
-				</div>
-				<Skeleton className="h-96 w-full rounded-lg" />
+				<Skeleton className="h-(--airport-map-height) w-full rounded-lg" />
 			</div>
 		);
 	}
