@@ -1,9 +1,10 @@
 import type { Route } from "./+types/search";
 
-import { flightRouteService } from "@travel-anchor/data-access-layer";
+import { type InferResponseType, parseResponse } from "hono/client";
 import React from "react";
 import { Await } from "react-router";
 
+import { ClientOnly } from "~/components/ClientOnly";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -19,9 +20,14 @@ import { SortSelect } from "~/features/airport-search/components/SortSelect";
 import { sortRoutes } from "~/features/airport-search/sorting-utils";
 import { MinimalFooter } from "~/features/landing/MinimalFooter";
 import { MinimalHeader } from "~/features/landing/MinimalHeader";
-import { isBrowser } from "~/lib/utils";
+import { honoClient } from "~/lib/hono-client";
 
-export async function loader({ request }: Route.LoaderArgs) {
+type ExpectedAPIResponse = InferResponseType<
+	ReturnType<typeof honoClient>["v1"]["flight-route"]["$get"],
+	200
+>["routes"];
+
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 	const requestURLObject = new URL(request.url);
 	const iataCodes = getIATACodesFromSearchParams(requestURLObject.searchParams);
 
@@ -29,16 +35,24 @@ export async function loader({ request }: Route.LoaderArgs) {
 		return { routes: [] };
 	}
 
-	const routes = new Promise<
-		Awaited<ReturnType<typeof flightRouteService.getAirportRoutesByIATA>>
-	>((res) => res(flightRouteService.getAirportRoutesByIATA(iataCodes)));
+	const routes = new Promise<ExpectedAPIResponse>((res) =>
+		res(
+			parseResponse(
+				honoClient().v1["flight-route"].$get({
+					query: {
+						IATA: iataCodes,
+					},
+				}),
+			).then(({ routes }) => routes),
+		),
+	);
 
 	return {
 		routes,
 	};
 }
 
-export type SearchPageLoaderResponse = Awaited<ReturnType<typeof loader>>;
+export type SearchPageLoaderResponse = Awaited<ReturnType<typeof clientLoader>>;
 
 export const meta: Route.MetaFunction = ({ location }) => {
 	const searchParams = new URLSearchParams(location.search);
@@ -113,15 +127,15 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 								if (activeView == "grid") {
 									return <DestinationListView routes={sortedRoutes} />;
 								}
-								if (!isBrowser) {
-									return null;
-								}
+
 								return (
-									<AirportsMap
-										airports={sortedRoutes.map(
-											({ destination_airport }) => destination_airport,
-										)}
-									/>
+									<ClientOnly>
+										<AirportsMap
+											airports={sortedRoutes.map(
+												({ destination_airport }) => destination_airport,
+											)}
+										/>
+									</ClientOnly>
 								);
 							}}
 						</Await>
