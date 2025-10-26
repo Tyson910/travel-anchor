@@ -5,6 +5,12 @@ import React from "react";
 import { Await } from "react-router";
 
 import { ClientOnly } from "~/components/ClientOnly";
+import {
+	Alert,
+	AlertContent,
+	AlertDescription,
+	AlertTitle,
+} from "~/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -93,7 +99,7 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 			<div className="pb-4 mb-4 border-b">
 				<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
 					<React.Suspense fallback={<div>Finding mutual routes...</div>}>
-						<Await resolve={loaderData.routes} errorElement={<ErrorElement />}>
+						<Await resolve={loaderData.routes} errorElement={<> </>}>
 							{(routes) => {
 								return <>Found {routes.length} mutual flight destinations</>;
 							}}
@@ -179,5 +185,12 @@ function LoadingSkeleton() {
 }
 
 function ErrorElement() {
-	return <div>Error loading routes</div>;
+	return (
+		<Alert variant="destructive" appearance="outline">
+			<AlertContent>
+				<AlertTitle>Error</AlertTitle>
+				<AlertDescription>Failed to load flight routes</AlertDescription>
+			</AlertContent>
+		</Alert>
+	);
 }
