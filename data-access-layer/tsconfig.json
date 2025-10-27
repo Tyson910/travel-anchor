@@ -3,11 +3,11 @@
 	"compilerOptions": {
 		// File Layout
 		"rootDir": "./src",
-		// "outDir": "./dist",
+		"outDir": "./dist",
 		"baseUrl": ".",
 
 		"allowImportingTsExtensions": true,
-		"noEmit": true,
+		"emitDeclarationOnly": true,
 		// Environment Settings
 		// See also https://aka.ms/tsconfig/module
 		"module": "preserve",
