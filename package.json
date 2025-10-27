@@ -19,7 +19,8 @@
 		"packages": [
 			"hono-api",
 			"data-access-layer",
-			"react-router-spa"
+			"react-router-spa",
+			"react-spa"
 		],
 		"catalog": {
 			"@types/bun": "^1.2.23",
