@@ -4,7 +4,8 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
-import Header from "../components/Header";
+import { MinimalFooter } from "~/components/layout/MinimalFooter";
+import { MinimalHeader } from "~/components/layout/MinimalHeader";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
 interface MyRouterContext {
@@ -14,7 +15,7 @@ interface MyRouterContext {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
 	component: () => (
 		<>
-			<Header />
+			<MinimalHeader />
 			<Outlet />
 			<TanStackDevtools
 				config={{
@@ -28,6 +29,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 					TanStackQueryDevtools,
 				]}
 			/>
+			<MinimalFooter />
 		</>
 	),
 });
