@@ -1,6 +1,4 @@
-import type { loader as SearchPageLoader } from "~/routes/search";
-
-type LoaderResponse = Awaited<ReturnType<typeof SearchPageLoader>>;
+import type { SearchPageLoaderResponse } from "~/routes/search";
 
 export type Destination =
-	LoaderResponse["routes"][number]["destination_airport"];
+	SearchPageLoaderResponse[number]["destination_airport"];

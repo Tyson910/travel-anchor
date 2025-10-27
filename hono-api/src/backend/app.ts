@@ -2,6 +2,7 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import {
 	DatabaseError,
 	handlePostgresError,
+	router,
 } from "@travel-anchor/data-access-layer";
 import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
@@ -10,8 +11,6 @@ import { HTTPException } from "hono/http-exception";
 import { prettyJSON } from "hono/pretty-json";
 import { secureHeaders } from "hono/secure-headers";
 
-import { airportRoutes } from "#domains/airport/routes.ts";
-import { flightRouteRoutes } from "#domains/flight-route/routes.ts";
 import { openImageRoutes } from "#domains/og-image/routes.ts";
 import { logger } from "#logger";
 import { timing } from "#middleware/timing.ts";
@@ -42,10 +41,12 @@ const app = new OpenAPIHono()
 	)
 	.use(etag())
 	.use(timing)
-
-	.route("/v1/airport", airportRoutes)
 	.route("/og-image", openImageRoutes)
-	.route("/v1/flight-route", flightRouteRoutes);
+	.mount("*", router.handler, {
+		replaceRequest: (req) => {
+			return req;
+		},
+	});
 
 app.get("/health", (c) => {
 	return c.json({

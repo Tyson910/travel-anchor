@@ -1,6 +1,5 @@
 import type { Route } from "./+types/search";
 
-import { type InferResponseType, parseResponse } from "hono/client";
 import React from "react";
 import { Await } from "react-router";
 
@@ -24,12 +23,7 @@ import { AirportsMap } from "~/features/airport-search/components/AirportsMap.cl
 import { AirportSearchCombobox } from "~/features/airport-search/components/SearchBar";
 import { SortSelect } from "~/features/airport-search/components/SortSelect";
 import { sortRoutes } from "~/features/airport-search/sorting-utils";
-import { honoClient } from "~/lib/hono-client";
-
-type ExpectedAPIResponse = InferResponseType<
-	ReturnType<typeof honoClient>["v1"]["flight-route"]["$get"],
-	200
->["routes"];
+import { rpcClient } from "~/lib/rpc-client";
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 	const requestURLObject = new URL(request.url);
@@ -39,24 +33,36 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 		return { routes: [] };
 	}
 
-	const routes = new Promise<ExpectedAPIResponse>((res) =>
-		res(
-			parseResponse(
-				honoClient().v1["flight-route"].$get({
-					query: {
-						IATA: iataCodes,
-					},
-				}),
-			).then(({ routes }) => routes),
-		),
-	);
+	const routes = rpcClient("/flight-route", {
+		query: {
+			IATA: iataCodes,
+		},
+		customFetchImpl: (req, init) => {
+			if (req instanceof URL) {
+				// workaround for weird better-fetch bug that prevents array query params
+				req.searchParams.delete("IATA");
+				iataCodes.forEach((code) => {
+					req.searchParams.append("IATA", code);
+				});
+			}
+			return fetch(req, init);
+		},
+	}).then(({ data, error }) => {
+		if (error) {
+			console.log(error);
+			throw error;
+		}
+		return data.routes;
+	});
 
 	return {
 		routes,
 	};
 }
 
-export type SearchPageLoaderResponse = Awaited<ReturnType<typeof clientLoader>>;
+export type SearchPageLoaderResponse = Awaited<
+	Exclude<Awaited<ReturnType<typeof clientLoader>>["routes"], never[]>
+>;
 
 export const meta: Route.MetaFunction = ({ location }) => {
 	const searchParams = new URLSearchParams(location.search);

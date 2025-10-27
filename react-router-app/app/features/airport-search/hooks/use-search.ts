@@ -1,33 +1,42 @@
-import {
-	type DetailedError,
-	type InferResponseType,
-	parseResponse,
-} from "hono/client";
 import useSWR, { type SWRConfiguration } from "swr";
 
-import { honoClient } from "~/lib/hono-client";
+import { rpcClient } from "~/lib/rpc-client";
 
-const airportEndpoint = honoClient().v1.airport.$get;
-export type AirportSearchQueryResult = InferResponseType<
-	typeof airportEndpoint
+const airportEndpoint = (searchStr: string) =>
+	rpcClient("/airports", {
+		query: {
+			search: searchStr,
+		},
+	});
+
+type AirportSearchQueryErrorResult = Exclude<
+	Awaited<ReturnType<typeof airportEndpoint>>["error"],
+	null
+>;
+
+export type AirportSearchQueryResult = Exclude<
+	Awaited<ReturnType<typeof airportEndpoint>>["data"],
+	null
 >;
 
 export const useAirportSearchQuery = (
 	searchQuery: string,
-	opts?: SWRConfiguration<AirportSearchQueryResult, DetailedError>,
+	opts?: SWRConfiguration<
+		AirportSearchQueryResult,
+		AirportSearchQueryErrorResult
+	>,
 ) => {
 	const fetcher = async () => {
-		const result = await parseResponse(
-			airportEndpoint({
-				query: {
-					query: searchQuery,
-				},
-			}),
-		);
-		return result;
+		const { data, error } = await rpcClient("/airports", {
+			query: {
+				search: searchQuery,
+			},
+		});
+		if (error) throw error;
+		return data;
 	};
 
-	return useSWR<AirportSearchQueryResult, DetailedError>(
+	return useSWR<AirportSearchQueryResult, AirportSearchQueryErrorResult>(
 		searchQuery || "N/a",
 		fetcher,
 		opts,
