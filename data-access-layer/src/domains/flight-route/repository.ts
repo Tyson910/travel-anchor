@@ -60,8 +60,6 @@ export async function getAirportRoutesByIATA(
 				country_name: eb.ref("country.country_name"),
 			}).as("destination_airport"),
 		)
-		.select(airportColumns)
-		.select(["state.state_name", "country.country_name"])
 		.select((eb) => [
 			jsonArrayFrom(
 				eb
