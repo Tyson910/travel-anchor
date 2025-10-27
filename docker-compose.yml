@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./hono-api
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - PORT=3000
+    restart: unless-stopped
+
+  spa:
+    build:
+      context: .
+      dockerfile: react-router-app/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    restart: unless-stopped

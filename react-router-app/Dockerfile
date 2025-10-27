@@ -1,22 +1,43 @@
-FROM node:20-alpine AS development-dependencies-env
-COPY . /app
+# Use Node.js for build stage (better React Router compatibility)
+FROM node:lts-alpine AS base
 WORKDIR /app
-RUN npm ci
 
-FROM node:20-alpine AS production-dependencies-env
-COPY ./package.json package-lock.json /app/
-WORKDIR /app
-RUN npm ci --omit=dev
+# Copy package files and install dependencies
+COPY package.json bun.lock ./
+COPY data-access-layer/package.json ./data-access-layer/
+COPY hono-api/package.json ./hono-api/
+COPY react-router-app/package.json ./react-router-app/
 
-FROM node:20-alpine AS build-env
-COPY . /app/
-COPY --from=development-dependencies-env /app/node_modules /app/node_modules
-WORKDIR /app
-RUN npm run build
+# Install Bun first
+RUN npm install -g bun
 
-FROM node:20-alpine
-COPY ./package.json package-lock.json /app/
-COPY --from=production-dependencies-env /app/node_modules /app/node_modules
-COPY --from=build-env /app/build /app/build
+# Install dependencies without running prepare scripts
+RUN bun install --frozen-lockfile --ignore-scripts
+
+# Copy source code
+COPY . .
+
+# Build the entire workspace to ensure all dependencies are available
+RUN bun --filter './data-access-layer' build
+
+# Change to react-router-app directory and run prepare + build
+WORKDIR /app/react-router-app
+RUN bun run prepare
+RUN bun run build
+
+# Go back to root for consistency
 WORKDIR /app
-CMD ["npm", "run", "start"]
+
+# Use the Caddy image for serving
+FROM caddy
+WORKDIR /app
+
+# Copy Caddyfile
+COPY react-router-app/Caddyfile ./
+RUN caddy fmt Caddyfile --overwrite
+
+# Copy built files from react-router-app build/client to dist
+COPY --from=base /app/react-router-app/build/client ./dist
+
+# Use Caddy to run/serve the app
+CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]

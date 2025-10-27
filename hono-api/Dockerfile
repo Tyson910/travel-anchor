@@ -3,15 +3,14 @@ FROM oven/bun:latest AS base
 WORKDIR /app
 
 # Copy package files and install dependencies
-COPY package.json bun.lock ./
-COPY data-access-layer/package.json ./data-access-layer/
-COPY hono-api/package.json ./hono-api/
-COPY react-router-app/package.json ./react-router-app/
+COPY ../package.json ../bun.lock ./
+COPY ../data-access-layer/package.json ./data-access-layer/
+COPY package.json ./
 
 RUN bun install --frozen-lockfile --filter hono-api --filter data-access-layer
 
 # Copy source code
-COPY . .
+COPY ../. .
 
 # Build the data-access-layer first, then hono-api
 RUN bun --filter './data-access-layer' build
