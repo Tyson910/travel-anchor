@@ -20,8 +20,6 @@ const searchSchema = z.object({
 	sort: sortOptionsValidator.optional().default("time-difference"),
 });
 
-type SearchParams = z.infer<typeof searchSchema>;
-
 export type SearchPageLoaderResponse = Array<{
 	destination_airport: {
 		name: string;
@@ -31,16 +29,6 @@ export type SearchPageLoaderResponse = Array<{
 		distance_km?: number | null;
 	}>;
 }>;
-
-function getIATACodesFromSearchParams(searchParams: SearchParams): string[] {
-	const codes = searchParams.codes;
-	if (!codes) return [];
-
-	if (typeof codes === "string") {
-		return [codes];
-	}
-	return [...new Set(codes)];
-}
 
 export const Route = createFileRoute("/search")({
 	validateSearch: (search) => {
@@ -146,12 +134,7 @@ function SearchPage() {
 }
 
 function LoadingSkeleton() {
-	const { view, codes } = Route.useSearch();
-	const iataCodes = getIATACodesFromSearchParams({
-		codes,
-		view,
-		sort: "time-difference",
-	});
+	const { view, codes: iataCodes } = Route.useSearch();
 
 	if (view === "map") {
 		return (
