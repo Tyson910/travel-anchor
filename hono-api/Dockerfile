@@ -29,7 +29,7 @@ WORKDIR /app
 
 # Copy built artifacts and dependencies
 COPY --from=base /app/node_modules ./node_modules
-COPY --from=base /app/data-access-layer/dist ./data-access-layer/dist
+COPY --from=base /app/data-access-layer ./data-access-layer
 COPY --from=base /app/hono-api/dist ./hono-api/dist
 COPY --from=base /app/hono-api/package.json ./hono-api/
 
