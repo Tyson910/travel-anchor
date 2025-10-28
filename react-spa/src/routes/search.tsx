@@ -111,7 +111,7 @@ function SearchPage() {
 				property="og:image:alt"
 				content="Mutual Flight Destinations for JFK, LAX, ORD"
 			/>
-			<meta property="og:image:type" content="image/svg"></meta>
+			<meta property="og:image:type" content="image/png" />
 			<div className="pb-4 mb-4 border-b">
 				<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
 					<Await
