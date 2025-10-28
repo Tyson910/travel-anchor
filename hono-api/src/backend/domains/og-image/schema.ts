@@ -21,7 +21,7 @@ export const getOgImageRoute = createRoute({
 	responses: {
 		200: {
 			content: {
-				"image/svg+xml": {
+				"image/png": {
 					schema: z.file(),
 				},
 			},

@@ -29,6 +29,7 @@
       "name": "@travel-anchor/hono-api",
       "dependencies": {
         "@hono/zod-openapi": "^1.1.0",
+        "@resvg/resvg-js": "^2.6.2",
         "@travel-anchor/data-access-layer": "workspace:",
         "hono": "catalog:",
         "winston": "^3.17.0",

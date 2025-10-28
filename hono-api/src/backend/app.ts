@@ -40,7 +40,13 @@ const app = new OpenAPIHono()
 			allowHeaders: ["GET"],
 		}),
 	)
-	.use(secureHeaders())
+	.use(
+		"/og-image",
+		secureHeaders({
+			crossOriginResourcePolicy: false,
+		}),
+	)
+	.use("/api/*", secureHeaders())
 	.use(
 		bodyLimit({
 			maxSize: 1024,
