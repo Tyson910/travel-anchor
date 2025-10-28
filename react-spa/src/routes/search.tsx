@@ -33,6 +33,10 @@ export type SearchPageLoaderResponse = Awaited<
 
 export const Route = createFileRoute("/search")({
 	staleTime: 5000,
+	// Do not cache this route's data after it's unloaded
+	// gcTime: 0,
+	// Only reload the route when the user navigates to it or when deps change
+	shouldReload: false,
 	validateSearch: (search) => {
 		return searchSchema.parse(search);
 	},
@@ -92,6 +96,22 @@ function SearchPage() {
 
 	return (
 		<div className="container mx-auto px-4 py-8">
+			<title>Mutual Flight Destinations - Travel Anchor</title>
+			<meta
+				name="description"
+				content="Find mutual direct-flight destinations for your group travel"
+			/>
+			<meta
+				property="og:image"
+				content={`http://localhost:3000/og-image?IATA=${searchParams.codes.join("&IATA=")}`}
+			/>
+			<meta property="og:image:height" content="1200" />
+			<meta property="og:image:width" content="630" />
+			<meta
+				property="og:image:alt"
+				content="Mutual Flight Destinations for JFK, LAX, ORD"
+			/>
+			<meta property="og:image:type" content="image/svg"></meta>
 			<div className="pb-4 mb-4 border-b">
 				<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
 					<Await
