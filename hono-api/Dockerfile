@@ -8,7 +8,7 @@ COPY data-access-layer/package.json ./data-access-layer/
 COPY hono-api/package.json ./hono-api/
 COPY react-router-app/package.json ./react-router-app/
 
-RUN bun install --frozen-lockfile --ignore-scripts
+RUN bun install --frozen-lockfile --ignore-scripts --filter './hono-api'
 
 # Copy source code
 COPY . .
