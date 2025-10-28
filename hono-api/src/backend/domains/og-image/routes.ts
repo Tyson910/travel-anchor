@@ -25,10 +25,9 @@ export const openImageRoutes = new OpenAPIHono().openapi(
 			const pngData = resvg.render();
 			const pngBuffer = pngData.asPng() as unknown as ArrayBuffer;
 
-			c.header("Cross-Origin-Resource-Policy", "cross-origin");
-
 			return c.body(pngBuffer, 200, {
 				"Content-Type": "image/png",
+				"Cross-Origin-Resource-Policy": "cross-origin",
 			});
 		} catch (_err) {
 			return c.json({ message: "An unexpected error has occured" }, 500);
