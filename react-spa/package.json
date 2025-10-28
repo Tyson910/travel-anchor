@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"check": "tsc --noEmit",
-		"dev": "vite --port 3000",
+		"dev": "vite",
 		"build": "vite build && tsc",
 		"serve": "vite preview",
 		"test": "vitest run"
