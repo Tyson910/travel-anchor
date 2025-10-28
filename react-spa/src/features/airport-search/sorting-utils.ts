@@ -1,3 +1,5 @@
+import type { SearchPageLoaderResponse } from "~/routes/search";
+
 import * as z from "zod";
 
 export const sortOptionsValidator = z.enum([
@@ -19,11 +21,11 @@ export interface SortOptionConfig {
 export const SORT_OPTIONS = {
 	"time-difference": {
 		label: "By Smallest Time Difference",
-		description: "Which destination is most fair for travel time?",
+		description: "Which destination is the most fair for travel time?",
 	},
 	"average-time": {
 		label: "By Lowest Average Time",
-		description: "Which destination requires least total time in the air?",
+		description: "Which destination requires the least total time in the air?",
 	},
 	"shortest-longest-flight": {
 		label: "By Shortest 'Longest' Flight",
@@ -32,7 +34,7 @@ export const SORT_OPTIONS = {
 	},
 	"distance-difference": {
 		label: "By Smallest Distance Difference",
-		description: "Which destination is most fair for distance?",
+		description: "Which destination is the most fair for distance?",
 	},
 	"average-distance": {
 		label: "By Lowest Average Distance",
@@ -44,16 +46,7 @@ export const SORT_OPTIONS = {
 	},
 } as const satisfies Record<SortOption, SortOptionConfig>;
 
-// Route type will be defined when we migrate the full components
-export interface Route {
-	destination_airport: {
-		name: string;
-	};
-	origin_airport_options?: Array<{
-		duration_min?: number | null;
-		distance_km?: number | null;
-	}>;
-}
+type Route = SearchPageLoaderResponse[number];
 
 function calculateVariance(values: number[]): number {
 	if (values.length === 0) return Infinity;
@@ -71,19 +64,15 @@ function calculateAverage(values: number[]): number {
 }
 
 function getTimeValues(route: Route): number[] {
-	return (
-		route.origin_airport_options
-			?.filter((origin) => origin.duration_min != null)
-			?.map((origin) => origin.duration_min as number) || []
-	);
+	return route.origin_airport_options
+		.filter((origin) => origin.duration_min != null)
+		.map((origin) => origin.duration_min as number);
 }
 
 function getDistanceValues(route: Route): number[] {
-	return (
-		route.origin_airport_options
-			?.filter((origin) => origin.distance_km != null)
-			?.map((origin) => origin.distance_km as number) || []
-	);
+	return route.origin_airport_options
+		.filter((origin) => origin.distance_km != null)
+		.map((origin) => origin.distance_km as number);
 }
 
 export function sortRoutes(routes: Route[], sortOption: SortOption): Route[] {

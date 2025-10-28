@@ -1,6 +1,10 @@
 import { Await, createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
+import { DestinationListView, ViewToggle } from "@/features/airport-search";
+import { AirportsMap } from "@/features/airport-search/components/AirportsMap.client";
+import { AirportSearchCombobox } from "@/features/airport-search/components/SearchBar";
+import { SortSelect } from "@/features/airport-search/components/SortSelect";
 import { oneOrManyIATAValidator } from "@/lib/validators";
 import {
 	Alert,
@@ -11,7 +15,10 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
-import { sortOptionsValidator } from "~/features/airport-search/sorting-utils";
+import {
+	sortOptionsValidator,
+	sortRoutes,
+} from "~/features/airport-search/sorting-utils";
 import { rpcClient } from "~/lib/rpc-client";
 
 const searchSchema = z.object({
@@ -20,17 +27,12 @@ const searchSchema = z.object({
 	sort: sortOptionsValidator.optional().default("time-difference"),
 });
 
-export type SearchPageLoaderResponse = Array<{
-	destination_airport: {
-		name: string;
-	};
-	origin_airport_options?: Array<{
-		duration_min?: number | null;
-		distance_km?: number | null;
-	}>;
-}>;
+export type SearchPageLoaderResponse = Awaited<
+	Exclude<(typeof Route)["types"]["loaderData"]["routes"], never[]>
+>;
 
 export const Route = createFileRoute("/search")({
+	staleTime: 5000,
 	validateSearch: (search) => {
 		return searchSchema.parse(search);
 	},
@@ -86,6 +88,7 @@ function SearchPage() {
 			</div>
 		);
 	}
+	const activeView = searchParams.view;
 
 	return (
 		<div className="container mx-auto px-4 py-8">
@@ -101,32 +104,29 @@ function SearchPage() {
 					</Await>
 				</h1>
 				<div className="flex flex-row justify-between items-end">
-					{/* <AirportSearchCombobox /> */}
+					<AirportSearchCombobox />
 					<div className="flex flex-row items-end gap-4">
-						{searchParams.view}
-						{/* {activeView == "grid" ? <SortSelect /> : null} */}
+						{activeView == "grid" ? <SortSelect /> : null}
 
-						{/* <ViewToggle /> */}
+						<ViewToggle />
 					</div>
 				</div>
 			</div>
 
 			<Await promise={routes} fallback={<LoadingSkeleton />}>
 				{(routes) => {
-					return null;
-					// const sortedRoutes = sortRoutes(routes, activeSort);
+					if (activeView == "grid") {
+						const sortedRoutes = sortRoutes(routes, searchParams.sort);
+						return <DestinationListView routes={sortedRoutes} />;
+					}
 
-					// if (activeView == "grid") {
-					// 	return <DestinationListView routes={sortedRoutes} />;
-					// }
-
-					// return (
-					// 	<AirportsMap
-					// 		airports={sortedRoutes.map(
-					// 			({ destination_airport }) => destination_airport,
-					// 		)}
-					// 	/>
-					// );
+					return (
+						<AirportsMap
+							airports={routes.map(
+								({ destination_airport }) => destination_airport,
+							)}
+						/>
+					);
 				}}
 			</Await>
 		</div>
