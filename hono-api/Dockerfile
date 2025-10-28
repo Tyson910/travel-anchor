@@ -2,6 +2,10 @@
 FROM oven/bun:latest AS base
 WORKDIR /app
 
+# Allow passing DATABASE_URL during build
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 # Copy package files and install dependencies
 COPY package.json bun.lock ./
 COPY data-access-layer/package.json ./data-access-layer/
@@ -9,6 +13,9 @@ COPY hono-api/package.json ./hono-api/
 COPY react-router-app/package.json ./react-router-app/
 
 RUN bun install --frozen-lockfile --ignore-scripts --filter './hono-api'
+
+# Generate database types from data-access-layer
+RUN cd data-access-layer && bun run db:inspect
 
 # Copy source code
 COPY . .
