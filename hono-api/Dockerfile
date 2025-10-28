@@ -2,9 +2,11 @@
 FROM oven/bun:latest AS base
 WORKDIR /app
 
-# Allow passing DATABASE_URL during build
 ARG DATABASE_URL
 ENV DATABASE_URL=$DATABASE_URL
+
+ARG FRONTEND_URL
+ENV FRONTEND_URL=$FRONTEND_URL
 
 # Copy package files and install dependencies
 COPY package.json bun.lock ./
@@ -26,6 +28,9 @@ RUN cd hono-api && bun run build
 # Production stage
 FROM oven/bun:latest AS production
 WORKDIR /app
+
+ARG FRONTEND_URL
+ENV FRONTEND_URL=$FRONTEND_URL
 
 # Copy built artifacts and dependencies
 COPY --from=base /app/node_modules ./node_modules

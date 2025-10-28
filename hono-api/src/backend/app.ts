@@ -15,6 +15,12 @@ import { openImageRoutes } from "#domains/og-image/routes.ts";
 import { logger } from "#logger";
 import { timing } from "#middleware/timing.ts";
 
+const frontEndURL = process.env.FRONTEND_URL;
+
+if (!frontEndURL) {
+	throw new Error("Missing frontendURL!");
+}
+
 const app = new OpenAPIHono()
 	.onError((err, c) => {
 		if (err instanceof HTTPException) {
@@ -30,7 +36,8 @@ const app = new OpenAPIHono()
 	.use(prettyJSON())
 	.use(
 		cors({
-			origin: ["http://localhost:3001"],
+			origin: ["http://localhost:3001", frontEndURL],
+			allowHeaders: ["GET"],
 		}),
 	)
 	.use(secureHeaders())
