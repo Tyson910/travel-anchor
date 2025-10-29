@@ -1,4 +1,4 @@
-import type { searchPageLoader } from "./loader.ts";
+import type { LoaderFunctionArgs } from "react-router";
 
 import React from "react";
 import { Await, useLoaderData } from "react-router";
@@ -17,13 +17,56 @@ import {
 } from "#components/ui/card.tsx";
 import { Separator } from "#components/ui/separator.tsx";
 import { Skeleton } from "#components/ui/skeleton.tsx";
-import { AirportsMap } from "./components/AirportsMap";
-import { DestinationListView } from "./components/DestinationListView";
-import { AirportSearchCombobox } from "./components/SearchBar";
-import { SortSelect } from "./components/SortSelect";
-import { ViewToggle } from "./components/ViewToggle";
-import { useAirportSearchParamsState } from "./hooks/use-airport-search-params";
-import { sortRoutes } from "./sorting-utils";
+import { getIATACodesFromSearchParams } from "#features/airport-search/hooks/use-airport-search-params.ts";
+import { rpcClient } from "#src/lib/rpc-client.ts";
+import { AirportsMap } from "./components/AirportsMap.tsx";
+import { DestinationListView } from "./components/DestinationListView.tsx";
+import { AirportSearchCombobox } from "./components/SearchBar.tsx";
+import { SortSelect } from "./components/SortSelect.tsx";
+import { ViewToggle } from "./components/ViewToggle.tsx";
+import { useAirportSearchParamsState } from "./hooks/use-airport-search-params.ts";
+import { sortRoutes } from "./sorting-utils.ts";
+
+export async function searchPageLoader({
+	request,
+}: LoaderFunctionArgs<unknown>) {
+	const requestURLObject = new URL(request.url);
+	const iataCodes = getIATACodesFromSearchParams(requestURLObject.searchParams);
+
+	if (iataCodes.length < 2) {
+		return { routes: [] };
+	}
+
+	const routes = rpcClient("/flight-route", {
+		query: {
+			IATA: iataCodes,
+		},
+		customFetchImpl: (req, init) => {
+			if (req instanceof URL) {
+				// workaround for weird better-fetch bug that prevents array query params
+				req.searchParams.delete("IATA");
+				iataCodes.forEach((code) => {
+					req.searchParams.append("IATA", code);
+				});
+			}
+			return fetch(req, init);
+		},
+	}).then(({ data, error }) => {
+		if (error) {
+			console.log(error);
+			throw error;
+		}
+		return data.routes;
+	});
+
+	return {
+		routes,
+	};
+}
+
+export type SearchPageLoaderResponse = Awaited<
+	Exclude<Awaited<ReturnType<typeof searchPageLoader>>["routes"], never[]>
+>;
 
 export function SearchPage() {
 	const loaderData = useLoaderData<typeof searchPageLoader>();

@@ -1,4 +1,4 @@
-import type { SearchPageLoaderResponse } from "#features/airport-search/loader.ts";
+import type { SearchPageLoaderResponse } from "#features/airport-search/route.tsx";
 
 import { sortRoutes } from "./sorting-utils";
 import { describe, expect, it } from "bun:test";

@@ -1,4 +1,4 @@
-import type { SearchPageLoaderResponse } from "#features/airport-search/loader.ts";
+import type { SearchPageLoaderResponse } from "#features/airport-search/route.tsx";
 
 import * as z from "zod";
 
