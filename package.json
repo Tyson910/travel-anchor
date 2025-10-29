@@ -6,8 +6,7 @@
 	"private": "true",
 	"scripts": {
 		"format": "bunx biome format --write",
-		"lint": "bunx biome check --write",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"lint": "bunx biome check --write"
 	},
 	"keywords": [],
 	"author": "",
@@ -19,7 +18,6 @@
 	"workspaces": {
 		"packages": [
 			"hono-api",
-			"react-router-app",
 			"data-access-layer",
 			"react-router-spa"
 		],
