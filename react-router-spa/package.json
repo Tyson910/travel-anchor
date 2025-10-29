@@ -12,8 +12,8 @@
 		"check": "tsc --noEmit",
 		"dev": "vite",
 		"build": "tsc -b && vite build",
-		"lint": "eslint .",
-		"preview": "bun run build && vite preview",
+		"lint": "bun run --cwd .. lint",
+		"preview": "vite preview",
 		"deploy": "bun run build && wrangler deploy",
 		"cf-typegen": "wrangler types"
 	},
