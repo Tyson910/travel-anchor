@@ -29,6 +29,12 @@ RUN cd hono-api && bun run build
 FROM oven/bun:latest AS production
 WORKDIR /app
 
+# Install system fonts for text rendering in OG images
+RUN apk add --no-cache \
+    ttf-liberation \
+    fontconfig \
+    dejavu-fonts-ttf
+
 ARG FRONTEND_URL
 ENV FRONTEND_URL=$FRONTEND_URL
 
