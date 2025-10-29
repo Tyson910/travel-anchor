@@ -4,4 +4,8 @@ export {
 	getIATACodesFromSearchParams,
 	useAirportSearchParamsState,
 } from "./hooks/use-airport-search-params";
-export { SearchPage, type SearchPageLoaderResponse, searchPageLoader } from "./route.tsx";
+export {
+	SearchPage,
+	type SearchPageLoaderResponse,
+	searchPageLoader,
+} from "./route.tsx";

@@ -6,6 +6,7 @@ import {
 	SearchPage,
 	searchPageLoader,
 } from "#features/airport-search/index.tsx";
+import { HomePage } from "#features/landing/route.tsx";
 
 const routes = [
 	{
@@ -21,7 +22,7 @@ const routes = [
 		children: [
 			{
 				path: "/",
-				element: <div className="bg-black">Hello World</div>,
+				Component: HomePage,
 			},
 			{
 				path: "/search",
