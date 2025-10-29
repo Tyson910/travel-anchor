@@ -5,8 +5,8 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "react-spa",
-	"main": "worker/index.ts",
-	"compatibility_date": "2025-10-24",
+	// "main": "worker/index.ts",
+	"compatibility_date": "2025-10-11",
 	"assets": {
 		"not_found_handling": "single-page-application"
 	},
