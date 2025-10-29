@@ -73,46 +73,49 @@ export function SearchPage() {
 	const { activeView, activeSort } = useAirportSearchParamsState();
 
 	return (
-		<div className="container mx-auto px-4 py-8">
-			<div className="pb-4 mb-4 border-b">
-				<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
-					<React.Suspense fallback={<div>Finding mutual routes...</div>}>
-						<Await resolve={loaderData.routes} errorElement={<> </>}>
-							{(routes) => {
-								return <>Found {routes.length} mutual flight destinations</>;
-							}}
-						</Await>
-					</React.Suspense>
-				</h1>
-				<div className="flex flex-row justify-between items-end">
-					<AirportSearchCombobox />
-					<div className="flex flex-row items-end gap-4">
-						{activeView == "grid" ? <SortSelect /> : null}
+		<>
+			<title>Mutual Flight Destinations - Travel Anchor</title>
+			<div className="container mx-auto px-4 py-8">
+				<div className="pb-4 mb-4 border-b">
+					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
+						<React.Suspense fallback={<div>Finding mutual routes...</div>}>
+							<Await resolve={loaderData.routes} errorElement={<> </>}>
+								{(routes) => {
+									return <>Found {routes.length} mutual flight destinations</>;
+								}}
+							</Await>
+						</React.Suspense>
+					</h1>
+					<div className="flex flex-row justify-between items-end">
+						<AirportSearchCombobox />
+						<div className="flex flex-row items-end gap-4">
+							{activeView == "grid" ? <SortSelect /> : null}
 
-						<ViewToggle />
+							<ViewToggle />
+						</div>
 					</div>
 				</div>
+				<React.Suspense fallback={<LoadingSkeleton />}>
+					<Await resolve={loaderData.routes} errorElement={<ErrorElement />}>
+						{(routes) => {
+							const sortedRoutes = sortRoutes(routes, activeSort);
+
+							if (activeView == "grid") {
+								return <DestinationListView routes={sortedRoutes} />;
+							}
+
+							return (
+								<AirportsMap
+									airports={sortedRoutes.map(
+										({ destination_airport }) => destination_airport,
+									)}
+								/>
+							);
+						}}
+					</Await>
+				</React.Suspense>
 			</div>
-			<React.Suspense fallback={<LoadingSkeleton />}>
-				<Await resolve={loaderData.routes} errorElement={<ErrorElement />}>
-					{(routes) => {
-						const sortedRoutes = sortRoutes(routes, activeSort);
-
-						if (activeView == "grid") {
-							return <DestinationListView routes={sortedRoutes} />;
-						}
-
-						return (
-							<AirportsMap
-								airports={sortedRoutes.map(
-									({ destination_airport }) => destination_airport,
-								)}
-							/>
-						);
-					}}
-				</Await>
-			</React.Suspense>
-		</div>
+		</>
 	);
 }
 

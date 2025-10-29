@@ -38,45 +38,48 @@ export function HomePage() {
 	};
 
 	return (
-		<main className="flex items-center justify-center px-4 py-20">
-			<div className="w-full max-w-2xl space-y-8">
-				<div className="text-center space-y-6">
-					<h1 className="text-2xl font-light tracking-tight">
-						Select at least 2 airports to find mutual destinations
-					</h1>
+		<>
+			<title>Travel Anchor - Smart Flight Connections</title>
+			<main className="flex items-center justify-center px-4 py-20">
+				<div className="w-full max-w-2xl space-y-8">
+					<div className="text-center space-y-6">
+						<h1 className="text-2xl font-light tracking-tight">
+							Select at least 2 airports to find mutual destinations
+						</h1>
 
-					<div className="space-y-4">
-						<label
-							htmlFor={id}
-							className="text-sm text-muted-foreground sr-only"
-						>
-							Select airports to search from:
-						</label>
-						<div className="mt-4">
-							<AirportSearchCombobox id={id} />
+						<div className="space-y-4">
+							<label
+								htmlFor={id}
+								className="text-sm text-muted-foreground sr-only"
+							>
+								Select airports to search from:
+							</label>
+							<div className="mt-4">
+								<AirportSearchCombobox id={id} />
+							</div>
+
+							<p className="text-sm text-muted-foreground">
+								{iataCodes.length >= 2
+									? `Find destinations that all airports can reach directly`
+									: null}
+							</p>
 						</div>
+					</div>
 
-						<p className="text-sm text-muted-foreground">
-							{iataCodes.length >= 2
-								? `Find destinations that all airports can reach directly`
-								: null}
-						</p>
+					<div className="text-center">
+						<Button
+							size="lg"
+							onClick={handleSearch}
+							disabled={iataCodes.length < 2}
+							className="w-full sm:w-auto"
+						>
+							Find Routes
+							<ArrowRight className="w-4 h-4 ml-2" />
+						</Button>
 					</div>
 				</div>
-
-				<div className="text-center">
-					<Button
-						size="lg"
-						onClick={handleSearch}
-						disabled={iataCodes.length < 2}
-						className="w-full sm:w-auto"
-					>
-						Find Routes
-						<ArrowRight className="w-4 h-4 ml-2" />
-					</Button>
-				</div>
-			</div>
-		</main>
+			</main>
+		</>
 	);
 }
 
