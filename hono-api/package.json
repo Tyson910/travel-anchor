@@ -18,7 +18,7 @@
 	},
 	"scripts": {
 		"dev": "bun --watch src/index.ts",
-		"build": "rm -rf dist && tsc && bun build ./src/index.ts --outdir ./dist --target node --minify --sourcemap",
+		"build": "rm -rf dist && tsc && bun build ./src/index.ts --outdir ./dist --target bun --minify --sourcemap",
 		"check": "tsc --noEmit",
 		"start": "bun run ./dist/index.js",
 		"test": "bun test",
