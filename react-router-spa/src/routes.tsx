@@ -1,5 +1,6 @@
 import { createBrowserRouter, Outlet, type RouteObject } from "react-router";
 
+import { ErrorBoundary } from "#components/ErrorBoundary.tsx";
 import { MinimalFooter } from "#components/layout/MinimalFooter.tsx";
 import { MinimalHeader } from "#components/layout/MinimalHeader.tsx";
 
@@ -15,6 +16,7 @@ const routes = [
 				<MinimalFooter />
 			</div>
 		),
+		ErrorBoundary: ErrorBoundary,
 		children: [
 			{
 				path: "/",
