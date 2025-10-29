@@ -70,7 +70,7 @@ export type SearchPageLoaderResponse = Awaited<
 
 export function SearchPage() {
 	const loaderData = useLoaderData<typeof searchPageLoader>();
-	const { activeView, activeSort } = useAirportSearchParamsState();
+	const { activeView, activeSort, iataCodes } = useAirportSearchParamsState();
 
 	return (
 		<>
@@ -78,7 +78,18 @@ export function SearchPage() {
 			<meta
 				name="description"
 				content="Find mutual direct-flight destinations for your group travel"
-			></meta>
+			/>
+			<meta
+				property="og:image"
+				content={`${import.meta.env.VITE_PUBLIC_API_URL}/og-image?IATA=${iataCodes.join("&IATA=")}`}
+			/>
+			<meta property="og:image:height" content="1200" />
+			<meta property="og:image:width" content="630" />
+			<meta
+				property="og:image:alt"
+				content="Mutual Flight Destinations for JFK, LAX, ORD"
+			/>
+			<meta property="og:image:type" content="image/png" />
 			<div className="container mx-auto px-4 py-8">
 				<div className="pb-4 mb-4 border-b">
 					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
