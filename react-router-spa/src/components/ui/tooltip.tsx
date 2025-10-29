@@ -1,0 +1,77 @@
+"use client";
+
+import type * as React from "react";
+
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+
+import { cn } from "#src/lib/utils.ts";
+
+function TooltipProvider({
+	delayDuration = 0,
+	...props
+}: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
+	return (
+		<TooltipPrimitive.Provider
+			data-slot="tooltip-provider"
+			delayDuration={delayDuration}
+			{...props}
+		/>
+	);
+}
+
+function Tooltip({
+	...props
+}: React.ComponentProps<typeof TooltipPrimitive.Root>) {
+	return (
+		<TooltipProvider>
+			<TooltipPrimitive.Root data-slot="tooltip" {...props} />
+		</TooltipProvider>
+	);
+}
+
+function TooltipTrigger({
+	...props
+}: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
+	return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
+}
+
+function TooltipContent({
+	className,
+	sideOffset = 0,
+	children,
+	variant = "default",
+	...props
+}: React.ComponentProps<typeof TooltipPrimitive.Content> & {
+	variant?: "default" | "technical" | "data";
+}) {
+	return (
+		<TooltipPrimitive.Portal>
+			<TooltipPrimitive.Content
+				data-slot="tooltip-content"
+				sideOffset={sideOffset}
+				className={cn(
+					"animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit origin-(--radix-tooltip-content-transform-origin) px-3 py-1.5 text-xs text-balance",
+					variant === "default" && "bg-foreground text-background rounded-md",
+					variant === "technical" &&
+						"bg-foreground text-background font-sans font-light text-xs tracking-tighter border rounded-technical shadow-technical",
+					variant === "data" &&
+						"bg-background text-foreground font-sans font-medium text-xs tracking-wide border rounded-technical shadow-module",
+					className,
+				)}
+				{...props}
+			>
+				{children}
+				<TooltipPrimitive.Arrow
+					className={cn(
+						"z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]",
+						variant === "default" && "bg-foreground fill-foreground",
+						variant === "technical" && "bg-foreground fill-foreground border",
+						variant === "data" && "bg-background fill-background border",
+					)}
+				/>
+			</TooltipPrimitive.Content>
+		</TooltipPrimitive.Portal>
+	);
+}
+
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
