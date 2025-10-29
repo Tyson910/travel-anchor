@@ -30,10 +30,11 @@ FROM oven/bun:latest AS production
 WORKDIR /app
 
 # Install system fonts for text rendering in OG images
-RUN apk add --no-cache \
-    ttf-liberation \
+RUN apt-get update && apt-get install -y \
+    fonts-liberation \
     fontconfig \
-    dejavu-fonts-ttf
+    fonts-dejavu-core \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ARG FRONTEND_URL
 ENV FRONTEND_URL=$FRONTEND_URL
