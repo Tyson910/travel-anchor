@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 
 import React from "react";
-import { Await, useLoaderData } from "react-router";
+import { Await, redirect, useLoaderData } from "react-router";
 
 import {
 	Alert,
@@ -33,8 +33,8 @@ export async function searchPageLoader({
 	const requestURLObject = new URL(request.url);
 	const iataCodes = getIATACodesFromSearchParams(requestURLObject.searchParams);
 
-	if (iataCodes.length < 2) {
-		return { routes: [] };
+	if (iataCodes.length == 0) {
+		throw redirect(`/${requestURLObject.search}`);
 	}
 
 	const routes = rpcClient("/flight-route", {
