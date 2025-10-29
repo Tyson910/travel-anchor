@@ -11,5 +11,10 @@ export default defineConfig({
 		port: 3001,
 		strictPort: true,
 	},
+	preview: {
+		host: true,
+		port: 3001,
+		strictPort: true,
+	},
 	plugins: [react(), cloudflare(), tailwindcss(), devtoolsJson()],
 });
