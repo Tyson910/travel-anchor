@@ -60,7 +60,7 @@ export function AirportSearchCombobox() {
 			}}
 			multiple
 		>
-			<div className="w-128 flex flex-col gap-3">
+			<div className="w-lg max-w-full flex flex-col gap-3">
 				<Label htmlFor={id}>Airports: </Label>
 
 				<ComboboxChips ref={containerRef}>

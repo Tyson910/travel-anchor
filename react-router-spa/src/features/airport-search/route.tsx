@@ -101,11 +101,10 @@ export function SearchPage() {
 							</Await>
 						</React.Suspense>
 					</h1>
-					<div className="flex flex-row justify-between items-end">
+					<div className="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-5 lg:gap-0">
 						<AirportSearchCombobox />
-						<div className="flex flex-row items-end gap-4">
+						<div className="flex flex-col lg:flex-row items-start lg:items-end gap-4">
 							{activeView == "grid" ? <SortSelect /> : null}
-
 							<ViewToggle />
 						</div>
 					</div>
