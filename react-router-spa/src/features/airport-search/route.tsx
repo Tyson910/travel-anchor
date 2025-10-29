@@ -75,6 +75,10 @@ export function SearchPage() {
 	return (
 		<>
 			<title>Mutual Flight Destinations - Travel Anchor</title>
+			<meta
+				name="description"
+				content="Find mutual direct-flight destinations for your group travel"
+			></meta>
 			<div className="container mx-auto px-4 py-8">
 				<div className="pb-4 mb-4 border-b">
 					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">

@@ -40,6 +40,10 @@ export function HomePage() {
 	return (
 		<>
 			<title>Travel Anchor - Smart Flight Connections</title>
+			<meta
+				name="description"
+				content="Find direct-flight connections between multiple airports with intelligent route analysis."
+			></meta>
 			<main className="flex items-center justify-center px-4 py-20">
 				<div className="w-full max-w-2xl space-y-8">
 					<div className="text-center space-y-6">
