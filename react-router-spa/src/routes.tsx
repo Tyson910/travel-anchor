@@ -1,3 +1,4 @@
+import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
 import { createBrowserRouter, Outlet, type RouteObject } from "react-router";
 
 import { ErrorBoundary } from "#components/ErrorBoundary.tsx";
@@ -9,11 +10,13 @@ const routes = [
 		hydrateFallbackElement: null,
 		element: (
 			<div className="min-h-screen bg-background flex flex-col">
-				<MinimalHeader />
-				<div className="flex-1">
-					<Outlet />
-				</div>
-				<MinimalFooter />
+				<NuqsAdapter>
+					<MinimalHeader />
+					<div className="flex-1">
+						<Outlet />
+					</div>
+					<MinimalFooter />
+				</NuqsAdapter>
 			</div>
 		),
 		ErrorBoundary: ErrorBoundary,
