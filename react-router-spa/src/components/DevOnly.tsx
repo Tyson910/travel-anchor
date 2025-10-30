@@ -5,7 +5,7 @@ import { cn } from "#src/lib/utils.ts";
 export function DevOnly({
 	children,
 	className,
-}: PropsWithChildren<{ className: string }>) {
+}: PropsWithChildren<{ className?: string }>) {
 	return (
 		<pre
 			className={cn(
