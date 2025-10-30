@@ -161,7 +161,7 @@ function SearchPage() {
 						) : null}
 
 						<ViewToggle
-							activeView={searchParams.view}
+							activeView={activeView}
 							setView={(value) => {
 								navigate({
 									search: (prev) => ({
