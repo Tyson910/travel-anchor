@@ -8,7 +8,11 @@
 	"files": {
 		"ignoreUnknown": false,
 		"maxSize": 2000000,
-		"includes": ["**/*", "!**/worker-configuration.d.ts", "!routeTree.gen.ts"]
+		"includes": [
+			"**/*",
+			"!**/worker-configuration.d.ts",
+			"!**/routeTree.gen.ts"
+		]
 	},
 	"formatter": {
 		"enabled": true,
