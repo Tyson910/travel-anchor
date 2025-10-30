@@ -1,4 +1,5 @@
 import { Await, createFileRoute } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod";
 
 import { DestinationListView, ViewToggle } from "@/features/airport-search";
@@ -37,9 +38,7 @@ export const Route = createFileRoute("/search")({
 	// gcTime: 0,
 	// Only reload the route when the user navigates to it or when deps change
 	shouldReload: false,
-	validateSearch: (search) => {
-		return searchSchema.parse(search);
-	},
+	validateSearch: zodValidator(searchSchema),
 	loaderDeps: ({ search }) => ({ iataCodes: search.codes }),
 	component: SearchPage,
 	loader: (ctx) => {
