@@ -1,5 +1,5 @@
 {
-	"name": "@travel-anchor/react-spa",
+	"name": "@travel-anchor/react-router-spa",
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
@@ -31,6 +31,7 @@
 		"cmdk": "^1.1.1",
 		"leaflet": "^1.9.4",
 		"lucide-react": "^0.548.0",
+		"nuqs": "^2.7.2",
 		"radix-ui": "^1.4.3",
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",
