@@ -1,7 +1,9 @@
 import { Await, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
+import { useId } from "react";
 import { z } from "zod";
 
+import { Label } from "@/components/ui/label";
 import { DestinationListView, ViewToggle } from "@/features/airport-search";
 import { AirportsMap } from "@/features/airport-search/components/AirportsMap";
 import { AirportSearchCombobox } from "@/features/airport-search/components/SearchBar";
@@ -21,8 +23,6 @@ import {
 	sortRoutes,
 } from "~/features/airport-search/sorting-utils";
 import { rpcClient } from "~/lib/rpc-client";
-import { Label } from "@/components/ui/label";
-import { useId } from "react";
 
 const searchSchema = z.object({
 	codes: oneOrManyIATAValidator.optional().default([]),
@@ -147,9 +147,31 @@ function SearchPage() {
 					</div>
 
 					<div className="flex flex-row items-end gap-4">
-						{activeView == "grid" ? <SortSelect /> : null}
+						{activeView == "grid" ? (
+							<SortSelect
+								activeSort={searchParams.sort}
+								setSort={(value) => {
+									navigate({
+										search: (prev) => ({
+											...prev,
+											sort: value,
+										}),
+									});
+								}}
+							/>
+						) : null}
 
-						<ViewToggle />
+						<ViewToggle
+							activeView={searchParams.view}
+							setView={(value) => {
+								navigate({
+									search: (prev) => ({
+										...prev,
+										view: value,
+									}),
+								});
+							}}
+						/>
 					</div>
 				</div>
 			</div>

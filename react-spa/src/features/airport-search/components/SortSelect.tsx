@@ -6,12 +6,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import { useAirportSearchParamsState } from "../hooks/use-airport-search-params";
 import { SORT_OPTIONS, type SortOption } from "../sorting-utils";
 
-export function SortSelect() {
-	const { activeSort, setSort } = useAirportSearchParamsState("/search");
-
+export function SortSelect({
+	activeSort,
+	setSort,
+}: {
+	activeSort: SortOption;
+	setSort: (value: SortOption) => void;
+}) {
 	return (
 		<div className="flex flex-col gap-y-3 w-64">
 			<Label>Sort By:</Label>

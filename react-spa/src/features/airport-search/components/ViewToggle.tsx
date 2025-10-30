@@ -1,10 +1,14 @@
 import { List, Map as MapIcon } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
-import { useAirportSearchParamsState } from "../hooks/use-airport-search-params";
 
-export function ViewToggle() {
-	const { activeView, setView } = useAirportSearchParamsState("/search");
+export function ViewToggle({
+	activeView,
+	setView,
+}: {
+	activeView: "grid" | "map";
+	setView: (value: "grid" | "map") => void;
+}) {
 	return (
 		<div className="inline-flex rounded-lg border border-input bg-background p-1">
 			<Button
