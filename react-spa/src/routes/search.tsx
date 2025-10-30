@@ -1,4 +1,4 @@
-import { Await, createFileRoute } from "@tanstack/react-router";
+import { Await, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod";
 
@@ -21,6 +21,8 @@ import {
 	sortRoutes,
 } from "~/features/airport-search/sorting-utils";
 import { rpcClient } from "~/lib/rpc-client";
+import { Label } from "@/components/ui/label";
+import { useId } from "react";
 
 const searchSchema = z.object({
 	codes: oneOrManyIATAValidator.optional().default([]),
@@ -79,6 +81,8 @@ export const Route = createFileRoute("/search")({
 function SearchPage() {
 	const { routes } = Route.useLoaderData();
 	const searchParams = Route.useSearch();
+	const navigate = useNavigate({ from: "/search" });
+	const inputId = useId();
 
 	if (Array.isArray(routes)) {
 		return (
@@ -123,7 +127,25 @@ function SearchPage() {
 					</Await>
 				</h1>
 				<div className="flex flex-row justify-between items-end">
-					<AirportSearchCombobox />
+					<div className="w-lg">
+						<Label htmlFor={inputId} className="mb-3">
+							Airports:
+						</Label>
+						<AirportSearchCombobox
+							id={inputId}
+							iataCodes={searchParams.codes}
+							onValueChange={(values) => {
+								const dedupedIATACodes = [...new Set(values)];
+								navigate({
+									search: (prev) => ({
+										...prev,
+										codes: dedupedIATACodes,
+									}),
+								});
+							}}
+						/>
+					</div>
+
 					<div className="flex flex-row items-end gap-4">
 						{activeView == "grid" ? <SortSelect /> : null}
 

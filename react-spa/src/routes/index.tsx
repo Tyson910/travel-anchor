@@ -6,25 +6,14 @@ import {
 	useNavigate,
 } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { ArrowRight, LoaderCircle } from "lucide-react";
-import { useId, useRef, useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { useId } from "react";
 import z from "zod";
 
 import { cn } from "@/lib/utils";
 import { oneOrManyIATAValidator } from "@/lib/validators";
-import {
-	Combobox,
-	ComboboxChip,
-	ComboboxChipRemove,
-	ComboboxChips,
-	ComboboxContent,
-	ComboboxInput,
-	ComboboxValue,
-} from "~/components/ui/base-combobox.tsx";
 import { buttonVariants } from "~/components/ui/button.tsx";
-import { AirportSearchResults } from "~/features/airport-search/components/SearchBar.tsx";
-import { useDebounce } from "~/features/airport-search/hooks/use-debounce.ts";
-import { useAirportSearchQuery } from "~/features/airport-search/hooks/use-search.ts";
+import { AirportSearchCombobox } from "~/features/airport-search/components/SearchBar.tsx";
 
 const searchSchema = z.object({
 	codes: oneOrManyIATAValidator.optional().default([]),
@@ -43,7 +32,7 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-	const navigate = useNavigate();
+	const navigate = useNavigate({ from: "/" });
 	const id = useId();
 	const { codes: iataCodes } = Route.useSearch();
 
@@ -62,7 +51,6 @@ function HomePage() {
 	const handleSearch = (values: string[]) => {
 		const dedupedIATACodes = [...new Set(values)];
 		navigate({
-			to: "/",
 			search: {
 				codes: dedupedIATACodes,
 			},
@@ -95,7 +83,11 @@ function HomePage() {
 								Select airports to search from:
 							</label>
 							<div className="mt-4">
-								<AirportSearchCombobox id={id} onValueChange={handleSearch} />
+								<AirportSearchCombobox
+									iataCodes={iataCodes}
+									id={id}
+									onValueChange={handleSearch}
+								/>
 							</div>
 
 							<p className="text-sm text-muted-foreground">
@@ -135,58 +127,5 @@ function HomePage() {
 				</div>
 			</main>
 		</>
-	);
-}
-
-function AirportSearchCombobox({
-	id,
-	onValueChange,
-}: {
-	id?: string;
-	onValueChange: (codes: string[]) => void;
-}) {
-	const containerRef = useRef<HTMLDivElement | null>(null);
-
-	const { codes: iataCodes } = Route.useSearch();
-
-	const [searchTerm, setSearchTerm] = useState("");
-	const { debouncedValue: debouncedSearchTerm, isDebouncing } =
-		useDebounce(searchTerm);
-
-	const { airports, isLoading } = useAirportSearchQuery(debouncedSearchTerm);
-
-	return (
-		<Combobox
-			filter={null}
-			inputValue={searchTerm}
-			onInputValueChange={setSearchTerm}
-			items={airports}
-			value={iataCodes}
-			onValueChange={async (value) => {
-				onValueChange(value as string[]);
-			}}
-			multiple
-		>
-			<div className="w-full flex flex-col gap-3">
-				<ComboboxChips ref={containerRef}>
-					<ComboboxValue>
-						{iataCodes.map((iataCode) => (
-							<ComboboxChip key={iataCode} aria-label={iataCode}>
-								{iataCode}
-								<ComboboxChipRemove />
-							</ComboboxChip>
-						))}
-						<ComboboxInput id={id} />
-					</ComboboxValue>
-					{isLoading || isDebouncing ? (
-						<LoaderCircle className="size-4 shrink-0 opacity-50 animate-spin" />
-					) : null}
-				</ComboboxChips>
-			</div>
-
-			<ComboboxContent anchor={containerRef}>
-				<AirportSearchResults searchTerm={debouncedSearchTerm} />
-			</ComboboxContent>
-		</Combobox>
 	);
 }

@@ -29,17 +29,22 @@ import {
 	EmptyMedia,
 	EmptyTitle,
 } from "~/components/ui/empty";
-import { Label } from "~/components/ui/label";
-import { useAirportSearchParamsState } from "../hooks/use-airport-search-params";
 import { useDebounce } from "../hooks/use-debounce";
 import { useAirportSearchQuery } from "../hooks/use-search";
 
-export function AirportSearchCombobox() {
+export function AirportSearchCombobox({
+	iataCodes,
+	id,
+	onValueChange,
+}: {
+	id?: string;
+	iataCodes: string[];
+	onValueChange: (codes: string[]) => void;
+}) {
 	const containerRef = useRef<HTMLDivElement | null>(null);
-	const id = useId();
+	const generatedId = useId();
 
-	const { iataCodes, addListOfAirports } = useAirportSearchParamsState();
-
+	const inputId = id ?? generatedId;
 	const [searchTerm, setSearchTerm] = useState("");
 	const { debouncedValue: debouncedSearchTerm, isDebouncing } =
 		useDebounce(searchTerm);
@@ -54,13 +59,11 @@ export function AirportSearchCombobox() {
 			items={airports}
 			value={iataCodes}
 			onValueChange={async (value) => {
-				addListOfAirports(value as string[]);
+				onValueChange(value as string[]);
 			}}
 			multiple
 		>
-			<div className="w-128 flex flex-col gap-3">
-				<Label htmlFor={id}>Airports: </Label>
-
+			<div className="flex flex-col gap-3">
 				<ComboboxChips ref={containerRef}>
 					<ComboboxValue>
 						{iataCodes.map((iataCode) => (
@@ -69,7 +72,7 @@ export function AirportSearchCombobox() {
 								<ComboboxChipRemove />
 							</ComboboxChip>
 						))}
-						<ComboboxInput id={id} />
+						<ComboboxInput id={inputId} />
 					</ComboboxValue>
 					{isLoading || isDebouncing ? (
 						<LoaderCircle className="size-4 shrink-0 opacity-50 animate-spin" />
