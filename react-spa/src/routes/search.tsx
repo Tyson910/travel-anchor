@@ -3,7 +3,7 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod";
 
 import { DestinationListView, ViewToggle } from "@/features/airport-search";
-import { AirportsMap } from "@/features/airport-search/components/AirportsMap.client";
+import { AirportsMap } from "@/features/airport-search/components/AirportsMap";
 import { AirportSearchCombobox } from "@/features/airport-search/components/SearchBar";
 import { SortSelect } from "@/features/airport-search/components/SortSelect";
 import { oneOrManyIATAValidator } from "@/lib/validators";
