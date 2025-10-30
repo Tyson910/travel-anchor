@@ -136,3 +136,28 @@ code {
 		@apply bg-background text-foreground;
 	}
 }
+
+.shake-element {
+	animation: shake 0.5s ease-in-out; /* Apply the shake animation */
+}
+
+@keyframes shake {
+	0% {
+		transform: translateX(0);
+	} /* Start at original position */
+	20% {
+		transform: translateX(-10px);
+	} /* Move left */
+	40% {
+		transform: translateX(10px);
+	} /* Move right */
+	60% {
+		transform: translateX(-10px);
+	} /* Move left again */
+	80% {
+		transform: translateX(10px);
+	} /* Move right again */
+	100% {
+		transform: translateX(0);
+	} /* Return to original position */
+}

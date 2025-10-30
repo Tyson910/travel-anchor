@@ -1,40 +1,192 @@
-import { createFileRoute } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Link,
+	stripSearchParams,
+	useBlocker,
+	useNavigate,
+} from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { ArrowRight, LoaderCircle } from "lucide-react";
+import { useId, useRef, useState } from "react";
+import z from "zod";
 
-import logo from "../logo.svg";
+import { cn } from "@/lib/utils";
+import { oneOrManyIATAValidator } from "@/lib/validators";
+import {
+	Combobox,
+	ComboboxChip,
+	ComboboxChipRemove,
+	ComboboxChips,
+	ComboboxContent,
+	ComboboxInput,
+	ComboboxValue,
+} from "~/components/ui/base-combobox.tsx";
+import { buttonVariants } from "~/components/ui/button.tsx";
+import { AirportSearchResults } from "~/features/airport-search/components/SearchBar.tsx";
+import { useDebounce } from "~/features/airport-search/hooks/use-debounce.ts";
+import { useAirportSearchQuery } from "~/features/airport-search/hooks/use-search.ts";
 
-export const Route = createFileRoute("/")({
-	component: App,
+const searchSchema = z.object({
+	codes: oneOrManyIATAValidator.optional().default([]),
 });
 
-function App() {
+export const Route = createFileRoute("/")({
+	// Only reload the route when the user navigates to it or when deps change
+	shouldReload: false,
+	validateSearch: zodValidator(searchSchema),
+	loaderDeps: ({ search }) => ({ iataCodes: search.codes }),
+	component: HomePage,
+	search: {
+		// strip empty codes from URL
+		middlewares: [stripSearchParams({ codes: [] })],
+	},
+});
+
+function HomePage() {
+	const navigate = useNavigate();
+	const id = useId();
+	const { codes: iataCodes } = Route.useSearch();
+
+	const blocker = useBlocker({
+		shouldBlockFn: ({ next }) => {
+			return (
+				next.fullPath == "/search" &&
+				"codes" in next.search &&
+				next.search.codes.length < 2
+			);
+		},
+		withResolver: true,
+		enableBeforeUnload: false,
+	});
+
+	const handleSearch = (values: string[]) => {
+		const dedupedIATACodes = [...new Set(values)];
+		navigate({
+			to: "/",
+			search: {
+				codes: dedupedIATACodes,
+			},
+		});
+
+		if (dedupedIATACodes.length > 1 && typeof blocker.reset == "function") {
+			blocker.reset();
+		}
+	};
+
 	return (
-		<div className="text-center">
-			<header className="min-h-screen flex flex-col items-center justify-center bg-[#282c34] text-white text-[calc(10px+2vmin)]">
-				<img
-					src={logo}
-					className="h-[40vmin] pointer-events-none animate-[spin_20s_linear_infinite]"
-					alt="logo"
-				/>
-				<p>
-					Edit <code>src/routes/index.tsx</code> and save to reload.
-				</p>
-				<a
-					className="text-[#61dafb] hover:underline"
-					href="https://reactjs.org"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Learn React
-				</a>
-				<a
-					className="text-[#61dafb] hover:underline"
-					href="https://tanstack.com"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Learn TanStack
-				</a>
-			</header>
-		</div>
+		<>
+			<title>Travel Anchor - Smart Flight Connections</title>
+			<meta
+				name="description"
+				content="Find direct-flight connections between multiple airports with intelligent route analysis."
+			></meta>
+			<main className="flex items-center justify-center px-4 py-20">
+				<div className="w-full max-w-2xl space-y-8">
+					<div className="text-center space-y-6">
+						<h1 className="text-2xl font-light tracking-tight">
+							Select at least 2 airports to find mutual destinations
+						</h1>
+
+						<div className="space-y-4">
+							<label
+								htmlFor={id}
+								className="text-sm text-muted-foreground sr-only"
+							>
+								Select airports to search from:
+							</label>
+							<div className="mt-4">
+								<AirportSearchCombobox id={id} onValueChange={handleSearch} />
+							</div>
+
+							<p className="text-sm text-muted-foreground">
+								{iataCodes.length >= 2
+									? `Find destinations that all airports can reach directly`
+									: null}
+							</p>
+						</div>
+					</div>
+
+					<div className="text-center">
+						<Link
+							to="/search"
+							search={{
+								codes: iataCodes,
+							}}
+							onClick={blocker.reset}
+							className={buttonVariants({
+								variant: "primary",
+								size: "lg",
+								class: cn(
+									"w-full sm:w-auto",
+									blocker.status == "blocked" && "shake-element",
+								),
+							})}
+						>
+							Find Routes
+							<ArrowRight className="size-4 ml-2" />
+						</Link>
+
+						<p className="text-sm mt-4 text-destructive-foreground">
+							{blocker.status == "blocked"
+								? "Please select at least 2 airports"
+								: null}
+						</p>
+					</div>
+				</div>
+			</main>
+		</>
+	);
+}
+
+function AirportSearchCombobox({
+	id,
+	onValueChange,
+}: {
+	id?: string;
+	onValueChange: (codes: string[]) => void;
+}) {
+	const containerRef = useRef<HTMLDivElement | null>(null);
+
+	const { codes: iataCodes } = Route.useSearch();
+
+	const [searchTerm, setSearchTerm] = useState("");
+	const { debouncedValue: debouncedSearchTerm, isDebouncing } =
+		useDebounce(searchTerm);
+
+	const { airports, isLoading } = useAirportSearchQuery(debouncedSearchTerm);
+
+	return (
+		<Combobox
+			filter={null}
+			inputValue={searchTerm}
+			onInputValueChange={setSearchTerm}
+			items={airports}
+			value={iataCodes}
+			onValueChange={async (value) => {
+				onValueChange(value as string[]);
+			}}
+			multiple
+		>
+			<div className="w-full flex flex-col gap-3">
+				<ComboboxChips ref={containerRef}>
+					<ComboboxValue>
+						{iataCodes.map((iataCode) => (
+							<ComboboxChip key={iataCode} aria-label={iataCode}>
+								{iataCode}
+								<ComboboxChipRemove />
+							</ComboboxChip>
+						))}
+						<ComboboxInput id={id} />
+					</ComboboxValue>
+					{isLoading || isDebouncing ? (
+						<LoaderCircle className="size-4 shrink-0 opacity-50 animate-spin" />
+					) : null}
+				</ComboboxChips>
+			</div>
+
+			<ComboboxContent anchor={containerRef}>
+				<AirportSearchResults searchTerm={debouncedSearchTerm} />
+			</ComboboxContent>
+		</Combobox>
 	);
 }
