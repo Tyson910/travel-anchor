@@ -1,4 +1,9 @@
-import { Await, createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+	Await,
+	createFileRoute,
+	redirect,
+	useNavigate,
+} from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { useId } from "react";
 import { z } from "zod";
@@ -31,7 +36,7 @@ const searchSchema = z.object({
 });
 
 export type SearchPageLoaderResponse = Awaited<
-	Exclude<(typeof Route)["types"]["loaderData"]["routes"], never[]>
+	(typeof Route)["types"]["loaderData"]["routes"]
 >;
 
 export const Route = createFileRoute("/search")({
@@ -45,8 +50,13 @@ export const Route = createFileRoute("/search")({
 	component: SearchPage,
 	loader: (ctx) => {
 		const { iataCodes } = ctx.deps;
-		if (iataCodes.length < 2) {
-			return { routes: [] };
+		if (iataCodes.length == 0) {
+			throw redirect({
+				to: "/",
+				search: {
+					codes: iataCodes,
+				},
+			});
 		}
 		const routes = rpcClient("/flight-route", {
 			query: {
@@ -84,17 +94,6 @@ function SearchPage() {
 	const navigate = useNavigate({ from: "/search" });
 	const inputId = useId();
 
-	if (Array.isArray(routes)) {
-		return (
-			<div className="container mx-auto px-4 py-8">
-				<div className="pb-4 mb-4 border-b">
-					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
-						Select at least 2 airports to find mutual destinations
-					</h1>
-				</div>
-			</div>
-		);
-	}
 	const activeView = searchParams.view;
 
 	return (
