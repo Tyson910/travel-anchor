@@ -9,7 +9,7 @@ const routes = [
 	{
 		hydrateFallbackElement: null,
 		element: (
-			<div className="min-h-screen bg-background flex flex-col">
+			<div className="min-h-screen bg-background flex flex-col isolate">
 				<NuqsAdapter>
 					<MinimalHeader />
 					<div className="flex-1">
