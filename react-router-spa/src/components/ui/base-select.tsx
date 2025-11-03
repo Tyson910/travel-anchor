@@ -20,7 +20,7 @@ const SelectContext = React.createContext<{
 });
 
 // Root Component
-const Select = ({
+function Select<T, U extends boolean = false>({
 	indicatorPosition = "left",
 	indicatorVisibility = true,
 	indicator,
@@ -31,7 +31,7 @@ const Select = ({
 	indicatorVisibility?: boolean;
 	indicator?: ReactNode;
 	icon?: ReactNode;
-} & React.ComponentProps<typeof SelectPrimitive.Root>) => {
+} & React.ComponentProps<typeof SelectPrimitive.Root<T, U>>) {
 	return (
 		<SelectContext.Provider
 			value={{ indicatorPosition, indicatorVisibility, indicator, icon }}
@@ -39,7 +39,7 @@ const Select = ({
 			<SelectPrimitive.Root data-slot="select" {...props} />
 		</SelectContext.Provider>
 	);
-};
+}
 
 function SelectGroup({
 	...props
