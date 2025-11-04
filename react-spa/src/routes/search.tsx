@@ -9,10 +9,11 @@ import { useId } from "react";
 import { z } from "zod";
 
 import { Label } from "@/components/ui/label";
-import { DestinationListView, ViewToggle } from "@/features/airport-search";
 import { AirportsMap } from "@/features/airport-search/components/AirportsMap";
+import { DestinationListView } from "@/features/airport-search/components/DestinationListView";
 import { AirportSearchCombobox } from "@/features/airport-search/components/SearchBar";
 import { SortSelect } from "@/features/airport-search/components/SortSelect";
+import { ViewToggle } from "@/features/airport-search/components/ViewToggle";
 import { oneOrManyIATAValidator } from "@/lib/validators";
 import {
 	Alert,
