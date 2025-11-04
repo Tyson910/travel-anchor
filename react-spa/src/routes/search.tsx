@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { useId } from "react";
-import { z } from "zod";
+import * as z from "zod";
 
 import { Label } from "@/components/ui/label";
 import { AirportsMap } from "@/features/airport-search/components/AirportsMap";

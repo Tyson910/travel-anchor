@@ -8,7 +8,7 @@ import {
 import { zodValidator } from "@tanstack/zod-adapter";
 import { ArrowRight } from "lucide-react";
 import { useId } from "react";
-import z from "zod";
+import * as z from "zod";
 
 import { cn } from "@/lib/utils";
 import { oneOrManyIATAValidator } from "@/lib/validators";
