@@ -1,12 +1,7 @@
 import type { SearchPageLoaderResponse } from "../route";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	type Control,
-	type FieldErrors,
-	useController,
-	useForm,
-} from "react-hook-form";
+import { type Control, useController, useForm } from "react-hook-form";
 import z from "zod";
 
 import {
@@ -17,7 +12,7 @@ import {
 	SelectValue,
 } from "#components/ui/base-select.tsx";
 import { Button } from "#src/components/ui/button.tsx";
-import { Label } from "#src/components/ui/label.tsx";
+import { Field, FieldError, FieldLabel } from "#src/components/ui/field.tsx";
 
 const IATAValidator = z.string().length(3).toUpperCase();
 
@@ -50,12 +45,7 @@ export function FilterSelect(props: {
 	routes: SearchPageLoaderResponse;
 	onValueChange: (filterName: FilterSchema) => void;
 }) {
-	const {
-		control,
-		handleSubmit,
-		formState: { errors, isSubmitting },
-		watch,
-	} = useForm<FilterSchema>({
+	const { control, handleSubmit, formState, watch } = useForm<FilterSchema>({
 		resolver: zodResolver(airportSearchFiltersSchema),
 		defaultValues: {
 			codes: props.routes[0].origin_airport_options.map(
@@ -72,59 +62,50 @@ export function FilterSelect(props: {
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
-			<FilterTypeSelect control={control} errors={errors} />
+			<FilterTypeSelect control={control} />
 			<IATAFilterSelect
 				control={control}
 				origin_airport_options={props.routes[0].origin_airport_options}
-				errors={errors}
 			/>
 			<FilterValueSelect
 				control={control}
 				routes={props.routes}
 				fieldName={watchedFieldName}
-				errors={errors}
 			/>
 
-			<Button type="submit" disabled={isSubmitting} className="w-full">
-				{isSubmitting ? "Applying Filter..." : "Apply Filter"}
+			<Button
+				type="submit"
+				disabled={formState.isSubmitting}
+				className="w-full"
+			>
+				{formState.isSubmitting ? "Applying Filter..." : "Apply Filter"}
 			</Button>
 		</form>
 	);
 }
 
-function FilterTypeSelect({
-	control,
-	errors,
-}: {
-	control: Control<FilterSchema>;
-	errors: FieldErrors<FilterSchema>;
-}) {
-	const {
-		field,
-		fieldState: { error },
-	} = useController({
+function FilterTypeSelect({ control }: { control: Control<FilterSchema> }) {
+	const { field, fieldState } = useController({
 		name: "field_name",
 		control,
 		rules: { required: "Please select a filter type" },
 	});
 
 	return (
-		<>
-			<div className="flex flex-row items-center gap-x-4 mb-2">
-				<Label>Select Filter</Label>
-				{(error || errors.field_name) && (
-					<div className="text-red-500 text-sm">
-						{error?.message || errors.field_name?.message}
-					</div>
-				)}
-			</div>
+		<Field data-invalid={fieldState.invalid}>
+			<FieldLabel htmlFor={field.name}>Select Filter</FieldLabel>
 			<Select
 				items={filters}
-				value={field.value}
+				value={field.value ?? ""}
 				onValueChange={field.onChange}
 			>
-				<SelectTrigger className="w-full" onBlur={field.onBlur}>
-					<SelectValue placeholder="Select a filter type" />
+				<SelectTrigger
+					className="w-full"
+					onBlur={field.onBlur}
+					id={field.name}
+					aria-invalid={fieldState.invalid}
+				>
+					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>
 					{filters.map((item) => (
@@ -138,51 +119,46 @@ function FilterTypeSelect({
 					))}
 				</SelectContent>
 			</Select>
-		</>
+			{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+		</Field>
 	);
 }
 
 function IATAFilterSelect({
 	control,
 	origin_airport_options,
-	errors,
 }: {
 	control: Control<FilterSchema>;
 	origin_airport_options: SearchPageLoaderResponse[number]["origin_airport_options"];
-	errors: FieldErrors<FilterSchema>;
 }) {
 	const iataCodeOptions = origin_airport_options.map(({ iata_code, name }) => ({
 		value: iata_code,
 		label: name,
 	}));
 
-	const {
-		field,
-		fieldState: { error },
-	} = useController({
+	const { field, fieldState } = useController({
 		name: "codes",
 		control,
 		rules: { required: "Please select at least one airport" },
 	});
 
 	return (
-		<>
-			<div className="flex flex-row items-center gap-x-4 mb-2">
-				<Label>Which Airports to Apply This Filter?</Label>
-				{(error || errors.codes) && (
-					<div className="text-red-500 text-sm">
-						{error?.message || errors.codes?.message}
-					</div>
-				)}
-			</div>
-
+		<Field data-invalid={fieldState.invalid}>
+			<FieldLabel htmlFor={field.name}>
+				Which Airports to Apply This Filter?
+			</FieldLabel>
 			<Select
 				multiple
 				items={iataCodeOptions}
-				value={field.value}
+				value={field.value ?? []}
 				onValueChange={field.onChange}
 			>
-				<SelectTrigger className="w-full" onBlur={field.onBlur}>
+				<SelectTrigger
+					className="w-full"
+					onBlur={field.onBlur}
+					id={field.name}
+					aria-invalid={fieldState.invalid}
+				>
 					<SelectValue placeholder="Select airports" />
 				</SelectTrigger>
 				<SelectContent>
@@ -197,7 +173,8 @@ function IATAFilterSelect({
 					))}
 				</SelectContent>
 			</Select>
-		</>
+			{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+		</Field>
 	);
 }
 
@@ -205,17 +182,12 @@ function FilterValueSelect({
 	control,
 	routes,
 	fieldName,
-	errors,
 }: {
 	control: Control<FilterSchema>;
 	routes: SearchPageLoaderResponse;
 	fieldName: FilterSchema["field_name"];
-	errors: FieldErrors<FilterSchema>;
 }) {
-	const {
-		field,
-		fieldState: { error },
-	} = useController({
+	const { field, fieldState } = useController({
 		name: "value",
 		control,
 		rules: { required: `Please select at least one ${fieldName}` },
@@ -247,22 +219,22 @@ function FilterValueSelect({
 	);
 
 	return (
-		<>
-			<div className="flex flex-row items-center gap-x-4 mb-2">
-				<Label className="capitalize">{fieldName} Options</Label>
-				{(error || errors.value) && (
-					<div className="text-red-500 text-sm">
-						{error?.message || errors.value?.message}
-					</div>
-				)}
-			</div>
+		<Field data-invalid={fieldState.invalid}>
+			<FieldLabel htmlFor={field.name} className="capitalize">
+				{fieldName} Options
+			</FieldLabel>
 			<Select
 				multiple
 				items={uniqueIataCodeOptions}
-				value={field.value}
+				value={field.value ?? []}
 				onValueChange={field.onChange}
 			>
-				<SelectTrigger className="w-full" onBlur={field.onBlur}>
+				<SelectTrigger
+					className="w-full"
+					onBlur={field.onBlur}
+					id={field.name}
+					aria-invalid={fieldState.invalid}
+				>
 					<SelectValue placeholder={`Select ${fieldName} options`} />
 				</SelectTrigger>
 				<SelectContent>
@@ -277,6 +249,7 @@ function FilterValueSelect({
 					))}
 				</SelectContent>
 			</Select>
-		</>
+			{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+		</Field>
 	);
 }
