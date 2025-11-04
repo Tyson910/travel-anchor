@@ -1,6 +1,7 @@
 import type { SearchPageLoaderResponse } from "../route";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRef } from "react";
 import { type Control, useController, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -11,6 +12,19 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "#components/ui/base-select.tsx";
+import {
+	Combobox,
+	ComboboxChip,
+	ComboboxChipRemove,
+	ComboboxChips,
+	ComboboxContent,
+	ComboboxEmpty,
+	ComboboxInput,
+	ComboboxItem,
+	ComboboxItemIndicator,
+	ComboboxList,
+	ComboboxValue,
+} from "#src/components/ui/base-combobox.tsx";
 import { Button } from "#src/components/ui/button.tsx";
 import { Field, FieldError, FieldLabel } from "#src/components/ui/field.tsx";
 
@@ -142,37 +156,58 @@ function IATAFilterSelect({
 		rules: { required: "Please select at least one airport" },
 	});
 
+	const containerRef = useRef<HTMLDivElement | null>(null);
+
 	return (
 		<Field data-invalid={fieldState.invalid}>
 			<FieldLabel htmlFor={field.name}>
 				Which Airports to Apply This Filter?
 			</FieldLabel>
-			<Select
-				multiple
+			<Combobox
 				items={iataCodeOptions}
+				multiple
 				value={field.value ?? []}
 				onValueChange={field.onChange}
 			>
-				<SelectTrigger
-					className="w-full"
-					onBlur={field.onBlur}
-					id={field.name}
-					aria-invalid={fieldState.invalid}
-				>
-					<SelectValue placeholder="Select airports" />
-				</SelectTrigger>
-				<SelectContent>
-					{iataCodeOptions.map((item) => (
-						<SelectItem
-							key={item.value}
-							value={item.value}
-							className="capitalize"
-						>
-							{item.label}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
+				<div className="w-full flex flex-col gap-3">
+					<ComboboxChips
+						ref={containerRef}
+						variant="md"
+						id={field.name}
+						aria-invalid={fieldState.invalid}
+						data-invalid={fieldState.invalid}
+					>
+						<ComboboxValue>
+							{(value: string[]) => (
+								<>
+									{value.map((item) => (
+										<ComboboxChip key={item} aria-label={item}>
+											{item}
+											<ComboboxChipRemove aria-label="Remove" />
+										</ComboboxChip>
+									))}
+									<ComboboxInput
+										placeholder={value.length > 0 ? "" : "Select airports"}
+										onBlur={field.onBlur}
+									/>
+								</>
+							)}
+						</ComboboxValue>
+					</ComboboxChips>
+				</div>
+
+				<ComboboxContent anchor={containerRef}>
+					<ComboboxEmpty>No airports found.</ComboboxEmpty>
+					<ComboboxList>
+						{(item: (typeof iataCodeOptions)[0]) => (
+							<ComboboxItem key={item.value} value={item.value}>
+								<ComboboxItemIndicator />
+								{item.label}
+							</ComboboxItem>
+						)}
+					</ComboboxList>
+				</ComboboxContent>
+			</Combobox>
 			{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 		</Field>
 	);
@@ -192,6 +227,8 @@ function FilterValueSelect({
 		control,
 		rules: { required: `Please select at least one ${fieldName}` },
 	});
+
+	const containerRef = useRef<HTMLDivElement | null>(null);
 
 	// TODO: improve this UX
 	if (!fieldName) return null;
@@ -223,32 +260,53 @@ function FilterValueSelect({
 			<FieldLabel htmlFor={field.name} className="capitalize">
 				{fieldName} Options
 			</FieldLabel>
-			<Select
-				multiple
+			<Combobox
 				items={uniqueIataCodeOptions}
+				multiple
 				value={field.value ?? []}
 				onValueChange={field.onChange}
 			>
-				<SelectTrigger
-					className="w-full"
-					onBlur={field.onBlur}
-					id={field.name}
-					aria-invalid={fieldState.invalid}
-				>
-					<SelectValue placeholder={`Select ${fieldName} options`} />
-				</SelectTrigger>
-				<SelectContent>
-					{uniqueIataCodeOptions.map((item) => (
-						<SelectItem
-							key={item.value}
-							value={item.value}
-							className="capitalize"
-						>
-							{item.label}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
+				<div className="w-full flex flex-col gap-3">
+					<ComboboxChips
+						ref={containerRef}
+						variant="md"
+						id={field.name}
+						aria-invalid={fieldState.invalid}
+						data-invalid={fieldState.invalid}
+					>
+						<ComboboxValue>
+							{(value: typeof uniqueIataCodeOptions) => (
+								<>
+									{value.map((item) => (
+										<ComboboxChip key={item.value} aria-label={item.label}>
+											{item.label}
+											<ComboboxChipRemove aria-label="Remove" />
+										</ComboboxChip>
+									))}
+									<ComboboxInput
+										placeholder={
+											value.length > 0 ? "" : `Select ${fieldName} options`
+										}
+										onBlur={field.onBlur}
+									/>
+								</>
+							)}
+						</ComboboxValue>
+					</ComboboxChips>
+				</div>
+
+				<ComboboxContent anchor={containerRef}>
+					<ComboboxEmpty>No {fieldName} options found.</ComboboxEmpty>
+					<ComboboxList>
+						{(item: (typeof uniqueIataCodeOptions)[0]) => (
+							<ComboboxItem key={item.value} value={item}>
+								<ComboboxItemIndicator />
+								{item.label}
+							</ComboboxItem>
+						)}
+					</ComboboxList>
+				</ComboboxContent>
+			</Combobox>
 			{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 		</Field>
 	);
