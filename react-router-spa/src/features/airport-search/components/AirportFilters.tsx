@@ -178,18 +178,17 @@ function IATAFilterSelect({
 						data-invalid={fieldState.invalid}
 					>
 						<ComboboxValue>
-							{(value: string[]) => (
+							{(values: string[]) => (
 								<>
-									{value.map((item) => (
-										<ComboboxChip key={item} aria-label={item}>
-											{item}
-											<ComboboxChipRemove aria-label="Remove" />
-										</ComboboxChip>
-									))}
-									<ComboboxInput
-										placeholder={value.length > 0 ? "" : "Select airports"}
-										onBlur={field.onBlur}
-									/>
+									{values.map((airport) => {
+										return (
+											<ComboboxChip key={airport} aria-label={airport}>
+												{airport}
+												<ComboboxChipRemove aria-label="Remove" />
+											</ComboboxChip>
+										);
+									})}
+									<ComboboxInput id={field.name} onBlur={field.onBlur} />
 								</>
 							)}
 						</ComboboxValue>
@@ -199,10 +198,10 @@ function IATAFilterSelect({
 				<ComboboxContent anchor={containerRef}>
 					<ComboboxEmpty>No airports found.</ComboboxEmpty>
 					<ComboboxList>
-						{(item: (typeof iataCodeOptions)[0]) => (
-							<ComboboxItem key={item.value} value={item.value}>
+						{(airport: { label: string; value: string }) => (
+							<ComboboxItem key={airport.value} value={airport.value}>
 								<ComboboxItemIndicator />
-								{item.label}
+								{airport.label}
 							</ComboboxItem>
 						)}
 					</ComboboxList>
