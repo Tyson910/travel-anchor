@@ -6,7 +6,7 @@ import {
 	useNavigate,
 } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { AlertTriangle, Home, RefreshCw } from "lucide-react";
+import { Home, RefreshCw } from "lucide-react";
 import { useId } from "react";
 import * as z from "zod";
 
@@ -21,7 +21,6 @@ import {
 	Alert,
 	AlertContent,
 	AlertDescription,
-	AlertIcon,
 	AlertTitle,
 } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
@@ -32,6 +31,12 @@ import {
 	sortOptionsValidator,
 	sortRoutes,
 } from "~/features/airport-search/sorting-utils";
+import {
+	getErrorDescription,
+	getErrorMessage,
+	getErrorTitle,
+	getErrorType,
+} from "~/lib/error-utils";
 import { rpcClient } from "~/lib/rpc-client";
 
 const searchSchema = z.object({
@@ -328,62 +333,3 @@ function ErrorElement({ error, info, reset }: ErrorComponentProps) {
 		</div>
 	);
 }
-
-const getErrorMessage = (error: unknown): string => {
-	if (error instanceof Error) {
-		return error.message;
-	}
-	if (typeof error === "string") {
-		return error;
-	}
-	if (error && typeof error === "object" && "message" in error) {
-		return String(error.message);
-	}
-	return "An unexpected error occurred while loading flight routes";
-};
-
-const getErrorType = (
-	error: unknown,
-): "network" | "api" | "validation" | "unknown" => {
-	if (error instanceof Error) {
-		if (error.message.includes("fetch") || error.message.includes("network")) {
-			return "network";
-		}
-		if (error.message.includes("404") || error.message.includes("500")) {
-			return "api";
-		}
-		if (
-			error.message.includes("validation") ||
-			error.message.includes("schema")
-		) {
-			return "validation";
-		}
-	}
-	return "unknown";
-};
-
-const getErrorTitle = (type: string): string => {
-	switch (type) {
-		case "network":
-			return "Network Connection Error";
-		case "api":
-			return "Service Unavailable";
-		case "validation":
-			return "Invalid Data";
-		default:
-			return "Something went wrong";
-	}
-};
-
-const getErrorDescription = (type: string, message: string): string => {
-	switch (type) {
-		case "network":
-			return "Unable to connect to the flight data service. Please check your internet connection and try again.";
-		case "api":
-			return "The flight data service is temporarily unavailable. Please try again in a few moments.";
-		case "validation":
-			return "The flight data received is invalid. Please try searching again.";
-		default:
-			return message;
-	}
-};
