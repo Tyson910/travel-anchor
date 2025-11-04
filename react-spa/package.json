@@ -5,7 +5,7 @@
 	"scripts": {
 		"check": "tsc --noEmit",
 		"dev": "vite",
-		"build": "vite build && tsc",
+		"build": "vite build",
 		"lint": "bun run --cwd .. lint",
 		"serve": "vite preview",
 		"test": "vitest run",
