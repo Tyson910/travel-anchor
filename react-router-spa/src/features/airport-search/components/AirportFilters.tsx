@@ -65,6 +65,7 @@ export function FilterSelect(props: {
 			codes: props.routes[0].origin_airport_options.map(
 				({ iata_code }) => iata_code,
 			),
+			value: [],
 		},
 	});
 
@@ -254,6 +255,10 @@ function FilterValueSelect({
 		[] as typeof iataCodeOptions,
 	);
 
+	const selectedValues = uniqueIataCodeOptions.filter((iataCode) => {
+		return field.value?.includes(iataCode.value);
+	});
+
 	return (
 		<Field data-invalid={fieldState.invalid}>
 			<FieldLabel htmlFor={field.name} className="capitalize">
@@ -262,8 +267,13 @@ function FilterValueSelect({
 			<Combobox
 				items={uniqueIataCodeOptions}
 				multiple
-				value={field.value ?? []}
-				onValueChange={field.onChange}
+				value={selectedValues}
+				onValueChange={(val) => {
+					const formattedValues = (val as { value: string }[]).map(
+						({ value }) => value,
+					);
+					field.onChange(formattedValues);
+				}}
 			>
 				<div className="w-full flex flex-col gap-3">
 					<ComboboxChips
@@ -274,7 +284,7 @@ function FilterValueSelect({
 						data-invalid={fieldState.invalid}
 					>
 						<ComboboxValue>
-							{(value: typeof uniqueIataCodeOptions) => (
+							{(value: { label: string; value: string }[]) => (
 								<>
 									{value.map((item) => (
 										<ComboboxChip key={item.value} aria-label={item.label}>
