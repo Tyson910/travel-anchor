@@ -1,10 +1,12 @@
 import {
 	Await,
 	createFileRoute,
+	type ErrorComponentProps,
 	redirect,
 	useNavigate,
 } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
+import { AlertTriangle, Home, RefreshCw } from "lucide-react";
 import { useId } from "react";
 import * as z from "zod";
 
@@ -19,8 +21,10 @@ import {
 	Alert,
 	AlertContent,
 	AlertDescription,
+	AlertIcon,
 	AlertTitle,
 } from "~/components/ui/alert";
+import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -248,13 +252,138 @@ function LoadingSkeleton() {
 	);
 }
 
-function ErrorElement() {
+function ErrorElement({ error, info, reset }: ErrorComponentProps) {
+	const navigate = useNavigate();
+	const isDevelopment = import.meta.env.DEV;
+
+	const errorMessage = getErrorMessage(error);
+	const errorType = getErrorType(error);
+
 	return (
-		<Alert variant="destructive" appearance="outline">
-			<AlertContent>
-				<AlertTitle>Error</AlertTitle>
-				<AlertDescription>Failed to load flight routes</AlertDescription>
-			</AlertContent>
-		</Alert>
+		<div className="container mx-auto px-4 py-8">
+			<Alert variant="destructive" appearance="light" size="lg">
+				<AlertContent className="w-full text-center">
+					<AlertTitle>{getErrorTitle(errorType)}</AlertTitle>
+					<AlertDescription>
+						{getErrorDescription(errorType, errorMessage)}
+					</AlertDescription>
+
+					<div className="w-max mx-auto flex flex-wrap gap-3 mt-4">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={reset}
+							className="flex items-center gap-2"
+						>
+							<RefreshCw className="size-4" />
+							Try Again
+						</Button>
+
+						<Button
+							variant="ghost"
+							size="sm"
+							onClick={() => navigate({ to: "/" })}
+							className="flex items-center gap-2"
+						>
+							<Home className="size-4" />
+							Back to Home
+						</Button>
+					</div>
+
+					{isDevelopment && (
+						<div className="mt-4 p-3 bg-muted rounded-md">
+							<details className="text-xs">
+								<summary className="cursor-pointer font-mono font-semibold mb-2">
+									Debug Information
+								</summary>
+								<div className="space-y-2 font-mono">
+									<div>
+										<strong>Error Type:</strong> {errorType}
+									</div>
+									<div>
+										<strong>Error Message:</strong> {errorMessage}
+									</div>
+									{error instanceof Error && (
+										<div>
+											<strong>Stack Trace:</strong>
+											<pre className="whitespace-pre-wrap mt-1 text-xs opacity-70">
+												{error.stack}
+											</pre>
+										</div>
+									)}
+									{info && (
+										<div>
+											<strong>Component Info:</strong>
+											<pre className="whitespace-pre-wrap mt-1 text-xs opacity-70">
+												{JSON.stringify(info, null, 2)}
+											</pre>
+										</div>
+									)}
+								</div>
+							</details>
+						</div>
+					)}
+				</AlertContent>
+			</Alert>
+		</div>
 	);
 }
+
+const getErrorMessage = (error: unknown): string => {
+	if (error instanceof Error) {
+		return error.message;
+	}
+	if (typeof error === "string") {
+		return error;
+	}
+	if (error && typeof error === "object" && "message" in error) {
+		return String(error.message);
+	}
+	return "An unexpected error occurred while loading flight routes";
+};
+
+const getErrorType = (
+	error: unknown,
+): "network" | "api" | "validation" | "unknown" => {
+	if (error instanceof Error) {
+		if (error.message.includes("fetch") || error.message.includes("network")) {
+			return "network";
+		}
+		if (error.message.includes("404") || error.message.includes("500")) {
+			return "api";
+		}
+		if (
+			error.message.includes("validation") ||
+			error.message.includes("schema")
+		) {
+			return "validation";
+		}
+	}
+	return "unknown";
+};
+
+const getErrorTitle = (type: string): string => {
+	switch (type) {
+		case "network":
+			return "Network Connection Error";
+		case "api":
+			return "Service Unavailable";
+		case "validation":
+			return "Invalid Data";
+		default:
+			return "Something went wrong";
+	}
+};
+
+const getErrorDescription = (type: string, message: string): string => {
+	switch (type) {
+		case "network":
+			return "Unable to connect to the flight data service. Please check your internet connection and try again.";
+		case "api":
+			return "The flight data service is temporarily unavailable. Please try again in a few moments.";
+		case "validation":
+			return "The flight data received is invalid. Please try searching again.";
+		default:
+			return message;
+	}
+};
