@@ -1,7 +1,8 @@
 import type { SearchPageLoaderResponse } from "~/routes/search";
 
+import { describe, expect, it } from "vitest";
+
 import { sortRoutes } from "./sorting-utils";
-import { describe, expect, it } from "bun:test";
 
 type MockRoute = SearchPageLoaderResponse[number];
 
