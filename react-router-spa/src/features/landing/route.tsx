@@ -13,9 +13,9 @@ import {
 } from "#components/ui/base-combobox.tsx";
 import { Button } from "#components/ui/button.tsx";
 import { AirportSearchResults } from "#features/airport-search/components/SearchBar.tsx";
+import { useAirportSearchParamsState } from "#features/airport-search/hooks/use-airport-search-params.ts";
 import { useDebounce } from "#features/airport-search/hooks/use-debounce.ts";
 import { useAirportSearchQuery } from "#features/airport-search/hooks/use-search.ts";
-import { useAirportSearchParamsState } from "#features/airport-search/index.tsx";
 
 export function HomePage() {
 	const navigate = useNavigate();
