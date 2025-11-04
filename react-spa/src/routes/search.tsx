@@ -105,6 +105,14 @@ function SearchPage() {
 				content="Find mutual direct-flight destinations for your group travel"
 			/>
 			<meta
+				property="og:title"
+				content="Mutual Flight Destinations - Travel Anchor"
+			/>
+			<meta
+				property="og:description"
+				content="Find mutual direct-flight destinations for your group travel"
+			/>
+			<meta
 				property="og:image"
 				content={`http://localhost:3000/og-image?IATA=${searchParams.codes.join("&IATA=")}`}
 			/>
@@ -175,7 +183,6 @@ function SearchPage() {
 					</div>
 				</div>
 			</div>
-
 			<Await promise={routes} fallback={<LoadingSkeleton />}>
 				{(routes) => {
 					if (activeView == "grid") {
