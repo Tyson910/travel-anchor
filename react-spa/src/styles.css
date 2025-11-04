@@ -4,19 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-body {
-	@apply m-0;
-	font-family:
-		-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-		"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-code {
-	font-family:
-		source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-}
 
 :root {
 	--background: oklch(1 0 0);
@@ -52,6 +39,9 @@ code {
 	--sidebar-accent-foreground: oklch(0.21 0.006 285.885);
 	--sidebar-border: oklch(0.92 0.004 286.32);
 	--sidebar-ring: oklch(0.871 0.006 286.286);
+
+	--font-sans: "Space Grotesk", system-ui, sans-serif;
+	--font-mono: "Space Grotesk", "Courier New", monospace;
 }
 
 .dark {
