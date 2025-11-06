@@ -1,7 +1,7 @@
 import type { SearchPageLoaderResponse } from "../../../routes/search";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { type Control, useController, useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -10,11 +10,9 @@ import {
 	SheetBody,
 	SheetClose,
 	SheetContent,
-	SheetDescription,
 	SheetFooter,
 	SheetHeader,
 	SheetTitle,
-	SheetTrigger,
 } from "@/components/ui/base-sheet";
 import {
 	Combobox,
@@ -72,15 +70,16 @@ const filters = airportSearchFiltersSchema.options.map((option) => ({
 export function FilterSelect(props: {
 	routes: SearchPageLoaderResponse;
 	onValueChange: (filterName: FilterSchema) => void;
+	defaultValues?: FilterSchema;
 }) {
-	const { control, handleSubmit, formState, watch, setValue } =
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
+	const { control, handleSubmit, formState, watch, setValue, reset } =
 		useForm<FilterSchema>({
 			resolver: zodResolver(airportSearchFiltersSchema),
-			defaultValues: {
+			defaultValues: props.defaultValues ?? {
 				codes: props.routes[0].origin_airport_options.map(
 					({ iata_code }) => iata_code,
 				),
-				field_name: "airline",
 				value: [],
 			},
 		});
@@ -96,19 +95,25 @@ export function FilterSelect(props: {
 			<FilterTypeSelect
 				onFilterSelect={(filterValue) => {
 					setValue("field_name", filterValue);
+					setIsPopupOpen(true);
 				}}
 			/>
-			<Sheet>
-				<SheetTrigger render={<Button variant="outline" />}>
-					Open Sheet
-				</SheetTrigger>
-				<SheetContent className="gap-2.5 p-0">
-					<SheetHeader>
-						<SheetTitle>Quick Help</SheetTitle>
-						<SheetDescription>Frequently Asked Questions(FAQ)</SheetDescription>
-					</SheetHeader>
-					<SheetBody className="py-0 grow">
-						<form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+			<form onSubmit={handleSubmit(onSubmit)} className="">
+				<Sheet
+					open={isPopupOpen}
+					onOpenChange={(isOpening) => {
+						setIsPopupOpen(isOpening);
+						// reset form on close
+						if (!isOpening) {
+							reset();
+						}
+					}}
+				>
+					<SheetContent className="gap-2.5 p-0">
+						<SheetHeader>
+							<SheetTitle>Add New Filter</SheetTitle>
+						</SheetHeader>
+						<SheetBody className="py-0 grow space-y-10">
 							<IATAFilterSelect
 								control={control}
 								origin_airport_options={props.routes[0].origin_airport_options}
@@ -118,7 +123,8 @@ export function FilterSelect(props: {
 								routes={props.routes}
 								fieldName={watchedFieldName}
 							/>
-
+						</SheetBody>
+						<SheetFooter>
 							<Button
 								type="submit"
 								disabled={formState.isSubmitting}
@@ -126,14 +132,11 @@ export function FilterSelect(props: {
 							>
 								{formState.isSubmitting ? "Applying Filter..." : "Apply Filter"}
 							</Button>
-						</form>
-					</SheetBody>
-					<SheetFooter>
-						<SheetClose>Cancel</SheetClose>
-						<Button type="submit">Submit</Button>
-					</SheetFooter>
-				</SheetContent>
-			</Sheet>
+							<SheetClose>Cancel</SheetClose>
+						</SheetFooter>
+					</SheetContent>
+				</Sheet>
+			</form>
 		</>
 	);
 }
