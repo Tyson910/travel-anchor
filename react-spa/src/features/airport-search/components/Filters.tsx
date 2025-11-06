@@ -92,11 +92,20 @@ const getFilterLabel = (fieldName: FilterSchema["field_name"]) => {
 	return fieldName;
 };
 
-export function FilterSelect(props: {
-	routes: SearchPageLoaderResponse;
-	onFilterSubmit: (filterName: FilterSchema) => void;
-	defaultValues?: FilterSchema;
-}) {
+type FilterSelectProps =
+	| {
+			routes: SearchPageLoaderResponse;
+			onFilterSubmit: (filter: FilterSchema) => void;
+			defaultValues?: undefined;
+	  }
+	| {
+			routes: SearchPageLoaderResponse;
+			onFilterSubmit: (filter: FilterSchema) => void;
+			onFilterRemove: (filter: FilterSchema) => void;
+			defaultValues: FilterSchema;
+	  };
+
+export function FilterSelect(props: FilterSelectProps) {
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
 	const { control, handleSubmit, formState, watch, setValue, reset } =
 		useForm<FilterSchema>({
@@ -138,7 +147,12 @@ export function FilterSelect(props: {
 						<span className="text-gray-600">•</span>
 						<span>{props.defaultValues.value.join(",")}</span>
 					</Button>
-					<Button variant="destructive">
+					<Button
+						variant="destructive"
+						onClick={() => {
+							props.onFilterRemove(props.defaultValues);
+						}}
+					>
 						<X size={14} />
 					</Button>
 				</ButtonGroup>
