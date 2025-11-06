@@ -152,17 +152,20 @@ function SearchPage() {
 				<Await promise={routes} fallback={<div>Finding mutual routes...</div>}>
 					{(routes) => {
 						return (
-							<FilterSelect
-								routes={routes}
-								onFilterSubmit={(val) => {
-									navigate({
-										search: (prev) => ({
-											...prev,
-											filters: prev.filters ? [...prev.filters, val] : [val],
-										}),
-									});
-								}}
-							/>
+							<>
+								<Bread routes={routes} />
+								<FilterSelect
+									routes={routes}
+									onFilterSubmit={(val) => {
+										navigate({
+											search: (prev) => ({
+												...prev,
+												filters: prev.filters ? [...prev.filters, val] : [val],
+											}),
+										});
+									}}
+								/>
+							</>
 						);
 					}}
 				</Await>
@@ -233,6 +236,54 @@ function SearchPage() {
 				}}
 			</Await>
 		</div>
+	);
+}
+
+function Bread({ routes }: { routes: SearchPageLoaderResponse }) {
+	const { filters } = Route.useSearch();
+	const navigate = useNavigate({ from: "/search" });
+
+	return (
+		<>
+			{filters.map((filter) => (
+				<FilterSelect
+					key={filter.id}
+					routes={routes}
+					defaultValues={filter}
+					onFilterRemove={(val) =>
+						navigate({
+							search: ({ filters, ...rest }) => {
+								const updatedFilters = filters.filter(
+									(filter) => filter.id !== val.id,
+								);
+								return {
+									...rest,
+									filters: updatedFilters,
+								};
+							},
+						})
+					}
+					onFilterSubmit={(val) =>
+						navigate({
+							search: ({ filters, ...rest }) => {
+								console.log(val)
+								const updatedFilters = filters.map((filter) => {
+									if (filter.id == val.id) {
+										return val;
+									}
+									return filter;
+								});
+								console.log(updatedFilters)
+								return {
+									...rest,
+									filters: updatedFilters,
+								};
+							},
+						})
+					}
+				/>
+			))}
+		</>
 	);
 }
 
