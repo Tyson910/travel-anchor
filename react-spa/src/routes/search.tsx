@@ -13,6 +13,10 @@ import * as z from "zod";
 import { Label } from "@/components/ui/label";
 import { AirportsMap } from "@/features/airport-search/components/AirportsMap";
 import { DestinationListView } from "@/features/airport-search/components/DestinationListView";
+import {
+	airportSearchFiltersSchema,
+	FilterSelect,
+} from "@/features/airport-search/components/Filters";
 import { AirportSearchCombobox } from "@/features/airport-search/components/SearchBar";
 import { SortSelect } from "@/features/airport-search/components/SortSelect";
 import { ViewToggle } from "@/features/airport-search/components/ViewToggle";
@@ -43,6 +47,7 @@ const searchSchema = z.object({
 	codes: oneOrManyIATAValidator.optional().default([]),
 	view: z.enum(["grid", "map"]).optional().default("map"),
 	sort: sortOptionsValidator.optional().default("time-difference"),
+	filters: z.array(airportSearchFiltersSchema).default([]),
 });
 
 export type SearchPageLoaderResponse = Awaited<
@@ -143,6 +148,25 @@ function SearchPage() {
 						}}
 					</Await>
 				</h1>
+
+				<Await promise={routes} fallback={<div>Finding mutual routes...</div>}>
+					{(routes) => {
+						return (
+							<FilterSelect
+								routes={routes}
+								onFilterSubmit={(val) => {
+									navigate({
+										search: (prev) => ({
+											...prev,
+											filters: prev.filters ? [...prev.filters, val] : [val],
+										}),
+									});
+								}}
+							/>
+						);
+					}}
+				</Await>
+
 				<div className="flex flex-row justify-between items-end">
 					<div className="w-lg">
 						<Label htmlFor={inputId} className="mb-3">
