@@ -1,7 +1,7 @@
 import type { SearchPageLoaderResponse } from "../../../routes/search";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarClock, Clock, Plane, X } from "lucide-react";
+import { Clock, Plane, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { type Control, useController, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -207,21 +207,25 @@ function FilterTypeSelect({
 	return (
 		<Menu>
 			<MenuTrigger render={<Button variant="outline">Add New Filter</Button>} />
-			<MenuContent sideOffset={4} className="w-40">
+			<MenuContent sideOffset={4} className="w-max">
 				<MenuGroup>
 					<MenuGroupLabel>Filter By: </MenuGroupLabel>
 					<MenuSeparator />
 					<MenuRadioGroup onValueChange={onFilterSelect}>
-						{filters.map((item) => (
-							<MenuRadioItem
-								closeOnClick
-								key={item.value}
-								value={item.value}
-								className="capitalize"
-							>
-								{item.label}
-							</MenuRadioItem>
-						))}
+						{filters.map((item) => {
+							const Icon = getFilterIcon(item.value);
+							return (
+								<MenuRadioItem
+									closeOnClick
+									key={item.value}
+									value={item.value}
+									className="capitalize"
+								>
+									<Icon className="mr-3 size-4" />
+									{item.label}
+								</MenuRadioItem>
+							);
+						})}
 					</MenuRadioGroup>
 				</MenuGroup>
 			</MenuContent>
