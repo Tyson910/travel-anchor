@@ -8,9 +8,7 @@ import * as z from "zod";
 import {
 	Sheet,
 	SheetBody,
-	SheetClose,
 	SheetContent,
-	SheetFooter,
 	SheetHeader,
 	SheetTitle,
 } from "@/components/ui/base-sheet";
@@ -87,6 +85,7 @@ export function FilterSelect(props: {
 
 	const onSubmit = (data: FilterSchema) => {
 		props.onFilterSubmit(data);
+		setIsPopupOpen(false);
 	};
 
 	return (
@@ -97,22 +96,22 @@ export function FilterSelect(props: {
 					setIsPopupOpen(true);
 				}}
 			/>
-			<form onSubmit={handleSubmit(onSubmit)} className="">
-				<Sheet
-					open={isPopupOpen}
-					onOpenChange={(isOpening) => {
-						setIsPopupOpen(isOpening);
-						// reset form on close
-						if (!isOpening) {
-							reset();
-						}
-					}}
-				>
-					<SheetContent className="gap-2.5 p-0">
-						<SheetHeader>
-							<SheetTitle>Add New Filter</SheetTitle>
-						</SheetHeader>
-						<SheetBody className="py-0 grow space-y-10">
+			<Sheet
+				open={isPopupOpen}
+				onOpenChange={(isOpening) => {
+					setIsPopupOpen(isOpening);
+					// reset form on close
+					if (!isOpening) {
+						reset();
+					}
+				}}
+			>
+				<SheetContent className="gap-2.5 p-0">
+					<SheetHeader>
+						<SheetTitle>Add New Filter</SheetTitle>
+					</SheetHeader>
+					<SheetBody className="py-0 grow">
+						<form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
 							<IATAFilterSelect
 								control={control}
 								origin_airport_options={props.routes[0].origin_airport_options}
@@ -122,8 +121,6 @@ export function FilterSelect(props: {
 								routes={props.routes}
 								fieldName={watchedFieldName}
 							/>
-						</SheetBody>
-						<SheetFooter>
 							<Button
 								type="submit"
 								disabled={formState.isSubmitting}
@@ -131,11 +128,10 @@ export function FilterSelect(props: {
 							>
 								{formState.isSubmitting ? "Applying Filter..." : "Apply Filter"}
 							</Button>
-							<SheetClose>Cancel</SheetClose>
-						</SheetFooter>
-					</SheetContent>
-				</Sheet>
-			</form>
+						</form>
+					</SheetBody>
+				</SheetContent>
+			</Sheet>
 		</>
 	);
 }
