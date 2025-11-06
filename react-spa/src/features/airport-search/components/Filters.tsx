@@ -1,6 +1,7 @@
 import type { SearchPageLoaderResponse } from "../../../routes/search";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CalendarClock, Clock, Plane, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { type Control, useController, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -41,16 +42,19 @@ import { IATAValidator } from "~/lib/validators";
 
 export const airportSearchFiltersSchema = z.discriminatedUnion("field_name", [
 	z.object({
+		id: z.uuid(),
 		field_name: z.literal("airline").describe("Airline"),
 		value: z.array(z.string().nonempty()).min(1),
 		codes: z.array(IATAValidator).min(1),
 	}),
 	// z.object({
-	// 	field_name: z.literal("duration"),
-	// 	value: z.number().nonnegative(),
+	// 		id: z.uuid(),
+	// 	field_name: z.literal("duration").describe("Max Duration"),
+	// 	value: z.number().nonnegative().describe("Travel Time Delta"),
 	// 	codes: z.array(IATAValidator).min(1),
 	// }),
 	// z.object({
+	// 		id: z.uuid(),
 	// 	field_name: z.literal("travelTimeDelta"),
 	// 	value: z.number().nonnegative(),
 	// 	codes: z.array(IATAValidator).min(1),
@@ -64,6 +68,29 @@ const filters = airportSearchFiltersSchema.options.map((option) => ({
 	value: option.shape.field_name.value,
 }));
 
+const getFilterIcon = (fieldName: FilterSchema["field_name"]) => {
+	switch (fieldName) {
+		case "airline":
+			return Plane;
+		// case "duration":
+		// 	return Clock;
+		// case "travelTimeDelta":
+		// 	return CalendarClock;
+		default:
+			return Clock;
+	}
+};
+
+const getFilterLabel = (fieldName: FilterSchema["field_name"]) => {
+	const matchedFilter = airportSearchFiltersSchema.options.find(
+		(option) => option.shape.field_name.value == fieldName,
+	);
+	if (matchedFilter?.description) {
+		return matchedFilter.description;
+	}
+	return fieldName;
+};
+
 export function FilterSelect(props: {
 	routes: SearchPageLoaderResponse;
 	onFilterSubmit: (filterName: FilterSchema) => void;
@@ -74,6 +101,7 @@ export function FilterSelect(props: {
 		useForm<FilterSchema>({
 			resolver: zodResolver(airportSearchFiltersSchema),
 			defaultValues: props.defaultValues ?? {
+				id: crypto.randomUUID(),
 				codes: props.routes[0].origin_airport_options.map(
 					({ iata_code }) => iata_code,
 				),
@@ -82,6 +110,8 @@ export function FilterSelect(props: {
 		});
 
 	const watchedFieldName = watch("field_name");
+	const Icon = getFilterIcon(watchedFieldName);
+	const filterLabel = getFilterLabel(watchedFieldName);
 
 	const onSubmit = (data: FilterSchema) => {
 		props.onFilterSubmit(data);
@@ -90,12 +120,43 @@ export function FilterSelect(props: {
 
 	return (
 		<>
-			<FilterTypeSelect
-				onFilterSelect={(filterValue) => {
-					setValue("field_name", filterValue);
-					setIsPopupOpen(true);
-				}}
-			/>
+			{props.defaultValues ? (
+				// TODO: replace with badge
+				<Button
+					onClick={() => setIsPopupOpen(true)}
+					className="inline-flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors group"
+				>
+					<Icon size={14} className="text-blue-600" />
+					<span className="text-sm font-medium text-gray-900">
+						{filterLabel}
+					</span>
+					<span className="text-sm text-gray-600">•</span>
+					<span className="text-sm text-blue-600 font-medium">
+						{props.defaultValues.codes.join(" , ")}
+					</span>
+					<span className="text-sm text-gray-600">•</span>
+					<span className="text-sm text-gray-600">
+						{props.defaultValues.value.join(",")}
+					</span>
+					<Button
+						variant="ghost"
+						onClick={(e) => {
+							e.stopPropagation();
+							// removeFilter(filter.id);
+						}}
+						className="ml-1 p-0.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded"
+					>
+						<X size={14} />
+					</Button>
+				</Button>
+			) : (
+				<FilterTypeSelect
+					onFilterSelect={(filterValue) => {
+						setValue("field_name", filterValue);
+						setIsPopupOpen(true);
+					}}
+				/>
+			)}
 			<Sheet
 				open={isPopupOpen}
 				onOpenChange={(isOpening) => {
@@ -108,7 +169,9 @@ export function FilterSelect(props: {
 			>
 				<SheetContent className="gap-2.5 p-0">
 					<SheetHeader>
-						<SheetTitle>Add New Filter</SheetTitle>
+						<SheetTitle>
+							{props.defaultValues ? "Edit Filter" : "Add New Filter"}
+						</SheetTitle>
 					</SheetHeader>
 					<SheetBody className="py-0 grow">
 						<form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
