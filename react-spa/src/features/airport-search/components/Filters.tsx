@@ -39,10 +39,9 @@ import {
 } from "~/components/ui/base-menu";
 import { Button } from "~/components/ui/button.tsx";
 import { Field, FieldError, FieldLabel } from "~/components/ui/field.tsx";
+import { IATAValidator } from "~/lib/validators";
 
-const IATAValidator = z.string().length(3).toUpperCase();
-
-const airportSearchFiltersSchema = z.discriminatedUnion("field_name", [
+export const airportSearchFiltersSchema = z.discriminatedUnion("field_name", [
 	z.object({
 		field_name: z.literal("airline").describe("Airline"),
 		value: z.array(z.string().nonempty()).min(1),
