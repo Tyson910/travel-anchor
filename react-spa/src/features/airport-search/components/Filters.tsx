@@ -13,6 +13,7 @@ import {
 	SheetHeader,
 	SheetTitle,
 } from "@/components/ui/base-sheet";
+import { ButtonGroup } from "@/components/ui/button-group";
 import {
 	Combobox,
 	ComboboxChip,
@@ -85,8 +86,8 @@ const getFilterLabel = (fieldName: FilterSchema["field_name"]) => {
 	const matchedFilter = airportSearchFiltersSchema.options.find(
 		(option) => option.shape.field_name.value == fieldName,
 	);
-	if (matchedFilter?.description) {
-		return matchedFilter.description;
+	if (matchedFilter?.shape?.field_name?.description) {
+		return matchedFilter.shape.field_name.description;
 	}
 	return fieldName;
 };
@@ -121,34 +122,25 @@ export function FilterSelect(props: {
 	return (
 		<>
 			{props.defaultValues ? (
-				// TODO: replace with badge
-				<Button
-					onClick={() => setIsPopupOpen(true)}
-					className="inline-flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors group"
-				>
-					<Icon size={14} className="text-blue-600" />
-					<span className="text-sm font-medium text-gray-900">
-						{filterLabel}
-					</span>
-					<span className="text-sm text-gray-600">•</span>
-					<span className="text-sm text-blue-600 font-medium">
-						{props.defaultValues.codes.join(" , ")}
-					</span>
-					<span className="text-sm text-gray-600">•</span>
-					<span className="text-sm text-gray-600">
-						{props.defaultValues.value.join(",")}
-					</span>
+				<ButtonGroup aria-label="Edit or Delete Filter">
 					<Button
-						variant="ghost"
-						onClick={(e) => {
-							e.stopPropagation();
-							// removeFilter(filter.id);
-						}}
-						className="ml-1 p-0.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded"
+						onClick={() => setIsPopupOpen(true)}
+						variant="outline"
+						className="text-sm"
 					>
+						<Icon size={14} />
+						<span className="font-medium">{filterLabel}</span>
+						<span className="text-gray-600">•</span>
+						<span className="font-medium">
+							{props.defaultValues.codes.join(" , ")}
+						</span>
+						<span className="text-gray-600">•</span>
+						<span>{props.defaultValues.value.join(",")}</span>
+					</Button>
+					<Button variant="destructive">
 						<X size={14} />
 					</Button>
-				</Button>
+				</ButtonGroup>
 			) : (
 				<FilterTypeSelect
 					onFilterSelect={(filterValue) => {
