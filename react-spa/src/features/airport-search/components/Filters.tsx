@@ -6,6 +6,17 @@ import { type Control, useController, useForm } from "react-hook-form";
 import * as z from "zod";
 
 import {
+	Sheet,
+	SheetBody,
+	SheetClose,
+	SheetContent,
+	SheetDescription,
+	SheetFooter,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from "@/components/ui/base-sheet";
+import {
 	Combobox,
 	ComboboxChip,
 	ComboboxChipRemove,
@@ -19,12 +30,15 @@ import {
 	ComboboxValue,
 } from "~/components/ui/base-combobox.tsx";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "~/components/ui/base-select.tsx";
+	Menu,
+	MenuContent,
+	MenuGroup,
+	MenuGroupLabel,
+	MenuRadioGroup,
+	MenuRadioItem,
+	MenuSeparator,
+	MenuTrigger,
+} from "~/components/ui/base-menu";
 import { Button } from "~/components/ui/button.tsx";
 import { Field, FieldError, FieldLabel } from "~/components/ui/field.tsx";
 
@@ -59,15 +73,17 @@ export function FilterSelect(props: {
 	routes: SearchPageLoaderResponse;
 	onValueChange: (filterName: FilterSchema) => void;
 }) {
-	const { control, handleSubmit, formState, watch } = useForm<FilterSchema>({
-		resolver: zodResolver(airportSearchFiltersSchema),
-		defaultValues: {
-			codes: props.routes[0].origin_airport_options.map(
-				({ iata_code }) => iata_code,
-			),
-			value: [],
-		},
-	});
+	const { control, handleSubmit, formState, watch, setValue } =
+		useForm<FilterSchema>({
+			resolver: zodResolver(airportSearchFiltersSchema),
+			defaultValues: {
+				codes: props.routes[0].origin_airport_options.map(
+					({ iata_code }) => iata_code,
+				),
+				field_name: "airline",
+				value: [],
+			},
+		});
 
 	const watchedFieldName = watch("field_name");
 
@@ -76,66 +92,79 @@ export function FilterSelect(props: {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
-			<FilterTypeSelect control={control} />
-			<IATAFilterSelect
-				control={control}
-				origin_airport_options={props.routes[0].origin_airport_options}
+		<>
+			<FilterTypeSelect
+				onFilterSelect={(filterValue) => {
+					setValue("field_name", filterValue);
+				}}
 			/>
-			<FilterValueSelect
-				control={control}
-				routes={props.routes}
-				fieldName={watchedFieldName}
-			/>
+			<Sheet>
+				<SheetTrigger render={<Button variant="outline" />}>
+					Open Sheet
+				</SheetTrigger>
+				<SheetContent className="gap-2.5 p-0">
+					<SheetHeader>
+						<SheetTitle>Quick Help</SheetTitle>
+						<SheetDescription>Frequently Asked Questions(FAQ)</SheetDescription>
+					</SheetHeader>
+					<SheetBody className="py-0 grow">
+						<form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+							<IATAFilterSelect
+								control={control}
+								origin_airport_options={props.routes[0].origin_airport_options}
+							/>
+							<FilterValueSelect
+								control={control}
+								routes={props.routes}
+								fieldName={watchedFieldName}
+							/>
 
-			<Button
-				type="submit"
-				disabled={formState.isSubmitting}
-				className="w-full"
-			>
-				{formState.isSubmitting ? "Applying Filter..." : "Apply Filter"}
-			</Button>
-		</form>
+							<Button
+								type="submit"
+								disabled={formState.isSubmitting}
+								className="w-full"
+							>
+								{formState.isSubmitting ? "Applying Filter..." : "Apply Filter"}
+							</Button>
+						</form>
+					</SheetBody>
+					<SheetFooter>
+						<SheetClose>Cancel</SheetClose>
+						<Button type="submit">Submit</Button>
+					</SheetFooter>
+				</SheetContent>
+			</Sheet>
+		</>
 	);
 }
 
-function FilterTypeSelect({ control }: { control: Control<FilterSchema> }) {
-	const { field, fieldState } = useController({
-		name: "field_name",
-		control,
-		rules: { required: "Please select a filter type" },
-	});
-
+function FilterTypeSelect({
+	onFilterSelect,
+}: {
+	onFilterSelect: (selectedItem: FilterSchema["field_name"]) => void;
+}) {
 	return (
-		<Field data-invalid={fieldState.invalid}>
-			<FieldLabel htmlFor={field.name}>Select Filter</FieldLabel>
-			<Select
-				items={filters}
-				value={field.value ?? ""}
-				onValueChange={field.onChange}
-			>
-				<SelectTrigger
-					className="w-full"
-					onBlur={field.onBlur}
-					id={field.name}
-					aria-invalid={fieldState.invalid}
-				>
-					<SelectValue />
-				</SelectTrigger>
-				<SelectContent>
-					{filters.map((item) => (
-						<SelectItem
-							key={item.value}
-							value={item.value}
-							className="capitalize"
-						>
-							{item.label}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
-			{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-		</Field>
+		<Menu>
+			<MenuTrigger render={<Button variant="outline">Add New Filter</Button>} />
+			<MenuContent sideOffset={4} className="w-40">
+				<MenuGroup>
+					<MenuGroupLabel>Filter By: </MenuGroupLabel>
+					<MenuSeparator />
+					<MenuRadioGroup onValueChange={onFilterSelect}>
+						{filters.map((item) => (
+							<MenuRadioItem
+								closeOnClick
+								key={item.value}
+								value={item.value}
+								className="capitalize"
+							>
+								{item.label}
+							</MenuRadioItem>
+						))}
+					</MenuRadioGroup>
+				</MenuGroup>
+			</MenuContent>
+		</Menu>
 	);
 }
 
