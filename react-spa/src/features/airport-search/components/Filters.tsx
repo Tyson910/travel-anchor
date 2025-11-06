@@ -68,7 +68,7 @@ const filters = airportSearchFiltersSchema.options.map((option) => ({
 
 export function FilterSelect(props: {
 	routes: SearchPageLoaderResponse;
-	onValueChange: (filterName: FilterSchema) => void;
+	onFilterSubmit: (filterName: FilterSchema) => void;
 	defaultValues?: FilterSchema;
 }) {
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -86,7 +86,7 @@ export function FilterSelect(props: {
 	const watchedFieldName = watch("field_name");
 
 	const onSubmit = (data: FilterSchema) => {
-		props.onValueChange(data);
+		props.onFilterSubmit(data);
 	};
 
 	return (
