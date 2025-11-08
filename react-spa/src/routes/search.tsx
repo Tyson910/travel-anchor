@@ -266,14 +266,12 @@ function Bread({ routes }: { routes: SearchPageLoaderResponse }) {
 					onFilterSubmit={(val) =>
 						navigate({
 							search: ({ filters, ...rest }) => {
-								console.log(val)
 								const updatedFilters = filters.map((filter) => {
 									if (filter.id == val.id) {
 										return val;
 									}
 									return filter;
 								});
-								console.log(updatedFilters)
 								return {
 									...rest,
 									filters: updatedFilters,
