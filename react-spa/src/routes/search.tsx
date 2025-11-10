@@ -150,24 +150,11 @@ function SearchPage() {
 				</h1>
 
 				<Await promise={routes} fallback={<div>Finding mutual routes...</div>}>
-					{(routes) => {
-						return (
-							<>
-								<Bread routes={routes} />
-								<FilterSelect
-									routes={routes}
-									onFilterSubmit={(val) => {
-										navigate({
-											search: (prev) => ({
-												...prev,
-												filters: prev.filters ? [...prev.filters, val] : [val],
-											}),
-										});
-									}}
-								/>
-							</>
-						);
-					}}
+					{(routes) => (
+						<div className="mb-5">
+							<FilterRow routes={routes} />
+						</div>
+					)}
 				</Await>
 
 				<div className="flex flex-row justify-between items-end">
@@ -239,49 +226,65 @@ function SearchPage() {
 	);
 }
 
-function Bread({ routes }: { routes: SearchPageLoaderResponse }) {
+function FilterRow({ routes }: { routes: SearchPageLoaderResponse }) {
 	const { filters } = Route.useSearch();
 	const navigate = useNavigate({ from: "/search" });
 
 	return (
-		<>
-			{filters.map((filter) => (
+		<Card className="flex flex-col">
+			<div className="flex flex-row justify-between">
+				<p className="text-xl font-medium">Active Filters</p>
 				<FilterSelect
-					key={filter.id}
 					routes={routes}
-					defaultValues={filter}
-					onFilterRemove={(val) =>
+					onFilterSubmit={(val) => {
 						navigate({
-							search: ({ filters, ...rest }) => {
-								const updatedFilters = filters.filter(
-									(filter) => filter.id !== val.id,
-								);
-								return {
-									...rest,
-									filters: updatedFilters,
-								};
-							},
-						})
-					}
-					onFilterSubmit={(val) =>
-						navigate({
-							search: ({ filters, ...rest }) => {
-								const updatedFilters = filters.map((filter) => {
-									if (filter.id == val.id) {
-										return val;
-									}
-									return filter;
-								});
-								return {
-									...rest,
-									filters: updatedFilters,
-								};
-							},
-						})
-					}
+							search: (prev) => ({
+								...prev,
+								filters: prev.filters ? [...prev.filters, val] : [val],
+							}),
+						});
+					}}
 				/>
-			))}
-		</>
+			</div>
+			<div className="flex flex-row flex-wrap gap-4 mt-4">
+				{filters.map((filter) => (
+					<FilterSelect
+						key={filter.id}
+						routes={routes}
+						defaultValues={filter}
+						onFilterRemove={(val) =>
+							navigate({
+								search: ({ filters, ...rest }) => {
+									const updatedFilters = filters.filter(
+										(filter) => filter.id !== val.id,
+									);
+									return {
+										...rest,
+										filters: updatedFilters,
+									};
+								},
+							})
+						}
+						onFilterSubmit={(val) =>
+							navigate({
+								search: ({ filters, ...rest }) => {
+									const updatedFilters = filters.map((filter) => {
+										if (filter.id == val.id) {
+											return val;
+										}
+										return filter;
+									});
+									return {
+										...rest,
+										filters: updatedFilters,
+									};
+								},
+							})
+						}
+					/>
+				))}
+			</div>
+		</Card>
 	);
 }
 
