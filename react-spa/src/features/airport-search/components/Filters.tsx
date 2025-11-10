@@ -1,7 +1,7 @@
 import type { SearchPageLoaderResponse } from "../../../routes/search";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Clock, Plane, X } from "lucide-react";
+import { Clock, Plane, PlusIcon, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { type Control, useController, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -213,7 +213,7 @@ function FilterTypeSelect({
 }) {
 	return (
 		<Menu>
-			<MenuTrigger render={<Button variant="outline">Add New Filter</Button>} />
+			<MenuTrigger render={<Button variant="primary">Add New Filter <PlusIcon className="size-4" /></Button>} />
 			<MenuContent sideOffset={4} className="w-max">
 				<MenuGroup>
 					<MenuGroupLabel>Filter By: </MenuGroupLabel>
