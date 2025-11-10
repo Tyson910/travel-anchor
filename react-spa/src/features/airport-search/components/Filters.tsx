@@ -1,10 +1,9 @@
 import type { SearchPageLoaderResponse } from "../../../routes/search";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Clock, Plane, PlusIcon, X } from "lucide-react";
+import { PlusIcon, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { type Control, useController, useForm } from "react-hook-form";
-import * as z from "zod";
 
 import {
 	Sheet,
@@ -39,58 +38,13 @@ import {
 } from "~/components/ui/base-menu";
 import { Button } from "~/components/ui/button.tsx";
 import { Field, FieldError, FieldLabel } from "~/components/ui/field.tsx";
-import { IATAValidator } from "~/lib/validators";
-
-export const airportSearchFiltersSchema = z.discriminatedUnion("field_name", [
-	z.object({
-		id: z.uuid(),
-		field_name: z.literal("airline").describe("Airline"),
-		value: z.array(z.string().nonempty()).min(1),
-		codes: z.array(IATAValidator).min(1),
-	}),
-	// z.object({
-	// 		id: z.uuid(),
-	// 	field_name: z.literal("duration").describe("Max Duration"),
-	// 	value: z.number().nonnegative().describe("Travel Time Delta"),
-	// 	codes: z.array(IATAValidator).min(1),
-	// }),
-	// z.object({
-	// 		id: z.uuid(),
-	// 	field_name: z.literal("travelTimeDelta"),
-	// 	value: z.number().nonnegative(),
-	// 	codes: z.array(IATAValidator).min(1),
-	// }),
-]);
-
-type FilterSchema = z.infer<typeof airportSearchFiltersSchema>;
-
-const filters = airportSearchFiltersSchema.options.map((option) => ({
-	label: option.shape.field_name.description || option.shape.field_name.value,
-	value: option.shape.field_name.value,
-}));
-
-const getFilterIcon = (fieldName: FilterSchema["field_name"]) => {
-	switch (fieldName) {
-		case "airline":
-			return Plane;
-		// case "duration":
-		// 	return Clock;
-		// case "travelTimeDelta":
-		// 	return CalendarClock;
-		default:
-			return Clock;
-	}
-};
-
-const getFilterLabel = (fieldName: FilterSchema["field_name"]) => {
-	const matchedFilter = airportSearchFiltersSchema.options.find(
-		(option) => option.shape.field_name.value == fieldName,
-	);
-	if (matchedFilter?.shape?.field_name?.description) {
-		return matchedFilter.shape.field_name.description;
-	}
-	return fieldName;
-};
+import {
+	airportSearchFiltersSchema,
+	type FilterSchema,
+	filterOptions,
+	getFilterIcon,
+	getFilterLabel,
+} from "../filter-utils";
 
 type FilterSelectProps =
 	| {
@@ -225,7 +179,7 @@ function FilterTypeSelect({
 					<MenuGroupLabel>Filter By: </MenuGroupLabel>
 					<MenuSeparator />
 					<MenuRadioGroup onValueChange={onFilterSelect}>
-						{filters.map((item) => {
+						{filterOptions.map((item) => {
 							const Icon = getFilterIcon(item.value);
 							return (
 								<MenuRadioItem
