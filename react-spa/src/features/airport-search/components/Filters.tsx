@@ -213,7 +213,13 @@ function FilterTypeSelect({
 }) {
 	return (
 		<Menu>
-			<MenuTrigger render={<Button variant="primary">Add New Filter <PlusIcon className="size-4" /></Button>} />
+			<MenuTrigger
+				render={
+					<Button variant="primary">
+						Add New Filter <PlusIcon className="size-4" />
+					</Button>
+				}
+			/>
 			<MenuContent sideOffset={4} className="w-max">
 				<MenuGroup>
 					<MenuGroupLabel>Filter By: </MenuGroupLabel>
