@@ -13,10 +13,7 @@ import * as z from "zod";
 import { Label } from "@/components/ui/label";
 import { AirportsMap } from "@/features/airport-search/components/AirportsMap";
 import { DestinationListView } from "@/features/airport-search/components/DestinationListView";
-import {
-	airportSearchFiltersSchema,
-	FilterSelect,
-} from "@/features/airport-search/components/Filters";
+import { FilterSelect } from "@/features/airport-search/components/Filters";
 import { AirportSearchCombobox } from "@/features/airport-search/components/SearchBar";
 import { SortSelect } from "@/features/airport-search/components/SortSelect";
 import { ViewToggle } from "@/features/airport-search/components/ViewToggle";
@@ -31,6 +28,10 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
+import {
+	airportSearchFiltersSchema,
+	applyFiltersToRoutes,
+} from "~/features/airport-search/filter-utils";
 import {
 	sortOptionsValidator,
 	sortRoutes,
@@ -144,7 +145,13 @@ function SearchPage() {
 						fallback={<div>Finding mutual routes...</div>}
 					>
 						{(routes) => {
-							return <>Found {routes.length} mutual flight destinations</>;
+							const filteredRoutes = applyFiltersToRoutes(
+								routes,
+								searchParams.filters,
+							);
+							return (
+								<>Found {filteredRoutes.length} mutual flight destinations</>
+							);
 						}}
 					</Await>
 				</h1>
@@ -208,14 +215,19 @@ function SearchPage() {
 			</div>
 			<Await promise={routes} fallback={<LoadingSkeleton />}>
 				{(routes) => {
+					const filteredRoutes = applyFiltersToRoutes(
+						routes,
+						searchParams.filters,
+					);
+
 					if (activeView == "grid") {
-						const sortedRoutes = sortRoutes(routes, searchParams.sort);
+						const sortedRoutes = sortRoutes(filteredRoutes, searchParams.sort);
 						return <DestinationListView routes={sortedRoutes} />;
 					}
 
 					return (
 						<AirportsMap
-							airports={routes.map(
+							airports={filteredRoutes.map(
 								({ destination_airport }) => destination_airport,
 							)}
 						/>
