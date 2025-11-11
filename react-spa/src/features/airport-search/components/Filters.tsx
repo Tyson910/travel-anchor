@@ -80,7 +80,9 @@ export function FilterSelect(props: FilterSelectProps) {
 	const onSubmit = (data: FilterSchema) => {
 		props.onFilterSubmit(data);
 		setIsPopupOpen(false);
-		reset({ id: crypto.randomUUID() });
+		if (!props.defaultValues) {
+			reset({ id: crypto.randomUUID() });
+		}
 	};
 
 	return (
