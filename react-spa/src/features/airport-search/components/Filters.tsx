@@ -1,7 +1,7 @@
 import type { SearchPageLoaderResponse } from "../../../routes/search";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon, X } from "lucide-react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useRef, useState } from "react";
 import { type Control, useController, useForm } from "react-hook-form";
 
@@ -109,7 +109,7 @@ export function FilterSelect(props: FilterSelectProps) {
 							props.onFilterRemove(props.defaultValues);
 						}}
 					>
-						<X size={14} />
+						<Trash2Icon size={14} />
 					</Button>
 				</ButtonGroup>
 			) : (
