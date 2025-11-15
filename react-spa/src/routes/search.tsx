@@ -156,14 +156,6 @@ function SearchPage() {
 					</Await>
 				</h1>
 
-				<Await promise={routes} fallback={<div>Finding mutual routes...</div>}>
-					{(routes) => (
-						<div className="mb-5">
-							<FilterRow routes={routes} />
-						</div>
-					)}
-				</Await>
-
 				<div className="flex flex-row justify-between items-end">
 					<div className="w-lg">
 						<Label htmlFor={inputId} className="mb-3">
@@ -212,7 +204,19 @@ function SearchPage() {
 						/>
 					</div>
 				</div>
+
+				<Await
+					promise={routes}
+					fallback={<Skeleton className="mt-5 h-40 w-full rounded-lg" />}
+				>
+					{(routes) => (
+						<div className="mt-5">
+							<FilterRow routes={routes} />
+						</div>
+					)}
+				</Await>
 			</div>
+
 			<Await promise={routes} fallback={<LoadingSkeleton />}>
 				{(routes) => {
 					const filteredRoutes = applyFiltersToRoutes(
