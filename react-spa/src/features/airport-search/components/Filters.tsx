@@ -12,6 +12,7 @@ import {
 	SheetHeader,
 	SheetTitle,
 } from "@/components/ui/base-sheet";
+import { Slider, SliderThumb } from "@/components/ui/base-slider";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
 	Combobox,
@@ -37,7 +38,12 @@ import {
 	MenuTrigger,
 } from "~/components/ui/base-menu";
 import { Button } from "~/components/ui/button.tsx";
-import { Field, FieldError, FieldLabel } from "~/components/ui/field.tsx";
+import {
+	Field,
+	FieldDescription,
+	FieldError,
+	FieldLabel,
+} from "~/components/ui/field.tsx";
 import {
 	airportSearchFiltersSchema,
 	type FilterSchema,
@@ -101,7 +107,11 @@ export function FilterSelect(props: FilterSelectProps) {
 							{props.defaultValues.codes.join(" , ")}
 						</span>
 						<span className="text-gray-600">•</span>
-						<span>{props.defaultValues.value.join(",")}</span>
+						<span>
+							{Array.isArray(props.defaultValues.value)
+								? props.defaultValues.value.join(",")
+								: `${props.defaultValues.value} hours`}
+						</span>
 					</Button>
 					<Button
 						variant="destructive"
@@ -291,10 +301,50 @@ function FilterValueSelect({
 		rules: { required: `Please select at least one ${fieldName}` },
 	});
 
+	// const id = useId();
 	const containerRef = useRef<HTMLDivElement | null>(null);
 
 	// TODO: improve this UX
 	if (!fieldName) return null;
+
+	if (fieldName == "duration") {
+		const routeDurationOptions = routes.flatMap(
+			({ origin_airport_options }) => {
+				return origin_airport_options.flatMap(({ duration_min }) =>
+					typeof duration_min == "number" ? Math.ceil(duration_min / 60) : [],
+				);
+			},
+		);
+
+		const dedupedRouteDurationOptions = [...new Set(routeDurationOptions)];
+		const maxDuration = Math.max(...dedupedRouteDurationOptions);
+		const minDuration = Math.min(...dedupedRouteDurationOptions);
+
+		return (
+			<Field className="space-y-4">
+				<div className="flex flex-col gap-2.5">
+					<div className="flex flex-row justify-between gap-x-3">
+						<FieldLabel htmlFor={field.name}>
+							{getFilterLabel(fieldName)}
+						</FieldLabel>
+						<FieldDescription>{field.value} Hours</FieldDescription>
+					</div>
+					<Slider
+						value={field.value as number}
+						onValueChange={(value) => {
+							field.onChange(Array.isArray(value) ? value[0] : value);
+						}}
+						aria-label="Duration Range Slider"
+						max={maxDuration}
+						min={minDuration}
+					>
+						<SliderThumb />
+					</Slider>
+				</div>
+				{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+			</Field>
+		);
+	}
 
 	const iataCodeOptions = routes.flatMap(({ origin_airport_options }) => {
 		return origin_airport_options.flatMap(({ airline_options }) =>
@@ -319,7 +369,7 @@ function FilterValueSelect({
 	);
 
 	const selectedValues = uniqueIataCodeOptions.filter((iataCode) => {
-		return field.value?.includes(iataCode.value);
+		return Array.isArray(field.value) && field.value?.includes(iataCode.value);
 	});
 
 	return (

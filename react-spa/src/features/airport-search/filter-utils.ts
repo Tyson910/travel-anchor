@@ -12,12 +12,12 @@ export const airportSearchFiltersSchema = z.discriminatedUnion("field_name", [
 		value: z.array(z.string().nonempty()).min(1),
 		codes: z.array(IATAValidator).min(1),
 	}),
-	// z.object({
-	// 		id: z.uuid(),
-	// 	field_name: z.literal("duration").describe("Max Duration"),
-	// 	value: z.number().nonnegative().describe("Travel Time Delta"),
-	// 	codes: z.array(IATAValidator).min(1),
-	// }),
+	z.object({
+		id: z.uuid(),
+		field_name: z.literal("duration").describe("Max Duration"),
+		value: z.number().nonnegative().describe("Travel Time Delta"),
+		codes: z.array(IATAValidator).min(1),
+	}),
 	// z.object({
 	// 		id: z.uuid(),
 	// 	field_name: z.literal("travelTimeDelta"),
@@ -39,8 +39,8 @@ export function getFilterIcon(fieldName: FilterSchema["field_name"]) {
 	switch (fieldName) {
 		case "airline":
 			return Plane;
-		// case "duration":
-		// 	return Clock;
+		case "duration":
+			return Clock;
 		// case "travelTimeDelta":
 		// 	return CalendarClock;
 		default:
@@ -77,6 +77,21 @@ export function applyFiltersToRoutes(
 
 					return originOption.airline_options.some((airline) =>
 						filter.value.includes(airline.iata_code),
+					);
+				});
+			}
+			if (filter.field_name == "duration") {
+				return route.origin_airport_options.every((originOption) => {
+					const isApplicableOrigin = filter.codes.includes(
+						originOption.iata_code,
+					);
+
+					if (!isApplicableOrigin) return true;
+
+					// Check if the duration is within the specified max duration
+					return (
+						originOption.duration_min !== null &&
+						Math.floor(originOption.duration_min / 60) < filter.value
 					);
 				});
 			}
