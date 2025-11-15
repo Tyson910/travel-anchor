@@ -103,14 +103,14 @@ export function FilterSelect(props: FilterSelectProps) {
 						<Icon size={14} />
 						<span className="font-medium">{filterLabel}</span>
 						<span className="text-gray-600">•</span>
-						<span className="font-medium">
-							{props.defaultValues.codes.join(" , ")}
-						</span>
-						<span className="text-gray-600">•</span>
 						<span>
 							{Array.isArray(props.defaultValues.value)
 								? props.defaultValues.value.join(",")
 								: `${props.defaultValues.value} hours`}
+						</span>
+						<span className="text-gray-600">•</span>
+						<span className="font-medium">
+							Applies to: {props.defaultValues.codes.join(" , ")}
 						</span>
 					</Button>
 					<Button
