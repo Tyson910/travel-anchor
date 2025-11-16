@@ -113,131 +113,136 @@ function SearchPage() {
 	const activeView = searchParams.view;
 
 	return (
-		<div className="container mx-auto px-4 py-8">
-			<title>Mutual Flight Destinations - Travel Anchor</title>
-			<meta
-				name="description"
-				content="Find mutual direct-flight destinations for your group travel"
-			/>
-			<meta
-				property="og:title"
-				content="Mutual Flight Destinations - Travel Anchor"
-			/>
-			<meta
-				property="og:description"
-				content="Find mutual direct-flight destinations for your group travel"
-			/>
-			<meta
-				property="og:image"
-				content={`http://localhost:3000/og-image?IATA=${searchParams.codes.join("&IATA=")}`}
-			/>
-			<meta property="og:image:height" content="1200" />
-			<meta property="og:image:width" content="630" />
-			<meta
-				property="og:image:alt"
-				content="Mutual Flight Destinations for JFK, LAX, ORD"
-			/>
-			<meta property="og:image:type" content="image/png" />
-			<div className="pb-4 mb-4 border-b">
-				<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
-					<Await
-						promise={routes}
-						fallback={<div>Finding mutual routes...</div>}
-					>
-						{(routes) => {
-							const filteredRoutes = applyFiltersToRoutes(
-								routes,
-								searchParams.filters,
-							);
-							return (
-								<>Found {filteredRoutes.length} mutual flight destinations</>
-							);
-						}}
-					</Await>
-				</h1>
-
-				<div className="flex flex-row justify-between items-end">
-					<div className="w-lg">
-						<Label htmlFor={inputId} className="mb-3">
-							Airports:
-						</Label>
-						<AirportSearchCombobox
-							id={inputId}
-							iataCodes={searchParams.codes}
-							onValueChange={(values) => {
-								const dedupedIATACodes = [...new Set(values)];
-								navigate({
-									search: (prev) => ({
-										...prev,
-										codes: dedupedIATACodes,
-									}),
-								});
+		<div className="bg-muted/35">
+			<div className="container mx-auto px-4 py-8">
+				<title>Mutual Flight Destinations - Travel Anchor</title>
+				<meta
+					name="description"
+					content="Find mutual direct-flight destinations for your group travel"
+				/>
+				<meta
+					property="og:title"
+					content="Mutual Flight Destinations - Travel Anchor"
+				/>
+				<meta
+					property="og:description"
+					content="Find mutual direct-flight destinations for your group travel"
+				/>
+				<meta
+					property="og:image"
+					content={`http://localhost:3000/og-image?IATA=${searchParams.codes.join("&IATA=")}`}
+				/>
+				<meta property="og:image:height" content="1200" />
+				<meta property="og:image:width" content="630" />
+				<meta
+					property="og:image:alt"
+					content="Mutual Flight Destinations for JFK, LAX, ORD"
+				/>
+				<meta property="og:image:type" content="image/png" />
+				<div className="pb-4 mb-4 border-b">
+					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
+						<Await
+							promise={routes}
+							fallback={<div>Finding mutual routes...</div>}
+						>
+							{(routes) => {
+								const filteredRoutes = applyFiltersToRoutes(
+									routes,
+									searchParams.filters,
+								);
+								return (
+									<>Found {filteredRoutes.length} mutual flight destinations</>
+								);
 							}}
-						/>
-					</div>
+						</Await>
+					</h1>
 
-					<div className="flex flex-row items-end gap-4">
-						{activeView == "grid" ? (
-							<SortSelect
-								activeSort={searchParams.sort}
-								setSort={(value) => {
+					<div className="flex flex-row justify-between items-end">
+						<div className="w-lg">
+							<Label htmlFor={inputId} className="mb-3">
+								Airports:
+							</Label>
+							<AirportSearchCombobox
+								id={inputId}
+								iataCodes={searchParams.codes}
+								onValueChange={(values) => {
+									const dedupedIATACodes = [...new Set(values)];
 									navigate({
 										search: (prev) => ({
 											...prev,
-											sort: value,
+											codes: dedupedIATACodes,
 										}),
 									});
 								}}
 							/>
-						) : null}
+						</div>
 
-						<ViewToggle
-							activeView={activeView}
-							setView={(value) => {
-								navigate({
-									search: (prev) => ({
-										...prev,
-										view: value,
-									}),
-								});
-							}}
-						/>
+						<div className="flex flex-row items-end gap-4">
+							{activeView == "grid" ? (
+								<SortSelect
+									activeSort={searchParams.sort}
+									setSort={(value) => {
+										navigate({
+											search: (prev) => ({
+												...prev,
+												sort: value,
+											}),
+										});
+									}}
+								/>
+							) : null}
+
+							<ViewToggle
+								activeView={activeView}
+								setView={(value) => {
+									navigate({
+										search: (prev) => ({
+											...prev,
+											view: value,
+										}),
+									});
+								}}
+							/>
+						</div>
 					</div>
+
+					<Await
+						promise={routes}
+						fallback={<Skeleton className="mt-5 h-40 w-full rounded-lg" />}
+					>
+						{(routes) => (
+							<div className="mt-5">
+								<FilterRow routes={routes} />
+							</div>
+						)}
+					</Await>
 				</div>
 
-				<Await
-					promise={routes}
-					fallback={<Skeleton className="mt-5 h-40 w-full rounded-lg" />}
-				>
-					{(routes) => (
-						<div className="mt-5">
-							<FilterRow routes={routes} />
-						</div>
-					)}
+				<Await promise={routes} fallback={<LoadingSkeleton />}>
+					{(routes) => {
+						const filteredRoutes = applyFiltersToRoutes(
+							routes,
+							searchParams.filters,
+						);
+
+						if (activeView == "grid") {
+							const sortedRoutes = sortRoutes(
+								filteredRoutes,
+								searchParams.sort,
+							);
+							return <DestinationListView routes={sortedRoutes} />;
+						}
+
+						return (
+							<AirportsMap
+								airports={filteredRoutes.map(
+									({ destination_airport }) => destination_airport,
+								)}
+							/>
+						);
+					}}
 				</Await>
 			</div>
-
-			<Await promise={routes} fallback={<LoadingSkeleton />}>
-				{(routes) => {
-					const filteredRoutes = applyFiltersToRoutes(
-						routes,
-						searchParams.filters,
-					);
-
-					if (activeView == "grid") {
-						const sortedRoutes = sortRoutes(filteredRoutes, searchParams.sort);
-						return <DestinationListView routes={sortedRoutes} />;
-					}
-
-					return (
-						<AirportsMap
-							airports={filteredRoutes.map(
-								({ destination_airport }) => destination_airport,
-							)}
-						/>
-					);
-				}}
-			</Await>
 		</div>
 	);
 }
