@@ -10,7 +10,7 @@ export function ViewToggle({
 	setView: (value: "grid" | "map") => void;
 }) {
 	return (
-		<div className="inline-flex rounded-lg border border-input bg-background p-1">
+		<div className="w-max inline-flex rounded-lg border border-input bg-background p-1">
 			<Button
 				variant={activeView === "grid" ? "primary" : "ghost"}
 				size="sm"

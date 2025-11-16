@@ -157,8 +157,8 @@ function SearchPage() {
 						</Await>
 					</h1>
 
-					<div className="flex flex-row justify-between items-end">
-						<div className="w-lg">
+					<div className="flex flex-col lg:flex-row justify-between items-end gap-y-5 mt-10 lg:mt-0">
+						<div className="w-lg max-w-full">
 							<Label htmlFor={inputId} className="mb-3">
 								Airports:
 							</Label>
@@ -176,8 +176,7 @@ function SearchPage() {
 								}}
 							/>
 						</div>
-
-						<div className="flex flex-row items-end gap-4">
+						<div className="flex flex-col items-start w-full lg:w-auto lg:flex-row lg:items-end gap-4">
 							{activeView == "grid" ? (
 								<SortSelect
 									activeSort={searchParams.sort}
