@@ -113,7 +113,7 @@ function SearchPage() {
 	const activeView = searchParams.view;
 
 	return (
-		<div className="bg-muted/35">
+		<div className="bg-primary/2">
 			<div className="container mx-auto px-4 py-8">
 				<title>Mutual Flight Destinations - Travel Anchor</title>
 				<meta
