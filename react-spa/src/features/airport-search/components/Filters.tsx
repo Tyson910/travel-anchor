@@ -94,7 +94,7 @@ export function FilterSelect(props: FilterSelectProps) {
 	return (
 		<>
 			{props.defaultValues ? (
-				<ButtonGroup aria-label="Edit or Delete Filter">
+				<ButtonGroup aria-label="Edit or Delete Filter" className="overflow-x-auto min-w-0">
 					<Button
 						onClick={() => setIsPopupOpen(true)}
 						variant="outline"
@@ -103,7 +103,7 @@ export function FilterSelect(props: FilterSelectProps) {
 						<Icon size={14} />
 						<span className="font-medium">{filterLabel}</span>
 						<span className="text-gray-600">•</span>
-						<span>
+						<span className="truncate max-w-full">
 							{Array.isArray(props.defaultValues.value)
 								? props.defaultValues.value.join(",")
 								: `${props.defaultValues.value} hours`}
