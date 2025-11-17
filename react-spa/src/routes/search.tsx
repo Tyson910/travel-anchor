@@ -11,14 +11,6 @@ import { Home, RefreshCw } from "lucide-react";
 import { useId } from "react";
 import * as z from "zod";
 
-import { Label } from "@/components/ui/label";
-import { AirportsMap } from "@/features/airport-search/components/AirportsMap";
-import { DestinationListView } from "@/features/airport-search/components/DestinationListView";
-import { FilterSelect } from "@/features/airport-search/components/Filters";
-import { AirportSearchCombobox } from "@/features/airport-search/components/SearchBar";
-import { SortSelect } from "@/features/airport-search/components/SortSelect";
-import { ViewToggle } from "@/features/airport-search/components/ViewToggle";
-import { oneOrManyIATAValidator } from "@/lib/validators";
 import {
 	Alert,
 	AlertContent,
@@ -27,8 +19,15 @@ import {
 } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
+import { AirportsMap } from "~/features/airport-search/components/AirportsMap";
+import { DestinationListView } from "~/features/airport-search/components/DestinationListView";
+import { FilterSelect } from "~/features/airport-search/components/Filters";
+import { AirportSearchCombobox } from "~/features/airport-search/components/SearchBar";
+import { SortSelect } from "~/features/airport-search/components/SortSelect";
+import { ViewToggle } from "~/features/airport-search/components/ViewToggle";
 import {
 	airportSearchFiltersSchema,
 	applyFiltersToRoutes,
@@ -44,6 +43,7 @@ import {
 	getErrorType,
 } from "~/lib/error-utils";
 import { rpcClient } from "~/lib/rpc-client";
+import { oneOrManyIATAValidator } from "~/lib/validators";
 
 const searchSchema = z.object({
 	codes: oneOrManyIATAValidator.optional().default([]),

@@ -10,10 +10,10 @@ import { ArrowRight } from "lucide-react";
 import { useId } from "react";
 import * as z from "zod";
 
-import { cn } from "@/lib/utils";
-import { oneOrManyIATAValidator } from "@/lib/validators";
 import { buttonVariants } from "~/components/ui/button.tsx";
 import { AirportSearchCombobox } from "~/features/airport-search/components/SearchBar.tsx";
+import { cn } from "~/lib/utils";
+import { oneOrManyIATAValidator } from "~/lib/validators";
 
 const searchSchema = z.object({
 	codes: oneOrManyIATAValidator.optional().default([]),

@@ -6,15 +6,6 @@ import { useRef, useState } from "react";
 import { type Control, useController, useForm } from "react-hook-form";
 
 import {
-	Sheet,
-	SheetBody,
-	SheetContent,
-	SheetHeader,
-	SheetTitle,
-} from "@/components/ui/base-sheet";
-import { Slider, SliderThumb } from "@/components/ui/base-slider";
-import { ButtonGroup } from "@/components/ui/button-group";
-import {
 	Combobox,
 	ComboboxChip,
 	ComboboxChipRemove,
@@ -37,7 +28,16 @@ import {
 	MenuSeparator,
 	MenuTrigger,
 } from "~/components/ui/base-menu";
+import {
+	Sheet,
+	SheetBody,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+} from "~/components/ui/base-sheet";
+import { Slider, SliderThumb } from "~/components/ui/base-slider";
 import { Button } from "~/components/ui/button.tsx";
+import { ButtonGroup } from "~/components/ui/button-group";
 import {
 	Field,
 	FieldDescription,
