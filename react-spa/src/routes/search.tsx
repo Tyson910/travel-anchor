@@ -1,5 +1,6 @@
 import {
 	Await,
+	CatchBoundary,
 	createFileRoute,
 	type ErrorComponentProps,
 	redirect,
@@ -141,20 +142,31 @@ function SearchPage() {
 				<meta property="og:image:type" content="image/png" />
 				<div className="pb-4 mb-4 border-b">
 					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
-						<Await
-							promise={routes}
-							fallback={<div>Finding mutual routes...</div>}
+						<CatchBoundary
+							getResetKey={() => "route-count"}
+							errorComponent={() => (
+								<div className="text-destructive">
+									Failed to load destinations
+								</div>
+							)}
 						>
-							{(routes) => {
-								const filteredRoutes = applyFiltersToRoutes(
-									routes,
-									searchParams.filters,
-								);
-								return (
-									<>Found {filteredRoutes.length} mutual flight destinations</>
-								);
-							}}
-						</Await>
+							<Await
+								promise={routes}
+								fallback={<div>Finding mutual routes...</div>}
+							>
+								{(routes) => {
+									const filteredRoutes = applyFiltersToRoutes(
+										routes,
+										searchParams.filters,
+									);
+									return (
+										<>
+											Found {filteredRoutes.length} mutual flight destinations
+										</>
+									);
+								}}
+							</Await>
+						</CatchBoundary>
 					</h1>
 
 					<div className="flex flex-col lg:flex-row justify-between items-end gap-y-5 mt-10 lg:mt-0">
@@ -205,42 +217,72 @@ function SearchPage() {
 						</div>
 					</div>
 
-					<Await
-						promise={routes}
-						fallback={<Skeleton className="mt-5 h-40 w-full rounded-lg" />}
+					<CatchBoundary
+						getResetKey={() => "filters"}
+						errorComponent={() => null}
 					>
-						{(routes) => (
-							<div className="mt-5">
-								<FilterRow routes={routes} />
-							</div>
-						)}
-					</Await>
+						<Await
+							promise={routes}
+							fallback={<Skeleton className="mt-5 h-40 w-full rounded-lg" />}
+						>
+							{(routes) => (
+								<div className="mt-5">
+									<FilterRow routes={routes} />
+								</div>
+							)}
+						</Await>
+					</CatchBoundary>
 				</div>
 
-				<Await promise={routes} fallback={<LoadingSkeleton />}>
-					{(routes) => {
-						const filteredRoutes = applyFiltersToRoutes(
-							routes,
-							searchParams.filters,
-						);
-
-						if (activeView == "grid") {
-							const sortedRoutes = sortRoutes(
-								filteredRoutes,
-								searchParams.sort,
+				<CatchBoundary
+					getResetKey={() => "main-content"}
+					errorComponent={() => (
+						<Alert variant="destructive" appearance="light" size="lg">
+							<AlertContent className="w-full text-center">
+								<AlertTitle>Failed to load destinations</AlertTitle>
+								<AlertDescription>
+									Unable to load flight destinations. Please try again later.
+								</AlertDescription>
+								<div className="w-max mx-auto flex flex-wrap gap-3 mt-4">
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={() => window.location.reload()}
+										className="flex items-center gap-2"
+									>
+										<RefreshCw className="size-4" />
+										Try Again
+									</Button>
+								</div>
+							</AlertContent>
+						</Alert>
+					)}
+				>
+					<Await promise={routes} fallback={<LoadingSkeleton />}>
+						{(routes) => {
+							const filteredRoutes = applyFiltersToRoutes(
+								routes,
+								searchParams.filters,
 							);
-							return <DestinationListView routes={sortedRoutes} />;
-						}
 
-						return (
-							<AirportsMap
-								airports={filteredRoutes.map(
-									({ destination_airport }) => destination_airport,
-								)}
-							/>
-						);
-					}}
-				</Await>
+							if (activeView == "grid") {
+								const sortedRoutes = sortRoutes(
+									filteredRoutes,
+									searchParams.sort,
+								);
+								return <DestinationListView routes={sortedRoutes} />;
+							}
+
+							return (
+								<AirportsMap
+									airports={filteredRoutes.map(
+										({ destination_airport }) => destination_airport,
+									)}
+								/>
+							);
+						}}
+					</Await>
+				</CatchBoundary>
 			</div>
 		</div>
 	);
