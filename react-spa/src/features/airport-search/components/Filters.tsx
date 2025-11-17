@@ -94,7 +94,10 @@ export function FilterSelect(props: FilterSelectProps) {
 	return (
 		<>
 			{props.defaultValues ? (
-				<ButtonGroup aria-label="Edit or Delete Filter" className="overflow-x-auto min-w-0">
+				<ButtonGroup
+					aria-label="Edit or Delete Filter"
+					className="overflow-x-auto min-w-0"
+				>
 					<Button
 						onClick={() => setIsPopupOpen(true)}
 						variant="outline"

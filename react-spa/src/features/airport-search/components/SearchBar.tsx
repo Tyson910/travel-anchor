@@ -67,7 +67,11 @@ export function AirportSearchCombobox({
 				<ComboboxChips ref={containerRef}>
 					<ComboboxValue>
 						{iataCodes.map((iataCode) => (
-							<ComboboxChip key={iataCode} aria-label={iataCode} className="bg-primary text-primary-foreground">
+							<ComboboxChip
+								key={iataCode}
+								aria-label={iataCode}
+								className="bg-primary text-primary-foreground"
+							>
 								{iataCode}
 								<ComboboxChipRemove />
 							</ComboboxChip>
