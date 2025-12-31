@@ -131,13 +131,13 @@ function SearchPage() {
 				/>
 				<meta
 					property="og:image"
-					content={`${import.meta.env.VITE_PUBLIC_API_URL.replace('/api', '')}/og-image?IATA=${searchParams.codes.join("&IATA=")}`}
+					content={`${import.meta.env.VITE_PUBLIC_API_URL.replace("/api", "")}/og-image?IATA=${searchParams.codes.join("&IATA=")}`}
 				/>
 				<meta property="og:image:height" content="1200" />
 				<meta property="og:image:width" content="630" />
 				<meta
 					property="og:image:alt"
-					content="Mutual Flight Destinations for JFK, LAX, ORD"
+					content={`Mutual Flight Destinations for ${searchParams.codes.join(" , ")}`}
 				/>
 				<meta property="og:image:type" content="image/png" />
 				<div className="pb-4 mb-4 border-b">
