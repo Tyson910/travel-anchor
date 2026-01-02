@@ -9,6 +9,7 @@
 		"lint": "bun run --cwd .. lint",
 		"serve": "vite --mode production preview",
 		"test": "vitest run",
+		"generate-weather-docs": "curl -S https://api.weather.gov/openapi.json > weather-open-api.json",
 		"deploy": "bun run build && wrangler deploy",
 		"cf-typegen": "wrangler types"
 	},
