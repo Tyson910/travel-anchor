@@ -9,7 +9,13 @@ type StationsData =
 	components["schemas"]["ObservationStationCollectionGeoJson"];
 type ObservationData = components["schemas"]["ObservationGeoJson"];
 
-export function useWeatherConditions(latitude: number, longitude: number) {
+export function useWeatherConditions({
+	latitude,
+	longitude,
+}: {
+	latitude: number;
+	longitude: number;
+}) {
 	const pointQuery = useQuery({
 		queryKey: ["weather-point", latitude, longitude],
 		queryFn: async () => {
