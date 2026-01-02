@@ -8,7 +8,6 @@ import {
 import {
 	ArrowLeft,
 	Clock,
-	CloudSun,
 	Home,
 	Mountain,
 	Plane,
@@ -34,8 +33,7 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
 import { AirportsMap } from "~/features/airport-search/components/AirportsMap";
-import { useWeatherConditions } from "~/features/weather/hooks/use-weather-conditions";
-
+import { WeatherCard } from "~/features/weather/components/WeatherCard";
 import {
 	getErrorDescription,
 	getErrorMessage,
@@ -185,89 +183,6 @@ function AirportHubPage() {
 				</section>
 			</div>
 		</div>
-	);
-}
-
-function WeatherCard({
-	latitude,
-	longitude,
-}: {
-	latitude: number;
-	longitude: number;
-}) {
-	const {
-		observation,
-		isLoadingInitial,
-		isLoadingStations,
-		isLoadingObservation,
-		isError,
-		error,
-	} = useWeatherConditions({ latitude, longitude });
-
-	if (isError) {
-		return (
-			<Empty>
-				<EmptyHeader>
-					<EmptyMedia variant="icon">
-						<CloudSun />
-					</EmptyMedia>
-					<EmptyTitle>Weather Unavailable</EmptyTitle>
-					<EmptyDescription>
-						{error?.message ?? "Failed to load weather data"}
-					</EmptyDescription>
-				</EmptyHeader>
-			</Empty>
-		);
-	}
-
-	if (!observation && isLoadingInitial) {
-		return (
-			<Empty>
-				<EmptyHeader>
-					<EmptyMedia variant="icon">
-						<CloudSun />
-					</EmptyMedia>
-					<EmptyTitle>Weather</EmptyTitle>
-					<EmptyDescription>
-						{isLoadingStations
-							? "Finding nearby weather stations..."
-							: isLoadingObservation
-								? "Loading current conditions..."
-								: "Real-time weather conditions and forecasts for this airport."}
-					</EmptyDescription>
-				</EmptyHeader>
-			</Empty>
-		);
-	}
-
-	if (observation) {
-		return (
-			<Empty>
-				<EmptyHeader>
-					<EmptyMedia variant="icon">
-						<CloudSun />
-					</EmptyMedia>
-					<EmptyTitle>Weather</EmptyTitle>
-					<EmptyDescription>
-						{observation?.properties?.textDescription ?? "Loading..."}
-					</EmptyDescription>
-				</EmptyHeader>
-			</Empty>
-		);
-	}
-
-	return (
-		<Empty>
-			<EmptyHeader>
-				<EmptyMedia variant="icon">
-					<CloudSun />
-				</EmptyMedia>
-				<EmptyTitle>Weather</EmptyTitle>
-				<EmptyDescription>
-					Real-time weather conditions and forecasts for this airport.
-				</EmptyDescription>
-			</EmptyHeader>
-		</Empty>
 	);
 }
 
