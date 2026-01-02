@@ -34,6 +34,8 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
 import { AirportsMap } from "~/features/airport-search/components/AirportsMap";
+import { useWeatherConditions } from "~/features/weather/hooks/use-weather-conditions";
+
 import {
 	getErrorDescription,
 	getErrorMessage,
@@ -86,7 +88,8 @@ function AirportHubPage() {
 		airport.city_name,
 		airport.state_name,
 		airport.country_name,
-	].filter(Boolean);
+	].filter((val) => val != null);
+
 	const locationString =
 		locationParts.length > 0 ? locationParts.join(", ") : "Unavailable";
 
@@ -159,17 +162,10 @@ function AirportHubPage() {
 					</h2>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						<Card variant="technical" className="border-dashed">
-							<Empty>
-								<EmptyHeader>
-									<EmptyMedia variant="icon">
-										<CloudSun />
-									</EmptyMedia>
-									<EmptyTitle>Weather</EmptyTitle>
-									<EmptyDescription>
-										Real-time weather conditions and forecasts for this airport.
-									</EmptyDescription>
-								</EmptyHeader>
-							</Empty>
+							<WeatherCard
+								latitude={airport.latitude}
+								longitude={airport.longitude}
+							/>
 						</Card>
 
 						<Card variant="technical" className="border-dashed">
@@ -189,6 +185,89 @@ function AirportHubPage() {
 				</section>
 			</div>
 		</div>
+	);
+}
+
+function WeatherCard({
+	latitude,
+	longitude,
+}: {
+	latitude: number;
+	longitude: number;
+}) {
+	const {
+		observation,
+		isLoadingInitial,
+		isLoadingStations,
+		isLoadingObservation,
+		isError,
+		error,
+	} = useWeatherConditions({ latitude, longitude });
+
+	if (isError) {
+		return (
+			<Empty>
+				<EmptyHeader>
+					<EmptyMedia variant="icon">
+						<CloudSun />
+					</EmptyMedia>
+					<EmptyTitle>Weather Unavailable</EmptyTitle>
+					<EmptyDescription>
+						{error?.message ?? "Failed to load weather data"}
+					</EmptyDescription>
+				</EmptyHeader>
+			</Empty>
+		);
+	}
+
+	if (!observation && isLoadingInitial) {
+		return (
+			<Empty>
+				<EmptyHeader>
+					<EmptyMedia variant="icon">
+						<CloudSun />
+					</EmptyMedia>
+					<EmptyTitle>Weather</EmptyTitle>
+					<EmptyDescription>
+						{isLoadingStations
+							? "Finding nearby weather stations..."
+							: isLoadingObservation
+								? "Loading current conditions..."
+								: "Real-time weather conditions and forecasts for this airport."}
+					</EmptyDescription>
+				</EmptyHeader>
+			</Empty>
+		);
+	}
+
+	if (observation) {
+		return (
+			<Empty>
+				<EmptyHeader>
+					<EmptyMedia variant="icon">
+						<CloudSun />
+					</EmptyMedia>
+					<EmptyTitle>Weather</EmptyTitle>
+					<EmptyDescription>
+						{observation?.properties?.textDescription ?? "Loading..."}
+					</EmptyDescription>
+				</EmptyHeader>
+			</Empty>
+		);
+	}
+
+	return (
+		<Empty>
+			<EmptyHeader>
+				<EmptyMedia variant="icon">
+					<CloudSun />
+				</EmptyMedia>
+				<EmptyTitle>Weather</EmptyTitle>
+				<EmptyDescription>
+					Real-time weather conditions and forecasts for this airport.
+				</EmptyDescription>
+			</EmptyHeader>
+		</Empty>
 	);
 }
 
