@@ -12,6 +12,7 @@ export const airportColumns = [
 	"airport.name",
 	"airport.elevation_ft",
 	"airport.iata_code",
+	"airport.viator_url",
 ] as const satisfies AnyColumnWithTable<DB, "airport">[];
 
 export async function getAirportByIATA(IATA: string, db = kyselyDriver) {
@@ -22,7 +23,7 @@ export async function getAirportByIATA(IATA: string, db = kyselyDriver) {
 		.leftJoin("country", "country.country_code", "airport.country_code")
 		.where("airport.iata_code", "=", IATA)
 		.select(airportColumns)
-		.select(["state.state_name", "country.country_name", "airport.iata_code"])
+		.select(["state.state_name", "country.country_name"])
 		.executeTakeFirstOrThrow();
 }
 
