@@ -114,11 +114,7 @@ interface WeatherIconProps {
 	className?: string;
 }
 
-const WeatherIcon: React.FC<WeatherIconProps> = ({
-	type,
-	size = 24,
-	className = "",
-}) => {
+function WeatherIcon({ type, size = 24, className = "" }: WeatherIconProps) {
 	switch (type.toLowerCase()) {
 		case "sun":
 			return <Sun size={size} className={className} />;
@@ -133,7 +129,7 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
 		default:
 			return <Sun size={size} className={className} />;
 	}
-};
+}
 
 interface DataBlockProps {
 	label: string;
@@ -143,37 +139,41 @@ interface DataBlockProps {
 	subtext?: string;
 }
 
-const DataBlock: React.FC<DataBlockProps> = ({
+function DataBlock({
 	label,
 	value,
 	unit,
 	icon: Icon,
 	subtext,
-}) => (
-	<div className="flex flex-col p-4 border-r border-b border-black/10 last:border-r-0 md:border-b-0 hover:bg-black/2 transition-colors group">
-		<div className="flex items-center justify-between mb-2">
-			<span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-mono">
-				{label}
-			</span>
-			{Icon && (
-				<Icon
-					size={14}
-					className="text-gray-400 group-hover:text-black transition-colors"
-				/>
+}: DataBlockProps) {
+	return (
+		<div className="flex flex-col p-4 border-r border-b border-black/10 last:border-r-0 md:border-b-0 hover:bg-black/2 transition-colors group">
+			<div className="flex items-center justify-between mb-2">
+				<span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-mono">
+					{label}
+				</span>
+				{Icon && (
+					<Icon
+						size={14}
+						className="text-gray-400 group-hover:text-black transition-colors"
+					/>
+				)}
+			</div>
+			<div className="flex items-baseline gap-1">
+				<span className="text-xl font-semibold text-gray-900">{value}</span>
+				{unit && (
+					<span className="text-xs text-gray-500 font-mono">{unit}</span>
+				)}
+			</div>
+			{subtext && (
+				<div className="mt-1 text-[10px] text-emerald-600 font-mono flex items-center gap-1">
+					<div className="w-1 h-1 rounded-full bg-emerald-500"></div>
+					{subtext}
+				</div>
 			)}
 		</div>
-		<div className="flex items-baseline gap-1">
-			<span className="text-xl font-semibold text-gray-900">{value}</span>
-			{unit && <span className="text-xs text-gray-500 font-mono">{unit}</span>}
-		</div>
-		{subtext && (
-			<div className="mt-1 text-[10px] text-emerald-600 font-mono flex items-center gap-1">
-				<div className="w-1 h-1 rounded-full bg-emerald-500"></div>
-				{subtext}
-			</div>
-		)}
-	</div>
-);
+	);
+}
 
 // --- Main Application ---
 
