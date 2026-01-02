@@ -12,7 +12,7 @@ ENV FRONTEND_URL=$FRONTEND_URL
 COPY package.json bun.lock ./
 COPY data-access-layer/package.json ./data-access-layer/
 COPY hono-api/package.json ./hono-api/
-COPY react-router-app/package.json ./react-router-app/
+COPY react-spa/package.json ./react-spa/
 
 RUN bun install --frozen-lockfile --ignore-scripts --filter './hono-api'
 
