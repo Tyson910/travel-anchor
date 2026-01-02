@@ -1,5 +1,7 @@
 import * as z from "zod";
 
+export const nonEmptyStringValidator = z.string().nonempty();
+
 export const IATAValidator = z.string().length(3).toUpperCase();
 
 export const oneOrManyIATAValidator = z

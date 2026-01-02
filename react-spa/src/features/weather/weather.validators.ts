@@ -1,4 +1,6 @@
-import { z } from "zod";
+import * as z from "zod";
+
+import { nonEmptyStringValidator } from "@/lib/validators";
 
 // --- Shared Types ---
 
@@ -8,8 +10,8 @@ import { z } from "zod";
  */
 const quantitativeValueSchema = z.object({
 	value: z.number().nullable(), // NWS often returns null for missing sensor data
-	unitCode: z.string().optional(),
-	qualityControl: z.string().optional(),
+	unitCode: nonEmptyStringValidator.optional(),
+	qualityControl: nonEmptyStringValidator.optional(),
 });
 
 // --- Route 1: GET /points/{latitude},{longitude} ---
@@ -20,7 +22,7 @@ const quantitativeValueSchema = z.object({
  */
 export const pointsResponseSchema = z.object({
 	properties: z.object({
-		gridId: z.string(),
+		gridId: nonEmptyStringValidator,
 		gridX: z.number().int(),
 		gridY: z.number().int(),
 		// Useful context but not strictly requested:
@@ -28,8 +30,8 @@ export const pointsResponseSchema = z.object({
 			.object({
 				properties: z
 					.object({
-						city: z.string().nonempty(),
-						state: z.string().nonempty(),
+						city: nonEmptyStringValidator.nonempty(),
+						state: nonEmptyStringValidator.nonempty(),
 					})
 					.partial()
 					.optional(),
@@ -45,8 +47,8 @@ export const pointsResponseSchema = z.object({
  */
 const stationFeatureSchema = z.object({
 	properties: z.object({
-		stationIdentifier: z.string(),
-		name: z.string(),
+		stationIdentifier: nonEmptyStringValidator,
+		name: nonEmptyStringValidator,
 		// Distance and bearing are often returned as QuantitativeValues in NWS API
 		// Note: If these fields are missing in the specific gridpoints/stations endpoint,
 		// .nullish() prevents parsing errors for null or undefined.
@@ -73,7 +75,7 @@ export const observationResponseSchema = z.object({
 	properties: z.object({
 		// Weather Conditions
 		temperature: quantitativeValueSchema,
-		textDescription: z.string().nullish(),
+		textDescription: nonEmptyStringValidator.nullish(),
 
 		// Wind
 		windSpeed: quantitativeValueSchema.nullish(),
@@ -91,7 +93,7 @@ export const observationResponseSchema = z.object({
 		// 'stationName' implies a display name which might need to be fetched from the Station endpoint
 		// or inferred if the API provides a specific description field.
 		// I've included strictly what was requested.
-		station: z.string().optional(), // The URL ID, often used as reference
+		station: nonEmptyStringValidator.optional(), // The URL ID, often used as reference
 	}),
 });
 
