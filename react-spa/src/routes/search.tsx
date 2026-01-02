@@ -131,7 +131,7 @@ function SearchPage() {
 				/>
 				<meta
 					property="og:image"
-					content={`${import.meta.env.VITE_PUBLIC_API_URL.replace("/api", "")}/og-image?IATA=${searchParams.codes.join("&IATA=")}`}
+					content={`${import.meta.env.VITE_PUBLIC_API_URL.replace("/api/", "/")}/og-image?IATA=${searchParams.codes.join("&IATA=")}`}
 				/>
 				<meta property="og:image:height" content="1200" />
 				<meta property="og:image:width" content="630" />
