@@ -9,7 +9,6 @@ import {
 	useNavigate,
 } from "@tanstack/react-router";
 import { Home, RefreshCw } from "lucide-react";
-
 import {
 	Alert,
 	AlertContent,
@@ -39,7 +38,7 @@ export const Route = createFileRoute("/airport/$iata")({
 	// Do not cache this route's data after it's unloaded
 	// gcTime: 0,
 	component: AirportHubPage,
-	loader: (ctx) => {
+	loader: async (ctx) => {
 		const { iata } = ctx.params;
 
 		const validatedIATAResult = IATAValidator.safeParse(iata);
@@ -48,20 +47,20 @@ export const Route = createFileRoute("/airport/$iata")({
 			throw new PathParamError("Invalid IATA code");
 		}
 
-		const airport = rpcClient("/airport/:IATA", {
+		const airportResponse = await rpcClient("/airport/:IATA", {
 			params: {
 				IATA: validatedIATAResult.data,
 			},
-		}).then(({ data, error }) => {
-			if (error) {
-				console.log(error);
-				throw error;
-			}
-			return data.airport;
 		});
 
+		if (airportResponse.error) {
+			throw new Error("Unable to load airport", {
+				cause: airportResponse.error,
+			});
+		}
+
 		return {
-			airport,
+			airport: airportResponse.data.airport,
 		};
 	},
 	pendingComponent: Skeleton,
@@ -73,22 +72,10 @@ function AirportHubPage() {
 
 	return (
 		<>
-			<CatchBoundary getResetKey={() => "airport"} errorComponent={() => null}>
-				<Await
-					promise={airport}
-					fallback={<Skeleton className="mt-5 h-40 w-full rounded-lg" />}
-				>
-					{(airport) => (
-						<>
-							<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
-								{airport.name}
-							</h1>
-							<div className="mt-5">{airport.city_name}</div>
-						</>
-					)}
-				</Await>
-			</CatchBoundary>
-			<div></div>
+			<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
+				{airport.name}
+			</h1>
+			<div className="mt-5">{airport.city_name}</div>
 		</>
 	);
 }
