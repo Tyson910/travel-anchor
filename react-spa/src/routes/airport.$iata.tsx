@@ -1,25 +1,39 @@
 import {
-	Await,
-	CatchBoundary,
 	createFileRoute,
 	type ErrorComponentProps,
-	notFound,
+	Link,
 	PathParamError,
-	redirect,
 	useNavigate,
 } from "@tanstack/react-router";
-import { Home, RefreshCw } from "lucide-react";
+import {
+	ArrowLeft,
+	Clock,
+	CloudSun,
+	Home,
+	Mountain,
+	Plane,
+	RefreshCw,
+} from "lucide-react";
+
 import {
 	Alert,
 	AlertContent,
 	AlertDescription,
 	AlertTitle,
 } from "~/components/ui/alert";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Label } from "~/components/ui/label";
+import { Card } from "~/components/ui/card";
+import {
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyMedia,
+	EmptyTitle,
+} from "~/components/ui/empty";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
+import { AirportsMap } from "~/features/airport-search/components/AirportsMap";
 import {
 	getErrorDescription,
 	getErrorMessage,
@@ -35,8 +49,6 @@ export type AirportDetailPageLoaderResponse = Awaited<
 
 export const Route = createFileRoute("/airport/$iata")({
 	staleTime: 5000,
-	// Do not cache this route's data after it's unloaded
-	// gcTime: 0,
 	component: AirportHubPage,
 	loader: async (ctx) => {
 		const { iata } = ctx.params;
@@ -63,20 +75,163 @@ export const Route = createFileRoute("/airport/$iata")({
 			airport: airportResponse.data.airport,
 		};
 	},
-	pendingComponent: Skeleton,
+	pendingComponent: LoadingSkeleton,
 	errorComponent: ErrorElement,
 });
 
 function AirportHubPage() {
 	const { airport } = Route.useLoaderData();
 
+	const locationParts = [
+		airport.city_name,
+		airport.state_name,
+		airport.country_name,
+	].filter(Boolean);
+	const locationString =
+		locationParts.length > 0 ? locationParts.join(", ") : "Unavailable";
+
 	return (
-		<>
-			<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground mb-2">
-				{airport.name}
-			</h1>
-			<div className="mt-5">{airport.city_name}</div>
-		</>
+		<div className="bg-primary/2">
+			<div className="container mx-auto px-4 py-8">
+				<title>
+					{airport.name} | {airport.iata_code} | Travel Anchor
+				</title>
+				<meta
+					name="description"
+					content={`Airport information for ${airport.name} (${airport.iata_code}) in ${locationString}`}
+				/>
+
+				{/* Back Navigation */}
+				<nav className="mb-6">
+					<Link
+						to="/"
+						className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+					>
+						<ArrowLeft className="size-4" />
+						Back to Search
+					</Link>
+				</nav>
+
+				{/* Hero Header */}
+				<header className="space-y-3 mb-8">
+					<Badge variant="iata" size="technical">
+						{airport.iata_code}
+					</Badge>
+					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground">
+						{airport.name}
+					</h1>
+					<p className="text-lg text-muted-foreground">{locationString}</p>
+					<div className="flex items-center gap-4 text-sm text-muted-foreground">
+						{airport.timezone && (
+							<span className="inline-flex items-center gap-1.5">
+								<Clock className="size-3" />
+								{airport.timezone}
+							</span>
+						)}
+						{airport.elevation_ft !== null && (
+							<span className="inline-flex items-center gap-1.5">
+								<Mountain className="size-3" />
+								{airport.elevation_ft.toLocaleString()} ft
+							</span>
+						)}
+						{!airport.timezone && airport.elevation_ft === null && (
+							<span>Unavailable</span>
+						)}
+					</div>
+				</header>
+
+				<Separator className="my-6" />
+
+				{/* Map Section */}
+				<section className="mb-8">
+					<h2 className="text-xl font-medium tracking-tight mb-4">Location</h2>
+					<Card variant="blueprint" size="sm" className="overflow-hidden p-0">
+						<AirportsMap airports={[airport]} />
+					</Card>
+				</section>
+
+				<Separator className="my-6" />
+
+				{/* Future Sections */}
+				<section>
+					<h2 className="text-xl font-medium tracking-tight mb-4">
+						Coming Soon
+					</h2>
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<Card variant="technical" className="border-dashed">
+							<Empty>
+								<EmptyHeader>
+									<EmptyMedia variant="icon">
+										<CloudSun />
+									</EmptyMedia>
+									<EmptyTitle>Weather</EmptyTitle>
+									<EmptyDescription>
+										Real-time weather conditions and forecasts for this airport.
+									</EmptyDescription>
+								</EmptyHeader>
+							</Empty>
+						</Card>
+
+						<Card variant="technical" className="border-dashed">
+							<Empty>
+								<EmptyHeader>
+									<EmptyMedia variant="icon">
+										<Plane />
+									</EmptyMedia>
+									<EmptyTitle>Outbound Flights</EmptyTitle>
+									<EmptyDescription>
+										Direct flight destinations from this airport.
+									</EmptyDescription>
+								</EmptyHeader>
+							</Empty>
+						</Card>
+					</div>
+				</section>
+			</div>
+		</div>
+	);
+}
+
+function LoadingSkeleton() {
+	return (
+		<div className="bg-primary/2">
+			<div className="container mx-auto px-4 py-8">
+				{/* Back Navigation Skeleton */}
+				<nav className="mb-6">
+					<Skeleton variant="grid" className="h-5 w-32" />
+				</nav>
+
+				{/* Hero Header Skeleton */}
+				<header className="space-y-3 mb-8">
+					<Skeleton variant="grid" className="h-6 w-16" />
+					<Skeleton variant="grid" className="h-9 w-80" />
+					<Skeleton variant="grid" className="h-6 w-48" />
+					<div className="flex items-center gap-4">
+						<Skeleton variant="grid" className="h-4 w-32" />
+						<Skeleton variant="grid" className="h-4 w-24" />
+					</div>
+				</header>
+
+				<Separator className="my-6" />
+
+				{/* Map Section Skeleton */}
+				<section className="mb-8">
+					<Skeleton variant="grid" className="h-6 w-24 mb-4" />
+					<Skeleton variant="grid" className="h-[600px] w-full rounded-sm" />
+				</section>
+
+				<Separator className="my-6" />
+
+				{/* Future Sections Skeleton */}
+				<section>
+					<Skeleton variant="grid" className="h-6 w-32 mb-4" />
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<Skeleton variant="grid" className="h-48 w-full rounded-xs" />
+						<Skeleton variant="grid" className="h-48 w-full rounded-xs" />
+					</div>
+				</section>
+			</div>
+		</div>
 	);
 }
 
