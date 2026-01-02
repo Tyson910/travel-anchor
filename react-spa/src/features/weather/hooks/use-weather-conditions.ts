@@ -1,13 +1,11 @@
-import type { components } from "@generated/weather-api/fetch-client";
-
 import { useQuery } from "@tanstack/react-query";
 
-import { weatherClient } from "~/lib/weather-client";
-
-type PointData = components["schemas"]["PointGeoJson"];
-type StationsData =
-	components["schemas"]["ObservationStationCollectionGeoJson"];
-type ObservationData = components["schemas"]["ObservationGeoJson"];
+import {
+	observationResponseSchema,
+	pointsResponseSchema,
+	stationsResponseSchema,
+} from "@/features/weather/weather.validators";
+import { weatherClient } from "@/features/weather/weather-client";
 
 export function useWeatherConditions({
 	latitude,
@@ -39,7 +37,7 @@ export function useWeatherConditions({
 				throw new Error("No data returned from point endpoint");
 			}
 
-			return data as PointData;
+			return pointsResponseSchema.parse(data);
 		},
 		staleTime: 1000 * 60 * 60,
 	});
@@ -74,8 +72,13 @@ export function useWeatherConditions({
 				throw new Error(error.title);
 			}
 
-			const stationsData = data as StationsData;
+			const stationsData = stationsResponseSchema.parse(data);
 			const features = stationsData?.features ?? [];
+
+			// The spec implies logic to "Pick first station (closest)"
+			// The NWS API typically orders stations by proximity for spatial queries,
+			// so the first element is usually the closest.
+
 			const firstFeature = features[0];
 
 			if (!firstFeature?.properties?.stationIdentifier) {
@@ -88,7 +91,7 @@ export function useWeatherConditions({
 		staleTime: 1000 * 60 * 60,
 	});
 
-	const observationQuery = useQuery<ObservationData>({
+	const observationQuery = useQuery({
 		queryKey: ["weather-observation", stationsQuery.data],
 		queryFn: async () => {
 			const stationId = stationsQuery.data;
@@ -116,7 +119,7 @@ export function useWeatherConditions({
 				throw new Error("No observation data returned");
 			}
 
-			return data as ObservationData;
+			return observationResponseSchema.parse(data);
 		},
 		enabled: stationsQuery.data !== undefined,
 		refetchIntervalInBackground: true,
