@@ -3,13 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { observationResponseSchema } from "@/features/weather/weather.validators";
 import { weatherClient } from "@/features/weather/weather-client";
 
-export function useWeatherConditions({
-	stationId,
-}: {
-	latitude: number;
-	longitude: number;
-	stationId?: string | null;
-}) {
+export function useWeatherConditions({ stationId }: { stationId: string }) {
 	const observationQuery = useQuery({
 		queryKey: ["weather-observation", stationId],
 		queryFn: async () => {

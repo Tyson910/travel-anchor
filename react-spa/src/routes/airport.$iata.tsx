@@ -167,9 +167,7 @@ function AirportHubPage() {
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						<Card variant="technical" className="border-dashed">
 							<WeatherCard
-								latitude={airport.latitude}
-								longitude={airport.longitude}
-								stationId={weatherStation?.stationIdentifier}
+								stationId={weatherStation?.stationIdentifier ?? ""}
 							/>
 						</Card>
 
