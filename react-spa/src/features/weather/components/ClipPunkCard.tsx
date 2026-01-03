@@ -162,6 +162,7 @@ function LocationSpecDetail({
 interface ClipPunkViewProps {
 	latitude: number;
 	longitude: number;
+	stationId: string;
 	airportCode: string;
 	airportName: string;
 	city: string;
@@ -173,11 +174,12 @@ export function ClipPunkView({
 	longitude,
 	airportCode,
 	airportName,
+	stationId,
 	city,
 	elevation,
 }: ClipPunkViewProps) {
 	const { observation, isLoading, isError, error } = useWeatherConditions({
-		stationId: `${latitude},${longitude}`,
+		stationId: stationId,
 	});
 
 	const getConditionIcon = (condition: string) => {
