@@ -34,6 +34,7 @@ import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
 import { AirportsMap } from "~/features/airport-search/components/AirportsMap";
 import { WeatherCard } from "~/features/weather/components/WeatherCard";
+import { fetchWeatherStation } from "~/features/weather/weather-client";
 import {
 	getErrorDescription,
 	getErrorMessage,
@@ -43,9 +44,8 @@ import {
 import { rpcClient } from "~/lib/rpc-client";
 import { IATAValidator } from "~/lib/validators";
 
-export type AirportDetailPageLoaderResponse = Awaited<
-	(typeof Route)["types"]["loaderData"]["airport"]
->;
+export type AirportDetailPageLoaderResponse =
+	(typeof Route)["types"]["loaderData"];
 
 export const Route = createFileRoute("/airport/$iata")({
 	staleTime: 5000,
@@ -71,8 +71,14 @@ export const Route = createFileRoute("/airport/$iata")({
 			});
 		}
 
+		const weatherStation = await fetchWeatherStation({
+			latitude: airportResponse.data.airport.latitude,
+			longitude: airportResponse.data.airport.longitude,
+		});
+
 		return {
 			airport: airportResponse.data.airport,
+			weatherStation,
 		};
 	},
 	pendingComponent: LoadingSkeleton,
@@ -80,7 +86,7 @@ export const Route = createFileRoute("/airport/$iata")({
 });
 
 function AirportHubPage() {
-	const { airport } = Route.useLoaderData();
+	const { airport, weatherStation } = Route.useLoaderData();
 
 	const locationParts = [
 		airport.city_name,
@@ -163,6 +169,7 @@ function AirportHubPage() {
 							<WeatherCard
 								latitude={airport.latitude}
 								longitude={airport.longitude}
+								stationId={weatherStation?.stationIdentifier}
 							/>
 						</Card>
 
