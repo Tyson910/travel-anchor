@@ -48,8 +48,5 @@ export function useWeatherConditions({
 		isLoading: observationQuery.isLoading || observationQuery.isFetching,
 		isError: observationQuery.isError,
 		error: observationQuery.error,
-		refetch: () => {
-			observationQuery.refetch();
-		},
 	};
 }
