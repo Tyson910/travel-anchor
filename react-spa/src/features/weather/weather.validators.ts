@@ -49,9 +49,10 @@ const stationFeatureSchema = z.object({
 	properties: z.object({
 		stationIdentifier: nonEmptyStringValidator,
 		name: nonEmptyStringValidator,
-		// Distance and bearing are often returned as QuantitativeValues in NWS API
+		// Distance, forecast and bearing are often returned as QuantitativeValues in NWS API
 		// Note: If these fields are missing in the specific gridpoints/stations endpoint,
 		// .nullish() prevents parsing errors for null or undefined.
+		forecast: z.url().nullish(),
 		distance: quantitativeValueSchema.nullish(),
 		bearing: quantitativeValueSchema.nullish(),
 	}),
