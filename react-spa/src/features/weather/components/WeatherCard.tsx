@@ -11,18 +11,8 @@ import {
 } from "~/components/ui/empty";
 import { useWeatherConditions } from "~/features/weather/hooks/use-weather-conditions";
 
-export function WeatherCard({
-	latitude,
-	longitude,
-	stationId,
-}: {
-	latitude: number;
-	longitude: number;
-	stationId?: string | null;
-}) {
+export function WeatherCard({ stationId }: { stationId: string }) {
 	const { observation, isLoading, isError, error } = useWeatherConditions({
-		latitude,
-		longitude,
 		stationId,
 	});
 
