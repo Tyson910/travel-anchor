@@ -15,6 +15,7 @@ import {
 
 import { Skeleton } from "~/components/ui/skeleton";
 import { useWeatherConditions } from "~/features/weather/hooks/use-weather-conditions";
+import { WEATHER_BASE_URL } from "../weather-client";
 
 // --- Type Definitions ---
 
@@ -112,27 +113,29 @@ function DataBlock({
 	subtext,
 }: DataBlockProps) {
 	return (
-		<div className="flex flex-col p-4 border-r border-b border-black/10 last:border-r-0 md:border-b-0 hover:bg-black/2 transition-colors group">
+		<div className="flex flex-col p-4 border-r border-b border-border last:border-r-0 md:border-b-0 hover:bg-muted/50 transition-colors group">
 			<div className="flex items-center justify-between mb-2">
-				<span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-mono">
+				<span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-mono">
 					{label}
 				</span>
 				{Icon && (
 					<Icon
 						size={14}
-						className="text-gray-400 group-hover:text-black transition-colors"
+						className="text-muted-foreground group-hover:text-foreground transition-colors"
 					/>
 				)}
 			</div>
 			<div className="flex items-baseline gap-1">
-				<span className="text-xl font-semibold text-gray-900">{value}</span>
+				<span className="text-xl font-semibold text-foreground">{value}</span>
 				{unit && (
-					<span className="text-xs text-gray-500 font-mono">{unit}</span>
+					<span className="text-xs text-muted-foreground font-mono">
+						{unit}
+					</span>
 				)}
 			</div>
 			{subtext && (
 				<div className="mt-1 text-[10px] text-emerald-600 font-mono flex items-center gap-1">
-					<div className="w-1 h-1 rounded-full bg-emerald-500"></div>
+					<div className="size-1 rounded-full bg-emerald-500"></div>
 					{subtext}
 				</div>
 			)}
@@ -159,8 +162,9 @@ export function ClipPunkView({
 	city,
 	elevation,
 }: ClipPunkViewProps) {
-	const { observation, isLoadingInitial, isError, error } =
-		useWeatherConditions({ latitude, longitude });
+	const { observation, isLoading, isError, error } = useWeatherConditions({
+		stationId: `${latitude},${longitude}`,
+	});
 
 	const getConditionIcon = (condition: string) => {
 		if (condition.toLowerCase().includes("rain")) return "rain";
@@ -180,13 +184,13 @@ export function ClipPunkView({
 
 	if (isError) {
 		return (
-			<div className="bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-				<header className="border-b-2 border-black p-6 bg-white">
+			<div className="bg-card shadow-[8px_8px_0px_0px_hsl(var(--foreground))] border-2 border-foreground">
+				<header className="border-b-2 border-border p-6 bg-card">
 					<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
 						<div>
 							<div className="flex items-center gap-2 mb-1">
-								<span className="size-2.5 bg-red-500 rounded-full"></span>
-								<span className="text-[10px] font-mono uppercase tracking-widest text-gray-500">
+								<span className="size-2.5 bg-destructive rounded-full"></span>
+								<span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
 									Connection Error
 								</span>
 							</div>
@@ -194,7 +198,7 @@ export function ClipPunkView({
 					</div>
 				</header>
 				<main className="p-6">
-					<p className="text-gray-600">
+					<p className="text-muted-foreground">
 						{error?.message ?? "Failed to load weather data"}
 					</p>
 				</main>
@@ -202,15 +206,15 @@ export function ClipPunkView({
 		);
 	}
 
-	if (isLoadingInitial && !observation) {
+	if (isLoading && !observation) {
 		return (
-			<div className="bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-				<header className="border-b-2 border-black p-6 bg-white">
+			<div className="bg-card shadow-[8px_8px_0px_0px_hsl(var(--foreground))] border-2 border-foreground">
+				<header className="border-b-2 border-border p-6 bg-card">
 					<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
 						<div>
 							<div className="flex items-center gap-2 mb-1">
-								<span className="size-2.5 bg-blue-500 rounded-full animate-pulse"></span>
-								<span className="text-[10px] font-mono uppercase tracking-widest text-gray-500">
+								<span className="size-2.5 bg-primary rounded-full animate-pulse"></span>
+								<span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
 									Loading Feed
 								</span>
 							</div>
@@ -239,14 +243,14 @@ export function ClipPunkView({
 	return (
 		<>
 			{/* Main Container - The "Clip-Board" */}
-			<div className="bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+			<div className="bg-card shadow-[8px_8px_0px_0px_hsl(var(--foreground))] border-2 border-foreground">
 				{/* Header Section */}
-				<header className="border-b-2 border-black p-6 bg-white">
+				<header className="border-b-2 border-border p-6 bg-card">
 					<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
 						<div>
 							<div className="flex items-center gap-2 mb-1">
-								<span className="size-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
-								<span className="text-[10px] font-mono uppercase tracking-widest text-gray-500">
+								<span className="size-2.5 bg-success-foreground rounded-full animate-pulse"></span>
+								<span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
 									Live Feed
 								</span>
 							</div>
@@ -256,12 +260,12 @@ export function ClipPunkView({
 
 				{/* Main Content Area */}
 				<main
-					className={`transition-opacity duration-300 ${isLoadingInitial ? "opacity-50" : "opacity-100"}`}
+					className={`transition-opacity duration-300 ${isLoading ? "opacity-50" : "opacity-100"}`}
 				>
 					{/* Primary Status Display */}
-					<div className="grid grid-cols-1 md:grid-cols-3 border-b-2 border-black">
+					<div className="grid grid-cols-1 md:grid-cols-3 border-b-2 border-foreground">
 						{/* Left: Location Identity */}
-						<div className="p-6 md:col-span-2 border-b md:border-b-0 md:border-r border-black/10 flex flex-col justify-center">
+						<div className="p-6 md:col-span-2 border-b md:border-b-0 md:border-r border-border flex flex-col justify-center">
 							<div className="flex items-center gap-3 mb-2">
 								<h2 className="text-6xl font-black tracking-tighter">
 									{airportCode}
@@ -270,29 +274,29 @@ export function ClipPunkView({
 									<span className="text-lg font-medium leading-none">
 										{city}
 									</span>
-									<span className="text-xs text-gray-500 font-mono mt-1">
+									<span className="text-xs text-muted-foreground font-mono mt-1">
 										{airportName}
 									</span>
 								</div>
 							</div>
-							<div className="inline-flex items-center gap-2 px-2 py-1 bg-gray-100 self-start mt-2 border border-gray-200 rounded-sm">
-								<MapPin size={12} className="text-gray-500" />
-								<span className="text-[10px] font-mono text-gray-600 uppercase">
+							<div className="inline-flex items-center gap-2 px-2 py-1 bg-muted self-start mt-2 border border-border rounded-sm">
+								<MapPin size={12} className="text-muted-foreground" />
+								<span className="text-[10px] font-mono text-muted-foreground uppercase">
 									{formatCoordinates(latitude, longitude)}
 								</span>
 							</div>
 						</div>
 
 						{/* Right: Primary Weather */}
-						<div className="p-6 bg-black text-white flex flex-col justify-between relative overflow-hidden group">
+						<div className="p-6 bg-primary text-primary-foreground flex flex-col justify-between relative overflow-hidden group">
 							{/* Abstract Background Decoration */}
-							<div className="absolute -right-4 -top-4 text-white/10 group-hover:text-white/20 transition-colors">
+							<div className="absolute -right-4 -top-4 text-primary-foreground/10 group-hover:text-primary-foreground/20 transition-colors">
 								<WeatherIcon type={getConditionIcon(condition)} size={120} />
 							</div>
 
 							<div className="relative z-10">
 								<div className="flex justify-between items-start">
-									<span className="text-[10px] font-mono uppercase border border-white/30 px-2 py-0.5 rounded-full">
+									<span className="text-[10px] font-mono uppercase border border-primary-foreground/30 px-2 py-0.5 rounded-full">
 										Current
 									</span>
 									<WeatherIcon type={getConditionIcon(condition)} size={24} />
@@ -301,14 +305,16 @@ export function ClipPunkView({
 									<span className="text-5xl font-mono font-bold">
 										{celsiusToFahrenheit(temp)}°
 									</span>
-									<p className="text-sm text-gray-400 mt-1">{condition}</p>
+									<p className="text-sm text-primary-foreground/80 mt-1">
+										{condition}
+									</p>
 								</div>
 							</div>
 						</div>
 					</div>
 
 					{/* Telemetry Grid */}
-					<div className="grid grid-cols-2 md:grid-cols-4 bg-white">
+					<div className="grid grid-cols-2 md:grid-cols-4 bg-card">
 						<DataBlock
 							label="Wind Velocity"
 							value={windSpeed !== null ? Math.round(windSpeed) : "--"}
@@ -339,10 +345,10 @@ export function ClipPunkView({
 					</div>
 
 					{/* Forecast Strip - "The Tape" */}
-					<div className="border-t-2 border-black bg-[#F9FAFB] p-4">
+					<div className="border-t-2 border-foreground bg-muted p-4">
 						<div className="flex items-center gap-2 mb-3">
-							<Clock size={14} className="text-gray-400" />
-							<span className="text-[10px] font-mono uppercase tracking-widest text-gray-500">
+							<Clock size={14} className="text-muted-foreground" />
+							<span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
 								Short-Range Forecast
 							</span>
 						</div>
@@ -351,15 +357,15 @@ export function ClipPunkView({
 							{STATIC_FORECAST.map((item, idx) => (
 								<div
 									key={`${item.time}-${item.temp}-${item.icon}-${idx}`}
-									className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+									className="flex flex-col items-center justify-center p-3 bg-card border border-border shadow-sm hover:shadow-md transition-shadow"
 								>
-									<span className="text-xs font-mono text-gray-400 mb-2">
+									<span className="text-xs font-mono text-muted-foreground mb-2">
 										{item.time}
 									</span>
 									<WeatherIcon
 										type={item.icon}
 										size={20}
-										className="text-gray-800 mb-2"
+										className="text-foreground mb-2"
 									/>
 									<span className="font-bold text-sm">{item.temp}°</span>
 								</div>
@@ -368,10 +374,10 @@ export function ClipPunkView({
 					</div>
 
 					{/* Footer / System Line */}
-					<div className="bg-black text-gray-500 text-[10px] font-mono p-2 flex justify-between items-center">
-						<span>DATA SOURCE: https://api.weather.gov</span>
+					<div className="bg-foreground text-primary-foreground text-[10px] font-mono p-2 flex justify-between items-center">
+						<span>DATA SOURCE: {WEATHER_BASE_URL}</span>
 						<span className="flex items-center gap-2">
-							<span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+							<span className="size-1.5 bg-success-foreground rounded-full"></span>
 							SYSTEM ONLINE
 						</span>
 					</div>
