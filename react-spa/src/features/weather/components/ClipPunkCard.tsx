@@ -143,6 +143,20 @@ function DataBlock({
 	);
 }
 
+function LocationSpecDetail({
+	children,
+	Icon,
+}: React.PropsWithChildren<{ Icon: typeof MapPin }>) {
+	return (
+		<div className="inline-flex items-center gap-2 px-2 py-1 bg-muted self-start mt-2 border border-border rounded-sm">
+			<Icon size={12} className="text-muted-foreground" />
+			<span className="text-[10px] font-mono text-muted-foreground uppercase">
+				{children}
+			</span>
+		</div>
+	);
+}
+
 // --- Main Application ---
 
 interface ClipPunkViewProps {
@@ -279,11 +293,11 @@ export function ClipPunkView({
 									</span>
 								</div>
 							</div>
-							<div className="inline-flex items-center gap-2 px-2 py-1 bg-muted self-start mt-2 border border-border rounded-sm">
-								<MapPin size={12} className="text-muted-foreground" />
-								<span className="text-[10px] font-mono text-muted-foreground uppercase">
+							{/* Location Details */}
+							<div className="flex flex-row gap-x-3">
+								<LocationSpecDetail Icon={MapPin}>
 									{formatCoordinates(latitude, longitude)}
-								</span>
+								</LocationSpecDetail>
 							</div>
 						</div>
 
