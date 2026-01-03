@@ -4,6 +4,7 @@ import createClient from "openapi-fetch";
 
 import {
 	pointsResponseSchema,
+	type StationsResponse,
 	stationsResponseSchema,
 } from "./weather.validators";
 
@@ -19,7 +20,7 @@ export async function fetchWeatherStation({
 }: {
 	latitude: number;
 	longitude: number;
-}): Promise<{ stationIdentifier: string } | null> {
+}): Promise<StationsResponse["features"][number]["properties"] | null> {
 	try {
 		const pointsResponse = await weatherClient.GET(
 			"/points/{latitude},{longitude}",
@@ -71,12 +72,12 @@ export async function fetchWeatherStation({
 		// so the first element is usually the closest.
 		const firstStation = features[0];
 
-		if (firstStation?.properties?.stationIdentifier) {
-			return { stationIdentifier: firstStation.properties.stationIdentifier };
+		if (!firstStation) {
+			console.error("No weather stations available for this location");
+			return null;
 		}
 
-		console.error("No weather stations available for this location");
-		return null;
+		return firstStation.properties;
 	} catch (error) {
 		console.error("Error fetching weather station:", error);
 		return null;
