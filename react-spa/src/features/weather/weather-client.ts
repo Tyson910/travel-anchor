@@ -2,6 +2,83 @@ import type { paths } from "@generated/weather-api/fetch-client"; // generated b
 
 import createClient from "openapi-fetch";
 
+import {
+	pointsResponseSchema,
+	stationsResponseSchema,
+} from "./weather.validators";
+
+export const WEATHER_BASE_URL = "https://api.weather.gov";
+
 export const weatherClient = createClient<paths>({
-	baseUrl: "https://api.weather.gov",
+	baseUrl: WEATHER_BASE_URL,
 });
+
+export async function fetchWeatherStation({
+	latitude,
+	longitude,
+}: {
+	latitude: number;
+	longitude: number;
+}): Promise<{ stationIdentifier: string } | null> {
+	try {
+		const pointsResponse = await weatherClient.GET(
+			"/points/{latitude},{longitude}",
+			{
+				params: {
+					path: {
+						latitude,
+						longitude,
+					},
+				},
+			},
+		);
+
+		if (pointsResponse.error) {
+			console.error("Failed to fetch weather stations:", pointsResponse.error);
+			return null;
+		}
+
+		if (!pointsResponse.data) {
+			console.error("No weather station data returned");
+			return null;
+		}
+
+		const pointData = pointsResponseSchema.parse(pointsResponse.data);
+
+		const stationResponse = await weatherClient.GET(
+			"/gridpoints/{wfo}/{x},{y}/stations",
+			{
+				params: {
+					path: {
+						wfo: pointData.properties.gridId,
+						x: pointData.properties.gridX,
+						y: pointData.properties.gridY,
+					},
+				},
+			},
+		);
+
+		if (stationResponse.error) {
+			console.error(stationResponse.error.title);
+			return null;
+		}
+
+		const stationsData = stationsResponseSchema.parse(stationResponse.data);
+		const features = stationsData?.features ?? [];
+
+		// The spec implies logic to "Pick first station (closest)"
+		// The NWS API typically orders stations by proximity for spatial queries,
+		// so the first element is usually the closest.
+		const firstStation = features[0];
+
+		if (firstStation?.properties?.stationIdentifier) {
+			return { stationIdentifier: firstStation.properties.stationIdentifier };
+		}
+
+		console.error("No weather stations available for this location");
+		return null;
+	} catch (error) {
+		console.error("Error fetching weather station:", error);
+		return null;
+	}
+}

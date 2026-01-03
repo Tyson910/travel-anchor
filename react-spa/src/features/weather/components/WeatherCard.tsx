@@ -14,18 +14,17 @@ import { useWeatherConditions } from "~/features/weather/hooks/use-weather-condi
 export function WeatherCard({
 	latitude,
 	longitude,
+	stationId,
 }: {
 	latitude: number;
 	longitude: number;
+	stationId?: string | null;
 }) {
-	const {
-		observation,
-		isLoadingInitial,
-		isLoadingStations,
-		isLoadingObservation,
-		isError,
-		error,
-	} = useWeatherConditions({ latitude, longitude });
+	const { observation, isLoading, isError, error } = useWeatherConditions({
+		latitude,
+		longitude,
+		stationId,
+	});
 
 	if (isError) {
 		return (
@@ -35,22 +34,24 @@ export function WeatherCard({
 		);
 	}
 
-	if (!observation && isLoadingInitial) {
+	if (!stationId) {
 		return (
-			<WeatherCardSkeleton>
-				{isLoadingStations
-					? "Finding nearby weather stations..."
-					: isLoadingObservation
-						? "Loading current conditions..."
-						: "Real-time weather conditions and forecasts for this airport."}
+			<WeatherCardSkeleton title="Weather Unavailable">
+				Unable to locate nearby weather station
 			</WeatherCardSkeleton>
+		);
+	}
+
+	if (isLoading) {
+		return (
+			<WeatherCardSkeleton>Loading current conditions...</WeatherCardSkeleton>
 		);
 	}
 
 	if (observation) {
 		return (
 			<WeatherCardSkeleton>
-				{observation?.properties?.textDescription ?? "Loading..."}
+				{observation?.properties?.textDescription ?? "No description available"}
 			</WeatherCardSkeleton>
 		);
 	}
