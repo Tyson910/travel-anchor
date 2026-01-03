@@ -77,6 +77,9 @@ export const observationResponseSchema = z.object({
 		// Weather Conditions
 		temperature: quantitativeValueSchema,
 		textDescription: nonEmptyStringValidator.nullish(),
+		windChill: quantitativeValueSchema.nullish(),
+		heatIndex: quantitativeValueSchema.nullish(),
+		dewpoint: quantitativeValueSchema.nullish(),
 
 		// Wind
 		windSpeed: quantitativeValueSchema.nullish(),
