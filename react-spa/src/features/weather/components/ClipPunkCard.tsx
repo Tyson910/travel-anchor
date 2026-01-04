@@ -1,3 +1,5 @@
+import type { QuantitativeValueSchema } from "~/features/weather/weather.validators";
+
 import {
 	ArrowUpRight,
 	Clock,
@@ -15,7 +17,10 @@ import {
 
 import { Skeleton } from "~/components/ui/skeleton";
 import { useWeatherConditions } from "~/features/weather/hooks/use-weather-conditions";
-import { formatWeatherValue } from "~/features/weather/unit-math";
+import {
+	type FormattedWeatherValue,
+	formatWeatherValue,
+} from "~/features/weather/unit-math";
 import { WEATHER_BASE_URL } from "~/features/weather/weather-client";
 
 // --- Type Definitions ---
@@ -41,6 +46,21 @@ function formatCoordinates(latitude: number, longitude: number): string {
 	const latDir = latitude >= 0 ? "N" : "S";
 	const lonDir = longitude >= 0 ? "E" : "W";
 	return `${Math.abs(latitude).toFixed(4)}° ${latDir}, ${Math.abs(longitude).toFixed(4)}° ${lonDir}`;
+}
+
+function calculateFeelsLike(
+	temperature: QuantitativeValueSchema,
+	windChill: QuantitativeValueSchema | null | undefined,
+	heatIndex: QuantitativeValueSchema | null | undefined,
+): FormattedWeatherValue {
+	// Priority: windChill → heatIndex → temperature
+	const windChillFormatted = windChill ? formatWeatherValue(windChill) : null;
+	if (windChillFormatted) return windChillFormatted;
+
+	const heatIndexFormatted = heatIndex ? formatWeatherValue(heatIndex) : null;
+	if (heatIndexFormatted) return heatIndexFormatted;
+
+	return formatWeatherValue(temperature);
 }
 
 // --- Sub-Components ---
@@ -177,6 +197,12 @@ export function ClipPunkView({
 	);
 	const dewPoint = formatWeatherValue(properties?.dewpoint ?? { value: null });
 
+	const feelsLike = calculateFeelsLike(
+		properties?.temperature ?? { value: null },
+		properties?.windChill,
+		properties?.heatIndex,
+	);
+
 	if (isError) {
 		return (
 			<div className="bg-card shadow-[8px_8px_0px_0px_hsl(var(--foreground))] border-2 border-foreground">
@@ -303,7 +329,7 @@ export function ClipPunkView({
 											Feels Like
 										</span>
 										<span className="text-6xl font-mono font-bold leading-none tracking-tighter">
-											{temp?.formattedString ?? "--"}
+											{feelsLike?.formattedString ?? "--"}
 										</span>
 									</div>
 
