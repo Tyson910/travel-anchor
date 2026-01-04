@@ -179,7 +179,7 @@ export const unitNotationSchema = z.union([
  */
 const quantitativeValueSchema = z.object({
 	value: z.number().nullable(), // NWS often returns null for missing sensor data
-	unitCode: nonEmptyStringValidator.optional(),
+	unitCode: z.templateLiteral(["wmoUnit:", unitNotationSchema]).optional(),
 	qualityControl: nonEmptyStringValidator.optional(),
 });
 
