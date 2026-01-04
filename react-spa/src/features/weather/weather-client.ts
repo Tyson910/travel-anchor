@@ -20,7 +20,14 @@ export async function fetchWeatherStation({
 }: {
 	latitude: number;
 	longitude: number;
-}): Promise<StationsResponse["features"][number]["properties"] | null> {
+}): Promise<{
+	stationProperties: StationsResponse["features"][number]["properties"] | null;
+	gridCoordinates: {
+		gridId: string;
+		gridX: number;
+		gridY: number;
+	} | null;
+} | null> {
 	try {
 		const pointsResponse = await weatherClient.GET(
 			"/points/{latitude},{longitude}",
@@ -45,6 +52,12 @@ export async function fetchWeatherStation({
 		}
 
 		const pointData = pointsResponseSchema.parse(pointsResponse.data);
+
+		const gridCoordinates = {
+			gridId: pointData.properties.gridId,
+			gridX: pointData.properties.gridX,
+			gridY: pointData.properties.gridY,
+		};
 
 		const stationResponse = await weatherClient.GET(
 			"/gridpoints/{wfo}/{x},{y}/stations",
@@ -77,7 +90,10 @@ export async function fetchWeatherStation({
 			return null;
 		}
 
-		return firstStation.properties;
+		return {
+			stationProperties: firstStation.properties,
+			gridCoordinates,
+		};
 	} catch (error) {
 		console.error("Error fetching weather station:", error);
 		return null;
