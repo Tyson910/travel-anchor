@@ -180,7 +180,12 @@ export const unitNotationSchema = z.union([
 const quantitativeValueSchema = z.object({
 	value: z.number().nullable(), // NWS often returns null for missing sensor data
 	unitCode: z.templateLiteral(["wmoUnit:", unitNotationSchema]).optional(),
-	qualityControl: nonEmptyStringValidator.optional(),
+	qualityControl: z
+		.enum(["Z", "C", "S", "V", "X", "Q", "G", "B", "T"])
+		.optional()
+		.describe(
+			"For values in observation records, the quality control flag from the MADIS system. The definitions of these flags can be found at https://madis.ncep.noaa.gov/madis_sfc_qc_notes.shtml",
+		),
 });
 
 // --- Route 1: GET /points/{latitude},{longitude} ---
