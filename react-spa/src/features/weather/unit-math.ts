@@ -16,7 +16,7 @@ export type FormattedWeatherValue = {
  */
 function degreesToCardinal(degrees: number) {
 	const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"] as const;
-	const index = Math.round(((degrees % 360) / 45) % 8);
+	const index = Math.floor((((degrees % 360) + 360) % 360) / 45) % 8;
 	return directions[index];
 }
 
@@ -142,6 +142,7 @@ export function formatWeatherValue({
 		case "degrees_true": {
 			const rounded = Math.round(value);
 			const cardinal = degreesToCardinal(rounded);
+			if (!cardinal) return null;
 			return {
 				formattedString: `${rounded}° ${cardinal}`,
 				userFriendlyUnit: "°",

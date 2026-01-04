@@ -291,4 +291,105 @@ describe("formatWeatherValue", () => {
 			expect(result).toBeNull();
 		});
 	});
+
+	describe("Wind direction edge cases - Bug reproduction", () => {
+		it("handles degree 337.5 (boundary that can round to index 8)", () => {
+			const input: QuantitativeValueSchema = {
+				value: 337.5,
+				unitCode: "wmoUnit:degree_(angle)",
+			};
+			const result = formatWeatherValue(input);
+			expect(result).not.toBeNull();
+			expect(result?.formattedString).toMatch(/^\d+° [A-Z]{1,2}$/);
+		});
+
+		it("handles degree 359.9 (near 360, should wrap to N)", () => {
+			const input: QuantitativeValueSchema = {
+				value: 359.9,
+				unitCode: "wmoUnit:degree_(angle)",
+			};
+			const result = formatWeatherValue(input);
+			expect(result).not.toBeNull();
+			expect(result?.formattedString).toMatch(/^\d+° [A-Z]{1,2}$/);
+		});
+
+		it("handles degree 360 (should wrap to N)", () => {
+			const input: QuantitativeValueSchema = {
+				value: 360,
+				unitCode: "wmoUnit:degree_(angle)",
+			};
+			const result = formatWeatherValue(input);
+			expect(result).not.toBeNull();
+			expect(result?.formattedString).toMatch(/^\d+° [A-Z]{1,2}$/);
+		});
+
+		it("handles negative degrees (-90 should map to W)", () => {
+			const input: QuantitativeValueSchema = {
+				value: -90,
+				unitCode: "wmoUnit:degree_(angle)",
+			};
+			const result = formatWeatherValue(input);
+			expect(result).not.toBeNull();
+			expect(result?.formattedString).toMatch(/^-?\d+° [A-Z]{1,2}$/);
+		});
+
+		it("handles degrees > 360 (720 should wrap to N)", () => {
+			const input: QuantitativeValueSchema = {
+				value: 720,
+				unitCode: "wmoUnit:degree_(angle)",
+			};
+			const result = formatWeatherValue(input);
+			expect(result).not.toBeNull();
+			expect(result?.formattedString).toMatch(/^\d+° [A-Z]{1,2}$/);
+		});
+
+		it.each([
+			22.4, 22.5, 22.6, 67.4, 67.5, 67.6, 112.4, 112.5, 112.6, 157.4, 157.5,
+			157.6, 202.4, 202.5, 202.6, 247.4, 247.5, 247.6, 292.4, 292.5, 292.6,
+			337.4, 337.5, 337.6,
+		])(
+			"handles fractional degrees at cardinal direction boundaries (%.1f°)",
+			(degrees) => {
+				const input: QuantitativeValueSchema = {
+					value: degrees,
+					unitCode: "wmoUnit:degree_(angle)",
+				};
+				const result = formatWeatherValue(input);
+				expect(result).not.toBeNull();
+				expect(result?.formattedString).toMatch(/^\d+° [A-Z]{1,2}$/);
+			},
+		);
+
+		it.each([337.5, 359.9, 360, -45, 720])(
+			"handles degrees_true with edge cases ($degrees°)",
+			(degrees) => {
+				const input: QuantitativeValueSchema = {
+					value: degrees,
+					unitCode: "wmoUnit:degrees_true",
+				};
+				const result = formatWeatherValue(input);
+				expect(result).not.toBeNull();
+				expect(result?.formattedString).toMatch(/^-?\d+° [A-Z]{1,2}$/);
+			},
+		);
+
+		it.each([
+			{ degree: 0, direction: "N" },
+			{ degree: 45, direction: "NE" },
+			{ degree: 90, direction: "E" },
+			{ degree: 135, direction: "SE" },
+			{ degree: 180, direction: "S" },
+			{ degree: 225, direction: "SW" },
+			{ degree: 270, direction: "W" },
+			{ degree: 315, direction: "NW" },
+		])("verifies $degree° maps to $direction", ({ degree, direction }) => {
+			const input: QuantitativeValueSchema = {
+				value: degree,
+				unitCode: "wmoUnit:degree_(angle)",
+			};
+			const result = formatWeatherValue(input);
+			expect(result).not.toBeNull();
+			expect(result?.formattedString).toContain(direction);
+		});
+	});
 });
