@@ -15,6 +15,7 @@ import {
 
 import { Skeleton } from "~/components/ui/skeleton";
 import { useWeatherConditions } from "~/features/weather/hooks/use-weather-conditions";
+import { formatWeatherValue } from "~/features/weather/unit-math";
 import { WEATHER_BASE_URL } from "~/features/weather/weather-client";
 
 // --- Type Definitions ---
@@ -35,24 +36,6 @@ const STATIC_FORECAST: ForecastItem[] = [
 ];
 
 // --- Utility Functions ---
-
-function celsiusToFahrenheit(celsius: number): number {
-	if (celsius === null) return 0;
-	return Math.round((celsius * 9) / 5 + 32);
-}
-
-function formatWindDirection(degrees: number | null): string {
-	if (degrees === null) return "--";
-	const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-	const index = Math.round(degrees / 45) % 8;
-	return directions[index];
-}
-
-function metersToMiles(meters: number | null): string {
-	if (meters === null) return "--";
-	const miles = meters / 1609.34;
-	return miles >= 10 ? "10+" : miles.toFixed(1);
-}
 
 function formatCoordinates(latitude: number, longitude: number): string {
 	const latDir = latitude >= 0 ? "N" : "S";
@@ -178,17 +161,21 @@ export function ClipPunkView({
 
 	// Extract weather data with fallbacks
 	const properties = observation?.properties;
-	const temp =
-		typeof properties?.temperature.value == "number"
-			? // TODO: build unit formatter function!
-				celsiusToFahrenheit(properties.temperature.value)
-			: null;
+	const temp = formatWeatherValue(properties?.temperature ?? { value: null });
 	const condition = properties?.textDescription ?? "Unknown";
-	const windSpeed = properties?.windSpeed?.value ?? null;
-	const windDirection = properties?.windDirection?.value ?? null;
-	const humidity = properties?.relativeHumidity?.value ?? null;
-	const visibility = properties?.visibility?.value ?? null;
-	const dewPoint = properties?.dewpoint?.value;
+	const windSpeed = formatWeatherValue(
+		properties?.windSpeed ?? { value: null },
+	);
+	const windDirection = formatWeatherValue(
+		properties?.windDirection ?? { value: null },
+	);
+	const humidity = formatWeatherValue(
+		properties?.relativeHumidity ?? { value: null },
+	);
+	const visibility = formatWeatherValue(
+		properties?.visibility ?? { value: null },
+	);
+	const dewPoint = formatWeatherValue(properties?.dewpoint ?? { value: null });
 
 	if (isError) {
 		return (
@@ -316,7 +303,7 @@ export function ClipPunkView({
 											Feels Like
 										</span>
 										<span className="text-6xl font-mono font-bold leading-none tracking-tighter">
-											{temp}° F
+											{temp?.formattedString ?? "--"}
 										</span>
 									</div>
 
@@ -326,7 +313,9 @@ export function ClipPunkView({
 											<span className="text-[10px] text-primary-foreground/60 font-mono uppercase">
 												Actual
 											</span>
-											<span className="text-xl font-bold">{temp}° F</span>
+											<span className="text-xl font-bold">
+												{temp?.formattedString ?? "--"}
+											</span>
 										</div>
 										<div className="h-8 w-px bg-primary-foreground/20"></div>
 										<div className="flex flex-col">
@@ -347,28 +336,29 @@ export function ClipPunkView({
 					<div className="grid grid-cols-2 md:grid-cols-4 bg-card">
 						<DataBlock
 							label="Wind Velocity"
-							value={windSpeed !== null ? Math.round(windSpeed) : "--"}
-							unit="MPH"
+							value={windSpeed?.value ?? "--"}
+							unit={windSpeed?.userFriendlyUnit}
 							icon={Wind}
-							subtext={`Dir: ${formatWindDirection(windDirection)}`}
+							subtext={
+								windDirection
+									? `Dir: ${windDirection.formattedString}`
+									: undefined
+							}
 						/>
 						<DataBlock
 							label="Visibility"
-							value={metersToMiles(visibility)}
-							unit="MI"
+							value={visibility?.value ?? "--"}
+							unit={visibility?.userFriendlyUnit}
 							icon={Eye}
 							subtext="Clear"
 						/>
 						<DataBlock
 							label="Humidity"
-							value={humidity !== null ? Math.round(humidity) : "--"}
-							unit="%"
+							value={humidity?.value ?? "--"}
+							unit={humidity?.userFriendlyUnit}
 							icon={Droplets}
 							subtext={
-								dewPoint != null
-									? // TODO: build unit formatter function!
-										`Dew: ${celsiusToFahrenheit(dewPoint)}° F`
-									: undefined
+								dewPoint ? `Dew: ${dewPoint.formattedString}` : undefined
 							}
 						/>
 						<DataBlock
