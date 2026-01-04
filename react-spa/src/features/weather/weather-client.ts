@@ -99,3 +99,23 @@ export async function fetchWeatherStation({
 		return null;
 	}
 }
+
+// The API is organized into these main endpoint groups:
+// 1. Alerts - /alerts* (8 endpoints) - Severe weather warnings
+// 2. Aviation - /aviation/* (7 endpoints) - CWUs and SIGMETs
+// 3. Points - /points/{lat},{lon}* (3 endpoints) - Location-based weather lookup
+// 4. Gridpoints - /gridpoints/{wfo},{x},{y}* (4 endpoints) - Detailed forecasts
+// 5. Stations - /stations* (7 endpoints) - Weather station data & observations
+// 6. Offices - /offices* (3 endpoints) - NWS forecast office info
+// 7. Products - /products* (8 endpoints) - Text weather products
+// 8. Radar - /radar/* (6 endpoints) - Radar server/station info
+// 9. Zones - /zones/* (5 endpoints) - Weather zone forecasts
+// 10. Icons - /icons* (4 endpoints) - Weather icons
+// 11. Glossary - /glossary - Terminology
+// 12. Thumbnails - /thumbnails/satellite/* - Satellite images
+// For a travel anchor app, I'd assume you need:
+// - /points/* (location lookup)
+// - /gridpoints/{wfo},{x},{y}/forecast* (forecasts)
+// - /alerts/active* (weather warnings)
+// - /stations/{stationId}/observations/latest (current conditions)
+// The weather data I actually need for your application is the location lookup in order to find the stationId. From there I want /stations/{stationId}/observations/latest & /alerts/active*
