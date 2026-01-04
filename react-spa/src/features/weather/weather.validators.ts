@@ -1,3 +1,5 @@
+import type { components } from "@generated/weather-api/fetch-client";
+
 import * as z from "zod";
 
 import { nonEmptyStringValidator } from "@/lib/validators";
@@ -196,7 +198,9 @@ const quantitativeValueSchema = z.object({
  */
 export const pointsResponseSchema = z.object({
 	properties: z.object({
-		gridId: nonEmptyStringValidator,
+		gridId: z.string().length(3) as z.ZodType<
+			components["parameters"]["GridpointWFO"]
+		>,
 		gridX: z.number().int(),
 		gridY: z.number().int(),
 		// Useful context but not strictly requested:
