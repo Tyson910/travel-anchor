@@ -15,7 +15,7 @@ import {
 
 import { Skeleton } from "~/components/ui/skeleton";
 import { useWeatherConditions } from "~/features/weather/hooks/use-weather-conditions";
-import { WEATHER_BASE_URL } from "../weather-client";
+import { WEATHER_BASE_URL } from "~/features/weather/weather-client";
 
 // --- Type Definitions ---
 
@@ -36,7 +36,7 @@ const STATIC_FORECAST: ForecastItem[] = [
 
 // --- Utility Functions ---
 
-function celsiusToFahrenheit(celsius: number | null): number {
+function celsiusToFahrenheit(celsius: number): number {
 	if (celsius === null) return 0;
 	return Math.round((celsius * 9) / 5 + 32);
 }
@@ -52,18 +52,6 @@ function metersToMiles(meters: number | null): string {
 	if (meters === null) return "--";
 	const miles = meters / 1609.34;
 	return miles >= 10 ? "10+" : miles.toFixed(1);
-}
-
-function calculateDewPoint(
-	tempC: number | null,
-	humidity: number | null,
-): number {
-	if (tempC === null || humidity === null || humidity === 0) return 0;
-	const a = 17.27;
-	const b = 237.7;
-	const alpha = (a * tempC) / (b + tempC) + Math.log(humidity / 100);
-	const dewPointC = (b * alpha) / (a - alpha);
-	return celsiusToFahrenheit(dewPointC);
 }
 
 function formatCoordinates(latitude: number, longitude: number): string {
@@ -190,13 +178,17 @@ export function ClipPunkView({
 
 	// Extract weather data with fallbacks
 	const properties = observation?.properties;
-	const temp = properties?.temperature?.value ?? null;
+	const temp =
+		typeof properties?.temperature.value == "number"
+			? // TODO: build unit formatter function!
+				celsiusToFahrenheit(properties.temperature.value)
+			: null;
 	const condition = properties?.textDescription ?? "Unknown";
 	const windSpeed = properties?.windSpeed?.value ?? null;
 	const windDirection = properties?.windDirection?.value ?? null;
 	const humidity = properties?.relativeHumidity?.value ?? null;
 	const visibility = properties?.visibility?.value ?? null;
-	const dewPoint = calculateDewPoint(temp, humidity);
+	const dewPoint = properties?.dewpoint?.value;
 
 	if (isError) {
 		return (
@@ -313,17 +305,39 @@ export function ClipPunkView({
 							<div className="relative z-10">
 								<div className="flex justify-between items-start">
 									<span className="text-[10px] font-mono uppercase border border-primary-foreground/30 px-2 py-0.5 rounded-full">
-										Current
+										Current Conditions
 									</span>
 									<WeatherIcon type={getConditionIcon(condition)} size={24} />
 								</div>
 								<div className="mt-4">
-									<span className="text-5xl font-mono font-bold">
-										{celsiusToFahrenheit(temp)}°
-									</span>
-									<p className="text-sm text-primary-foreground/80 mt-1">
-										{condition}
-									</p>
+									{/* Primary Metric: Feels Like */}
+									<div className="flex flex-col">
+										<span className="text-[10px] text-primary-foreground/80 font-mono uppercase mb-1">
+											Feels Like
+										</span>
+										<span className="text-6xl font-mono font-bold leading-none tracking-tighter">
+											{temp}° F
+										</span>
+									</div>
+
+									{/* Secondary Metric: Actual */}
+									<div className="flex items-center gap-3 mt-4 pt-4 border-t border-primary-foreground/20">
+										<div className="flex flex-col">
+											<span className="text-[10px] text-primary-foreground/60 font-mono uppercase">
+												Actual
+											</span>
+											<span className="text-xl font-bold">{temp}° F</span>
+										</div>
+										<div className="h-8 w-px bg-primary-foreground/20"></div>
+										<div className="flex flex-col">
+											<span className="text-[10px] text-primary-foreground/60 font-mono uppercase">
+												Sky
+											</span>
+											<span className="text-sm font-medium whitespace-nowrap">
+												{condition}
+											</span>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -350,7 +364,12 @@ export function ClipPunkView({
 							value={humidity !== null ? Math.round(humidity) : "--"}
 							unit="%"
 							icon={Droplets}
-							subtext={`Dew: ${dewPoint}°`}
+							subtext={
+								dewPoint != null
+									? // TODO: build unit formatter function!
+										`Dew: ${celsiusToFahrenheit(dewPoint)}° F`
+									: undefined
+							}
 						/>
 						<DataBlock
 							label="Elevation"
@@ -390,7 +409,7 @@ export function ClipPunkView({
 					</div>
 
 					{/* Footer / System Line */}
-					<div className="bg-foreground text-primary-foreground text-[10px] font-mono p-2 flex justify-between items-center">
+					<div className="bg-foreground text-background text-[10px] font-mono p-2 flex justify-between items-center">
 						<span>DATA SOURCE: {WEATHER_BASE_URL}</span>
 						<span className="flex items-center gap-2">
 							<span className="size-1.5 bg-success-foreground rounded-full"></span>
