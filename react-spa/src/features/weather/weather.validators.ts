@@ -270,9 +270,9 @@ export const observationResponseSchema = z.object({
 	}),
 });
 
-export type UnitNotation = z.infer<typeof unitNotationSchema>;
-
 // --- Export Types ---
+export type UnitNotation = z.infer<typeof unitNotationSchema>;
+export type QuantitativeValueSchema = z.infer<typeof quantitativeValueSchema>;
 export type PointsResponse = z.infer<typeof pointsResponseSchema>;
 export type StationsResponse = z.infer<typeof stationsResponseSchema>;
 export type ObservationResponse = z.infer<typeof observationResponseSchema>;
