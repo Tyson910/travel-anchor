@@ -34,7 +34,6 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
 import { AirportsMap } from "~/features/airport-search/components/AirportsMap";
-import { WeatherCard } from "~/features/weather/components/WeatherCard";
 import { fetchWeatherStation } from "~/features/weather/weather-client";
 import {
 	getErrorDescription,
@@ -167,12 +166,6 @@ function AirportHubPage() {
 						Coming Soon
 					</h2>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<Card variant="technical" className="border-dashed">
-							<WeatherCard
-								stationId={weatherStation?.stationIdentifier ?? ""}
-							/>
-						</Card>
-
 						<Card variant="technical" className="border-dashed">
 							<Empty>
 								<EmptyHeader>
