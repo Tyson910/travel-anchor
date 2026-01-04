@@ -275,9 +275,52 @@ export const observationResponseSchema = z.object({
 	}),
 });
 
+// --- Route 4: GET /gridpoints/{gridId}/{gridX},{gridY}/forecast ---
+
+/**
+ * Schema for a single forecast period from the NWS API.
+ */
+export const forecastPeriodSchema = z.object({
+	number: z.number(),
+	// name: z.string(),
+	startTime: nonEmptyStringValidator,
+	endTime: nonEmptyStringValidator,
+	isDaytime: z.boolean(),
+	temperature: z.number(),
+	temperatureUnit: z.enum(["F", "C"]),
+	temperatureTrend: z
+		.union([
+			z.literal("rising"),
+			z.literal("falling"),
+			z.literal("steady"),
+			z.null(),
+		])
+		.optional(),
+	probabilityOfPrecipitation: quantitativeValueSchema,
+	dewpoint: quantitativeValueSchema.nullish(),
+	relativeHumidity: quantitativeValueSchema.nullish(),
+	windSpeed: nonEmptyStringValidator,
+	windDirection: nonEmptyStringValidator,
+	shortForecast: nonEmptyStringValidator,
+	// icon: z.url(),
+	// detailedForecast: nonEmptyStringValidator,
+});
+
+/**
+ * Schema for the /gridpoints/.../forecast endpoint response.
+ * Returns an array of forecast periods.
+ */
+export const forecastValidator = z.object({
+	properties: z.object({
+		periods: z.array(forecastPeriodSchema),
+	}),
+});
+
 // --- Export Types ---
 export type UnitNotation = z.infer<typeof unitNotationSchema>;
 export type QuantitativeValueSchema = z.infer<typeof quantitativeValueSchema>;
 export type PointsResponse = z.infer<typeof pointsResponseSchema>;
 export type StationsResponse = z.infer<typeof stationsResponseSchema>;
 export type ObservationResponse = z.infer<typeof observationResponseSchema>;
+export type ForecastPeriod = z.infer<typeof forecastPeriodSchema>;
+export type ForecastResponse = z.infer<typeof forecastValidator>;
