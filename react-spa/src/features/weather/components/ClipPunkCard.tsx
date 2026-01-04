@@ -1,4 +1,7 @@
-import type { QuantitativeValueSchema } from "~/features/weather/weather.validators";
+import type {
+	ForecastPeriod,
+	QuantitativeValueSchema,
+} from "~/features/weather/weather.validators";
 
 import {
 	ArrowUpRight,
@@ -17,6 +20,7 @@ import {
 
 import { Skeleton } from "~/components/ui/skeleton";
 import { useWeatherConditions } from "~/features/weather/hooks/use-weather-conditions";
+import { useWeatherForecast } from "~/features/weather/hooks/use-weather-forecast";
 import {
 	type FormattedWeatherValue,
 	formatWeatherValue,
@@ -28,17 +32,9 @@ import { WEATHER_BASE_URL } from "~/features/weather/weather-client";
 interface ForecastItem {
 	time: string;
 	temp: number;
+	temperatureUnit: string;
 	icon: string;
 }
-
-// --- Static Data ---
-
-const STATIC_FORECAST: ForecastItem[] = [
-	{ time: "14:00", temp: 65, icon: "sun" },
-	{ time: "15:00", temp: 64, icon: "cloud" },
-	{ time: "16:00", temp: 62, icon: "cloud" },
-	{ time: "17:00", temp: 59, icon: "rain" },
-];
 
 // --- Utility Functions ---
 
@@ -61,6 +57,41 @@ function calculateFeelsLike(
 	if (heatIndexFormatted) return heatIndexFormatted;
 
 	return formatWeatherValue(temperature);
+}
+
+function getConditionIconFromForecast(forecast: string) {
+	const lower = forecast.toLowerCase();
+	if (lower.includes("rain") || lower.includes("shower")) return "rain";
+	if (lower.includes("storm") || lower.includes("thunder")) return "storm";
+	if (lower.includes("snow")) return "snow";
+	if (lower.includes("cloud") || lower.includes("overcast")) return "cloud";
+	if (lower.includes("clear") || lower.includes("sunny")) return "sun";
+	return "cloud";
+}
+
+function getNextFourHourlyPeriods(
+	periods: ForecastPeriod[] | undefined,
+): ForecastItem[] {
+	if (!periods || periods.length === 0) return [];
+
+	const now = new Date();
+
+	// Filter periods that start after current time
+	const futurePeriods = periods.filter(
+		(period) => new Date(period.startTime) > now,
+	);
+
+	// Take the next 4 hours
+	return futurePeriods.slice(0, 4).map((period) => ({
+		time: new Date(period.startTime).toLocaleTimeString("en-US", {
+			hour: "2-digit",
+			minute: "2-digit",
+			hour12: true,
+		}),
+		temp: period.temperature,
+		temperatureUnit: period.temperatureUnit,
+		icon: getConditionIconFromForecast(period.shortForecast),
+	}));
 }
 
 // --- Sub-Components ---
@@ -148,6 +179,82 @@ function LocationSpecDetail({
 	);
 }
 
+interface ForecastStripProps {
+	gridId: string;
+	gridX: number;
+	gridY: number;
+}
+
+function ForecastStrip({ gridId, gridX, gridY }: ForecastStripProps) {
+	const { forecast, isLoading, isError } = useWeatherForecast({
+		wfo: gridId,
+		x: gridX,
+		y: gridY,
+	});
+
+	const displayForecast = getNextFourHourlyPeriods(
+		forecast?.properties.periods,
+	);
+
+	if (isLoading) {
+		return (
+			<div className="grid grid-cols-4 gap-4">
+				<div className="flex flex-col items-center justify-center p-3 bg-card border border-border">
+					<Skeleton className="h-4 w-12 mb-2" />
+					<Skeleton className="h-5 w-5 mb-2 rounded-full" />
+					<Skeleton className="h-4 w-8" />
+				</div>
+				<div className="flex flex-col items-center justify-center p-3 bg-card border border-border">
+					<Skeleton className="h-4 w-12 mb-2" />
+					<Skeleton className="h-5 w-5 mb-2 rounded-full" />
+					<Skeleton className="h-4 w-8" />
+				</div>
+				<div className="flex flex-col items-center justify-center p-3 bg-card border border-border">
+					<Skeleton className="h-4 w-12 mb-2" />
+					<Skeleton className="h-5 w-5 mb-2 rounded-full" />
+					<Skeleton className="h-4 w-8" />
+				</div>
+				<div className="flex flex-col items-center justify-center p-3 bg-card border border-border">
+					<Skeleton className="h-4 w-12 mb-2" />
+					<Skeleton className="h-5 w-5 mb-2 rounded-full" />
+					<Skeleton className="h-4 w-8" />
+				</div>
+			</div>
+		);
+	}
+
+	if (isError || displayForecast.length === 0) {
+		return (
+			<div className="col-span-4 text-center text-sm text-muted-foreground py-4 bg-card border border-border p-6">
+				<p className="font-mono">Forecast data unavailable</p>
+			</div>
+		);
+	}
+
+	return (
+		<div className="grid grid-cols-4 gap-4">
+			{displayForecast.map((item, idx) => (
+				<div
+					key={`${item.time}-${item.temp}-${item.icon}-${idx}`}
+					className="flex flex-col items-center justify-center p-3 bg-card border border-border shadow-sm hover:shadow-md transition-shadow"
+				>
+					<span className="text-xs font-mono text-muted-foreground mb-2">
+						{item.time}
+					</span>
+					<WeatherIcon
+						type={item.icon}
+						size={20}
+						className="text-foreground mb-2"
+					/>
+					<span className="font-bold text-sm">
+						{item.temp}°{item.temperatureUnit}
+					</span>
+				</div>
+			))}
+		</div>
+	);
+}
+
 // --- Main Application ---
 
 interface ClipPunkViewProps {
@@ -158,6 +265,9 @@ interface ClipPunkViewProps {
 	airportName: string;
 	city: string;
 	elevation?: number;
+	gridId: string;
+	gridX: number;
+	gridY: number;
 }
 
 export function ClipPunkView({
@@ -168,6 +278,9 @@ export function ClipPunkView({
 	stationId,
 	city,
 	elevation,
+	gridId,
+	gridX,
+	gridY,
 }: ClipPunkViewProps) {
 	const { observation, isLoading, isError, error } = useWeatherConditions({
 		stationId: stationId,
@@ -404,24 +517,7 @@ export function ClipPunkView({
 							</span>
 						</div>
 
-						<div className="grid grid-cols-4 gap-4">
-							{STATIC_FORECAST.map((item, idx) => (
-								<div
-									key={`${item.time}-${item.temp}-${item.icon}-${idx}`}
-									className="flex flex-col items-center justify-center p-3 bg-card border border-border shadow-sm hover:shadow-md transition-shadow"
-								>
-									<span className="text-xs font-mono text-muted-foreground mb-2">
-										{item.time}
-									</span>
-									<WeatherIcon
-										type={item.icon}
-										size={20}
-										className="text-foreground mb-2"
-									/>
-									<span className="font-bold text-sm">{item.temp}°</span>
-								</div>
-							))}
-						</div>
+						<ForecastStrip gridId={gridId} gridX={gridX} gridY={gridY} />
 					</div>
 
 					{/* Footer / System Line */}

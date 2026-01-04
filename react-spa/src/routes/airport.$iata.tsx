@@ -14,6 +14,7 @@ import {
 	RefreshCw,
 } from "lucide-react";
 
+import { ClipPunkView } from "@/features/weather/components/ClipPunkCard";
 import {
 	Alert,
 	AlertContent,
@@ -71,14 +72,15 @@ export const Route = createFileRoute("/airport/$iata")({
 			});
 		}
 
-		const weatherStation = await fetchWeatherStation({
+		const weatherStationData = await fetchWeatherStation({
 			latitude: airportResponse.data.airport.latitude,
 			longitude: airportResponse.data.airport.longitude,
 		});
 
 		return {
 			airport: airportResponse.data.airport,
-			weatherStation,
+			weatherStation: weatherStationData?.stationProperties ?? null,
+			gridCoordinates: weatherStationData?.gridCoordinates ?? null,
 		};
 	},
 	pendingComponent: LoadingSkeleton,
