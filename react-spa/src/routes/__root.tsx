@@ -1,7 +1,11 @@
 import type { QueryClient } from "@tanstack/react-query";
 
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import {
+	createRootRouteWithContext,
+	HeadContent,
+	Outlet,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { MinimalFooter } from "~/components/layout/MinimalFooter";
@@ -15,6 +19,7 @@ interface MyRouterContext {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
 	component: () => (
 		<>
+			<HeadContent />
 			<div className="min-h-screen bg-background flex flex-col">
 				<MinimalHeader />
 				<div className="flex-1">
