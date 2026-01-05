@@ -13,7 +13,6 @@ import {
 	Droplets,
 	Eye,
 	type LucideIcon,
-	MapPin,
 	Sun,
 	Wind,
 } from "lucide-react";
@@ -37,12 +36,6 @@ interface ForecastItem {
 }
 
 // --- Utility Functions ---
-
-function formatCoordinates(latitude: number, longitude: number): string {
-	const latDir = latitude >= 0 ? "N" : "S";
-	const lonDir = longitude >= 0 ? "E" : "W";
-	return `${Math.abs(latitude).toFixed(4)}° ${latDir}, ${Math.abs(longitude).toFixed(4)}° ${lonDir}`;
-}
 
 function calculateFeelsLike(
 	temperature: QuantitativeValueSchema,
@@ -165,20 +158,6 @@ function DataBlock({
 	);
 }
 
-function LocationSpecDetail({
-	children,
-	Icon,
-}: React.PropsWithChildren<{ Icon: typeof MapPin }>) {
-	return (
-		<div className="inline-flex items-center gap-2 px-2 py-1 bg-muted self-start mt-2 border border-border rounded-sm">
-			<Icon size={12} className="text-muted-foreground" />
-			<span className="text-[10px] font-mono text-muted-foreground uppercase">
-				{children}
-			</span>
-		</div>
-	);
-}
-
 interface ForecastStripProps {
 	gridId: string;
 	gridX: number;
@@ -257,31 +236,21 @@ function ForecastStrip({ gridId, gridX, gridY }: ForecastStripProps) {
 
 // --- Main Application ---
 
-interface ClipPunkViewProps {
-	latitude: number;
-	longitude: number;
+interface WeatherCardProps {
 	stationId: string;
-	airportCode: string;
-	airportName: string;
-	city: string;
 	elevation?: number;
 	gridId: string;
 	gridX: number;
 	gridY: number;
 }
 
-export function ClipPunkView({
-	latitude,
-	longitude,
-	airportCode,
-	airportName,
+export function WeatherCard({
 	stationId,
-	city,
 	elevation,
 	gridId,
 	gridX,
 	gridY,
-}: ClipPunkViewProps) {
+}: WeatherCardProps) {
 	const { observation, isLoading, isError, error } = useWeatherConditions({
 		stationId: stationId,
 	});
@@ -397,31 +366,8 @@ export function ClipPunkView({
 					className={`transition-opacity duration-300 ${isLoading ? "opacity-50" : "opacity-100"}`}
 				>
 					{/* Primary Status Display */}
-					<div className="grid grid-cols-1 md:grid-cols-3 border-b-2 border-foreground">
-						{/* Left: Location Identity */}
-						<div className="p-6 md:col-span-2 border-b md:border-b-0 md:border-r border-border flex flex-col justify-center">
-							<div className="flex items-center gap-3 mb-2">
-								<h2 className="text-6xl font-black tracking-tighter">
-									{airportCode}
-								</h2>
-								<div className="flex flex-col">
-									<span className="text-lg font-medium leading-none">
-										{city}
-									</span>
-									<span className="text-xs text-muted-foreground font-mono mt-1">
-										{airportName}
-									</span>
-								</div>
-							</div>
-							{/* Location Details */}
-							<div className="flex flex-row gap-x-3">
-								<LocationSpecDetail Icon={MapPin}>
-									{formatCoordinates(latitude, longitude)}
-								</LocationSpecDetail>
-							</div>
-						</div>
-
-						{/* Right: Primary Weather */}
+					<div className="border-b-2 border-foreground">
+						{/* Primary Weather */}
 						<div className="p-6 bg-primary text-primary-foreground flex flex-col justify-between relative overflow-hidden group">
 							{/* Abstract Background Decoration */}
 							<div className="absolute -right-4 -top-4 text-primary-foreground/10 group-hover:text-primary-foreground/20 transition-colors">

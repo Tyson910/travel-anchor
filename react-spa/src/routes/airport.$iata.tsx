@@ -8,20 +8,19 @@ import {
 import {
 	ArrowLeft,
 	Clock,
+	Cloud,
 	Home,
-	Mountain,
+	MapPin,
 	Plane,
 	RefreshCw,
 } from "lucide-react";
 
-import { ClipPunkView } from "@/features/weather/components/ClipPunkCard";
 import {
 	Alert,
 	AlertContent,
 	AlertDescription,
 	AlertTitle,
 } from "~/components/ui/alert";
-import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import {
@@ -34,6 +33,9 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
 import { AirportsMap } from "~/features/airport-search/components/AirportsMap";
+import { LocationSpecDetail } from "~/features/weather/components/LocationSpecDetail";
+import { WeatherCard } from "~/features/weather/components/WeatherCard";
+import { formatCoordinates } from "~/features/weather/unit-math";
 import { fetchWeatherStation } from "~/features/weather/weather-client";
 import {
 	getErrorDescription,
@@ -87,7 +89,7 @@ export const Route = createFileRoute("/airport/$iata")({
 });
 
 function AirportHubPage() {
-	const { airport, weatherStation } = Route.useLoaderData();
+	const { airport, weatherStation, gridCoordinates } = Route.useLoaderData();
 
 	const locationParts = [
 		airport.city_name,
@@ -121,30 +123,32 @@ function AirportHubPage() {
 				</nav>
 
 				{/* Hero Header */}
-				<header className="space-y-3 mb-8">
-					<Badge variant="iata" size="technical">
-						{airport.iata_code}
-					</Badge>
-					<h1 className="text-3xl font-bold font-sans tracking-tight text-foreground">
-						{airport.name}
-					</h1>
-					<p className="text-lg text-muted-foreground">{locationString}</p>
-					<div className="flex items-center gap-4 text-sm text-muted-foreground">
-						{airport.timezone && (
-							<span className="inline-flex items-center gap-1.5">
-								<Clock className="size-3" />
-								{airport.timezone}
-							</span>
-						)}
-						{airport.elevation_ft !== null && (
-							<span className="inline-flex items-center gap-1.5">
-								<Mountain className="size-3" />
-								{airport.elevation_ft.toLocaleString()} ft
-							</span>
-						)}
-						{!airport.timezone && airport.elevation_ft === null && (
-							<span>Unavailable</span>
-						)}
+				<header className="mb-8">
+					<div className="p-6 flex flex-col justify-center bg-card border-2 border-foreground shadow-[4px_4px_0px_0px_hsl(var(--foreground))]">
+						<div className="flex items-center gap-3 mb-2">
+							<h1 className="text-6xl font-black tracking-tighter">
+								{airport.iata_code}
+							</h1>
+							<div className="flex flex-col">
+								<span className="text-lg font-medium leading-none">
+									{locationString}
+								</span>
+								<span className="text-xs text-muted-foreground font-mono mt-1">
+									{airport.name}
+								</span>
+							</div>
+						</div>
+						{/* Location Details */}
+						<div className="flex flex-row gap-x-3 flex-wrap">
+							<LocationSpecDetail Icon={MapPin}>
+								{formatCoordinates(airport.latitude, airport.longitude)}
+							</LocationSpecDetail>
+							{airport.timezone && (
+								<LocationSpecDetail Icon={Clock}>
+									{airport.timezone}
+								</LocationSpecDetail>
+							)}
+						</div>
 					</div>
 				</header>
 
@@ -156,6 +160,40 @@ function AirportHubPage() {
 					<Card variant="blueprint" size="sm" className="overflow-hidden p-0">
 						<AirportsMap airports={[airport]} />
 					</Card>
+				</section>
+
+				<Separator className="my-6" />
+
+				{/* Weather Section */}
+				<section className="mb-8">
+					<h2 className="text-xl font-medium tracking-tight mb-4">
+						Current Weather Conditions
+					</h2>
+					{weatherStation && gridCoordinates ? (
+						<WeatherCard
+							stationId={weatherStation.stationIdentifier}
+							elevation={airport.elevation_ft ?? undefined}
+							gridId={gridCoordinates.gridId}
+							gridX={gridCoordinates.gridX}
+							gridY={gridCoordinates.gridY}
+						/>
+					) : (
+						<Card variant="technical" className="border-dashed">
+							<Empty>
+								<EmptyHeader>
+									<EmptyMedia variant="icon">
+										<Cloud />
+									</EmptyMedia>
+									<EmptyTitle>Weather Data Unavailable</EmptyTitle>
+									<EmptyDescription>
+										Unable to retrieve weather information for this location.
+										The National Weather Service may not have coverage for this
+										area, or the service may be temporarily unavailable.
+									</EmptyDescription>
+								</EmptyHeader>
+							</Empty>
+						</Card>
+					)}
 				</section>
 
 				<Separator className="my-6" />
@@ -212,6 +250,14 @@ function LoadingSkeleton() {
 				<section className="mb-8">
 					<Skeleton variant="grid" className="h-6 w-24 mb-4" />
 					<Skeleton variant="grid" className="h-[600px] w-full rounded-sm" />
+				</section>
+
+				<Separator className="my-6" />
+
+				{/* Weather Section Skeleton */}
+				<section className="mb-8">
+					<Skeleton variant="grid" className="h-6 w-64 mb-4" />
+					<Skeleton variant="grid" className="h-[500px] w-full rounded-sm" />
 				</section>
 
 				<Separator className="my-6" />

@@ -160,3 +160,15 @@ export function formatWeatherValue({
 			return null;
 	}
 }
+
+/**
+ * Formats geographic coordinates with directional indicators
+ * @param latitude - Latitude value (-90 to 90)
+ * @param longitude - Longitude value (-180 to 180)
+ * @returns Formatted coordinate string (e.g., "40.6413° N, 73.7781° W")
+ */
+export function formatCoordinates(latitude: number, longitude: number): string {
+	const latDir = latitude >= 0 ? "N" : "S";
+	const lonDir = longitude >= 0 ? "E" : "W";
+	return `${Math.abs(latitude).toFixed(4)}° ${latDir}, ${Math.abs(longitude).toFixed(4)}° ${lonDir}`;
+}
