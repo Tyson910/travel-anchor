@@ -11,17 +11,32 @@ import {
 
 import { Button } from "@/components/ui/base-button";
 
-interface Airport {
+type Airport = {
 	iata_code: string;
 	latitude: number;
 	longitude: number;
 	name: string;
 	city_name: string | null;
-}
+	country_code: string;
+};
+
+type DestinationAirport = Airport & {
+	distance_km: number | null;
+	duration_min: number | null;
+	airline_options: Array<{
+		iata_code: string;
+		name: string;
+		is_oneworld: boolean;
+		is_skyteam: boolean;
+		is_staralliance: boolean;
+		url: string | null;
+		is_lowcost: boolean;
+	}>;
+};
 
 interface AirlineRouteMapProps {
 	origin_airport: Airport;
-	destination_airports: Airport[];
+	destination_airports: DestinationAirport[];
 }
 
 export function AirlineRouteMap({ origin_airport }: AirlineRouteMapProps) {
