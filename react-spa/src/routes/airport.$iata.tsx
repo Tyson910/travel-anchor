@@ -15,6 +15,7 @@ import {
 	RefreshCw,
 } from "lucide-react";
 
+import { deSlugifyStr } from "@/lib/formatters";
 import {
 	Alert,
 	AlertContent,
@@ -147,7 +148,7 @@ function AirportHubPage() {
 								</LocationSpecDetail>
 								{airport.timezone && (
 									<LocationSpecDetail Icon={Clock}>
-										{airport.timezone}
+										{deSlugifyStr(airport.timezone)}
 									</LocationSpecDetail>
 								)}
 							</div>
@@ -197,7 +198,7 @@ function AirportHubPage() {
 						<h2 className="text-xl font-medium tracking-tight mb-4">
 							Coming Soon
 						</h2>
-						<div className="grid grid-cols-1  gap-6">
+						<div className="grid grid-cols-1   gap-6">
 							<Card variant="technical" className="border-dashed">
 								<Empty>
 									<EmptyHeader>
