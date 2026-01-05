@@ -126,7 +126,7 @@ function AirportHubPage() {
 
 					{/* Hero Header */}
 					<header className="mb-8">
-						<div className="p-6 flex flex-col justify-center bg-card border-2 border-foreground shadow-[4px_4px_0px_0px_hsl(var(--foreground))]">
+						<div className="py-6 flex flex-col justify-center">
 							<div className="flex items-center gap-3 mb-2">
 								<h1 className="text-6xl font-black tracking-tighter">
 									{airport.iata_code}
@@ -154,25 +154,17 @@ function AirportHubPage() {
 						</div>
 					</header>
 
-					<Separator className="my-6" />
-
 					{/* Map Section */}
 					<section className="mb-8">
-						<h2 className="text-xl font-medium tracking-tight mb-4">
-							Location
-						</h2>
+						<h2 className="sr-only">Location</h2>
 						<Card variant="blueprint" size="sm" className="overflow-hidden p-0">
 							<AirportsMap airports={[airport]} />
 						</Card>
 					</section>
 
-					<Separator className="my-6" />
-
 					{/* Weather Section */}
 					<section className="mb-8">
-						<h2 className="text-xl font-medium tracking-tight mb-4">
-							Current Weather Conditions
-						</h2>
+						<h2 className="sr-only">Current Weather Conditions</h2>
 						{weatherStation && gridCoordinates ? (
 							<WeatherCard
 								stationId={weatherStation.stationIdentifier}
@@ -200,14 +192,12 @@ function AirportHubPage() {
 						)}
 					</section>
 
-					<Separator className="my-6" />
-
 					{/* Future Sections */}
 					<section>
 						<h2 className="text-xl font-medium tracking-tight mb-4">
 							Coming Soon
 						</h2>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div className="grid grid-cols-1  gap-6">
 							<Card variant="technical" className="border-dashed">
 								<Empty>
 									<EmptyHeader>
