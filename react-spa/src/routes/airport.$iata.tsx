@@ -113,14 +113,6 @@ function AirportHubPage() {
 			</head>
 			<div className="bg-primary/2">
 				<div className="container mx-auto px-4 py-8">
-					<title>
-						{airport.name} | {airport.iata_code} | Travel Anchor
-					</title>
-					<meta
-						name="description"
-						content={`Airport information for ${airport.name} (${airport.iata_code}) in ${locationString}`}
-					/>
-
 					{/* Back Navigation */}
 					<nav className="mb-6">
 						<Link
