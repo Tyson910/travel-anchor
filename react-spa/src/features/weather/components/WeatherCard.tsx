@@ -3,6 +3,7 @@ import type {
 	QuantitativeValueSchema,
 } from "~/features/weather/weather.validators";
 
+import { onlineManager } from "@tanstack/react-query";
 import {
 	ArrowUpRight,
 	Clock,
@@ -16,7 +17,9 @@ import {
 	Sun,
 	Wind,
 } from "lucide-react";
+import { useState } from "react";
 
+import { cn } from "@/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useWeatherConditions } from "~/features/weather/hooks/use-weather-conditions";
 import { useWeatherForecast } from "~/features/weather/hooks/use-weather-forecast";
@@ -255,6 +258,9 @@ export function WeatherCard({
 		stationId: stationId,
 	});
 
+	const [isOnline, setIsOnline] = useState(true);
+	onlineManager.subscribe(setIsOnline);
+
 	const getConditionIcon = (condition: string) => {
 		if (condition.toLowerCase().includes("rain")) return "rain";
 		if (condition.toLowerCase().includes("cloud")) return "cloud";
@@ -470,8 +476,13 @@ export function WeatherCard({
 					<div className="bg-foreground text-background text-[10px] font-mono p-2 flex justify-between items-center">
 						<span>DATA SOURCE: {WEATHER_BASE_URL}</span>
 						<span className="flex items-center gap-2">
-							<span className="size-1.5 bg-success-foreground rounded-full"></span>
-							SYSTEM ONLINE
+							<span
+								className={cn([
+									"size-1.5  rounded-full",
+									isOnline ? "bg-success-foreground" : "bg-destructive",
+								])}
+							></span>
+							SYSTEM {isOnline ? "ONLINE" : "OFFLINE"}
 						</span>
 					</div>
 				</main>
