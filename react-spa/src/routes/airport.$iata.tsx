@@ -101,8 +101,8 @@ function AirportHubPage() {
 		locationParts.length > 0 ? locationParts.join(", ") : "Unavailable";
 
 	return (
-		<div className="bg-primary/2">
-			<div className="container mx-auto px-4 py-8">
+		<>
+			<head>
 				<title>
 					{airport.name} | {airport.iata_code} | Travel Anchor
 				</title>
@@ -110,117 +110,130 @@ function AirportHubPage() {
 					name="description"
 					content={`Airport information for ${airport.name} (${airport.iata_code}) in ${locationString}`}
 				/>
+			</head>
+			<div className="bg-primary/2">
+				<div className="container mx-auto px-4 py-8">
+					<title>
+						{airport.name} | {airport.iata_code} | Travel Anchor
+					</title>
+					<meta
+						name="description"
+						content={`Airport information for ${airport.name} (${airport.iata_code}) in ${locationString}`}
+					/>
 
-				{/* Back Navigation */}
-				<nav className="mb-6">
-					<Link
-						to="/"
-						className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-					>
-						<ArrowLeft className="size-4" />
-						Back to Search
-					</Link>
-				</nav>
+					{/* Back Navigation */}
+					<nav className="mb-6">
+						<Link
+							to="/"
+							className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+						>
+							<ArrowLeft className="size-4" />
+							Back to Search
+						</Link>
+					</nav>
 
-				{/* Hero Header */}
-				<header className="mb-8">
-					<div className="p-6 flex flex-col justify-center bg-card border-2 border-foreground shadow-[4px_4px_0px_0px_hsl(var(--foreground))]">
-						<div className="flex items-center gap-3 mb-2">
-							<h1 className="text-6xl font-black tracking-tighter">
-								{airport.iata_code}
-							</h1>
-							<div className="flex flex-col">
-								<span className="text-lg font-medium leading-none">
-									{locationString}
-								</span>
-								<span className="text-xs text-muted-foreground font-mono mt-1">
-									{airport.name}
-								</span>
+					{/* Hero Header */}
+					<header className="mb-8">
+						<div className="p-6 flex flex-col justify-center bg-card border-2 border-foreground shadow-[4px_4px_0px_0px_hsl(var(--foreground))]">
+							<div className="flex items-center gap-3 mb-2">
+								<h1 className="text-6xl font-black tracking-tighter">
+									{airport.iata_code}
+								</h1>
+								<div className="flex flex-col">
+									<span className="text-lg font-medium leading-none">
+										{locationString}
+									</span>
+									<span className="text-xs text-muted-foreground font-mono mt-1">
+										{airport.name}
+									</span>
+								</div>
+							</div>
+							{/* Location Details */}
+							<div className="flex flex-row gap-x-3 flex-wrap">
+								<LocationSpecDetail Icon={MapPin}>
+									{formatCoordinates(airport.latitude, airport.longitude)}
+								</LocationSpecDetail>
+								{airport.timezone && (
+									<LocationSpecDetail Icon={Clock}>
+										{airport.timezone}
+									</LocationSpecDetail>
+								)}
 							</div>
 						</div>
-						{/* Location Details */}
-						<div className="flex flex-row gap-x-3 flex-wrap">
-							<LocationSpecDetail Icon={MapPin}>
-								{formatCoordinates(airport.latitude, airport.longitude)}
-							</LocationSpecDetail>
-							{airport.timezone && (
-								<LocationSpecDetail Icon={Clock}>
-									{airport.timezone}
-								</LocationSpecDetail>
-							)}
+					</header>
+
+					<Separator className="my-6" />
+
+					{/* Map Section */}
+					<section className="mb-8">
+						<h2 className="text-xl font-medium tracking-tight mb-4">
+							Location
+						</h2>
+						<Card variant="blueprint" size="sm" className="overflow-hidden p-0">
+							<AirportsMap airports={[airport]} />
+						</Card>
+					</section>
+
+					<Separator className="my-6" />
+
+					{/* Weather Section */}
+					<section className="mb-8">
+						<h2 className="text-xl font-medium tracking-tight mb-4">
+							Current Weather Conditions
+						</h2>
+						{weatherStation && gridCoordinates ? (
+							<WeatherCard
+								stationId={weatherStation.stationIdentifier}
+								elevation={airport.elevation_ft ?? undefined}
+								gridId={gridCoordinates.gridId}
+								gridX={gridCoordinates.gridX}
+								gridY={gridCoordinates.gridY}
+							/>
+						) : (
+							<Card variant="technical" className="border-dashed">
+								<Empty>
+									<EmptyHeader>
+										<EmptyMedia variant="icon">
+											<Cloud />
+										</EmptyMedia>
+										<EmptyTitle>Weather Data Unavailable</EmptyTitle>
+										<EmptyDescription>
+											Unable to retrieve weather information for this location.
+											The National Weather Service may not have coverage for
+											this area, or the service may be temporarily unavailable.
+										</EmptyDescription>
+									</EmptyHeader>
+								</Empty>
+							</Card>
+						)}
+					</section>
+
+					<Separator className="my-6" />
+
+					{/* Future Sections */}
+					<section>
+						<h2 className="text-xl font-medium tracking-tight mb-4">
+							Coming Soon
+						</h2>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<Card variant="technical" className="border-dashed">
+								<Empty>
+									<EmptyHeader>
+										<EmptyMedia variant="icon">
+											<Plane />
+										</EmptyMedia>
+										<EmptyTitle>Outbound Flights</EmptyTitle>
+										<EmptyDescription>
+											Direct flight destinations from this airport.
+										</EmptyDescription>
+									</EmptyHeader>
+								</Empty>
+							</Card>
 						</div>
-					</div>
-				</header>
-
-				<Separator className="my-6" />
-
-				{/* Map Section */}
-				<section className="mb-8">
-					<h2 className="text-xl font-medium tracking-tight mb-4">Location</h2>
-					<Card variant="blueprint" size="sm" className="overflow-hidden p-0">
-						<AirportsMap airports={[airport]} />
-					</Card>
-				</section>
-
-				<Separator className="my-6" />
-
-				{/* Weather Section */}
-				<section className="mb-8">
-					<h2 className="text-xl font-medium tracking-tight mb-4">
-						Current Weather Conditions
-					</h2>
-					{weatherStation && gridCoordinates ? (
-						<WeatherCard
-							stationId={weatherStation.stationIdentifier}
-							elevation={airport.elevation_ft ?? undefined}
-							gridId={gridCoordinates.gridId}
-							gridX={gridCoordinates.gridX}
-							gridY={gridCoordinates.gridY}
-						/>
-					) : (
-						<Card variant="technical" className="border-dashed">
-							<Empty>
-								<EmptyHeader>
-									<EmptyMedia variant="icon">
-										<Cloud />
-									</EmptyMedia>
-									<EmptyTitle>Weather Data Unavailable</EmptyTitle>
-									<EmptyDescription>
-										Unable to retrieve weather information for this location.
-										The National Weather Service may not have coverage for this
-										area, or the service may be temporarily unavailable.
-									</EmptyDescription>
-								</EmptyHeader>
-							</Empty>
-						</Card>
-					)}
-				</section>
-
-				<Separator className="my-6" />
-
-				{/* Future Sections */}
-				<section>
-					<h2 className="text-xl font-medium tracking-tight mb-4">
-						Coming Soon
-					</h2>
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<Card variant="technical" className="border-dashed">
-							<Empty>
-								<EmptyHeader>
-									<EmptyMedia variant="icon">
-										<Plane />
-									</EmptyMedia>
-									<EmptyTitle>Outbound Flights</EmptyTitle>
-									<EmptyDescription>
-										Direct flight destinations from this airport.
-									</EmptyDescription>
-								</EmptyHeader>
-							</Empty>
-						</Card>
-					</div>
-				</section>
+					</section>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 
