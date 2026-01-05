@@ -56,7 +56,7 @@ export function AirlineRouteMap({ origin_airport }: AirlineRouteMapProps) {
 				mapStyle={
 					isDarkMode
 						? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-						: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+						: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
 				}
 			>
 				<Marker
