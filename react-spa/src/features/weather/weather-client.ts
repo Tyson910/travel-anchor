@@ -29,13 +29,16 @@ export async function fetchWeatherStation({
 	} | null;
 } | null> {
 	try {
+		// Round coordinates to nearest thousandth before the API call
+		const roundedLatitude = Math.round(latitude * 1000) / 1000;
+		const roundedLongitude = Math.round(longitude * 1000) / 1000;
 		const pointsResponse = await weatherClient.GET(
 			"/points/{latitude},{longitude}",
 			{
 				params: {
 					path: {
-						latitude,
-						longitude,
+						latitude: roundedLatitude,
+						longitude: roundedLongitude,
 					},
 				},
 			},
