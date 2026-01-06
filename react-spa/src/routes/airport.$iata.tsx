@@ -15,6 +15,7 @@ import {
 	RefreshCw,
 } from "lucide-react";
 
+import { AirlineRouteMap } from "@/features/maps/FlightRoutes";
 import { deSlugifyStr } from "@/lib/formatters";
 import {
 	Alert,
@@ -33,7 +34,6 @@ import {
 } from "~/components/ui/empty";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
-import { AirportsMap } from "~/features/airport-search/components/AirportsMap";
 import { LocationSpecDetail } from "~/features/weather/components/LocationSpecDetail";
 import { WeatherCard } from "~/features/weather/components/WeatherCard";
 import { formatCoordinates } from "~/features/weather/unit-math";
@@ -79,10 +79,34 @@ export const Route = createFileRoute("/airport/$iata")({
 			longitude: airportResponse.data.airport.longitude,
 		});
 
+		const routes = await rpcClient("/flight-route", {
+			query: {
+				IATA: iata,
+			},
+		}).then(({ data, error }) => {
+			if (error) {
+				console.log(error);
+				throw error;
+			}
+			return data.routes.map(
+				({ destination_airport, origin_airport_options }) => {
+					const [routeInfo] = origin_airport_options;
+
+					return {
+						...destination_airport,
+						airline_options: routeInfo.airline_options,
+						distance_km: routeInfo.distance_km,
+						duration_min: routeInfo.duration_min,
+					};
+				},
+			);
+		});
+
 		return {
 			airport: airportResponse.data.airport,
 			weatherStation: weatherStationData?.stationProperties ?? null,
 			gridCoordinates: weatherStationData?.gridCoordinates ?? null,
+			routes,
 		};
 	},
 	head: (ctx) => {
@@ -113,7 +137,8 @@ export const Route = createFileRoute("/airport/$iata")({
 });
 
 function AirportHubPage() {
-	const { airport, weatherStation, gridCoordinates } = Route.useLoaderData();
+	const { airport, weatherStation, gridCoordinates, routes } =
+		Route.useLoaderData();
 
 	const locationParts = [
 		airport.city_name,
@@ -172,7 +197,10 @@ function AirportHubPage() {
 				<section className="mb-8">
 					<h2 className="sr-only">Location</h2>
 					<Card variant="blueprint" size="sm" className="overflow-hidden p-0">
-						<AirportsMap airports={[airport]} />
+						<AirlineRouteMap
+							origin_airport={airport}
+							destination_airports={routes}
+						/>
 					</Card>
 				</section>
 
