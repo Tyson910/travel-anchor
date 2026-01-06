@@ -63,7 +63,9 @@ export function AirlineRouteMap({ origin_airport }: AirlineRouteMapProps) {
 					longitude={origin_airport.longitude}
 					latitude={origin_airport.latitude}
 					anchor="bottom"
-				/>
+				>
+					<div className="size-4 rounded-full bg-primary border-2 border-white shadow-lg" />
+				</Marker>
 				<FullscreenControl />
 				<GeolocateControl />
 				<NavigationControl />
