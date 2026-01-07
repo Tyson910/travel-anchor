@@ -1,15 +1,18 @@
-import { useState } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 
+import { DivIcon } from "leaflet";
 import {
-	FullscreenControl,
-	GeolocateControl,
-	Map as MapLibre,
+	MapContainer,
 	Marker,
-	NavigationControl,
-} from "react-map-gl/maplibre";
+	Polyline,
+	Popup,
+	TileLayer,
+	useMap,
+} from "react-leaflet";
 
-import { Button } from "@/components/ui/base-button";
+import "leaflet/dist/leaflet.css";
+
+import { generateGreatCircleArc } from "./route-utils";
 
 type Airport = {
 	iata_code: string;
@@ -39,37 +42,99 @@ interface AirlineRouteMapProps {
 	destination_airports: DestinationAirport[];
 }
 
-export function AirlineRouteMap({ origin_airport }: AirlineRouteMapProps) {
-	const [isDarkMode, setIsDarkMode] = useState(false);
+const customIcon = new DivIcon({
+	className: "custom-marker ",
+	html: '<div style="width: 16px; height: 16px; border-radius: 50%; background-color: var(--color-muted-foreground); border: 2px solid white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);" />',
+	iconSize: [16, 16],
+	iconAnchor: [8, 8],
+});
+
+const highlightedIcon = new DivIcon({
+	className: "custom-marker ",
+	html: '<div style="width: 16px; height: 16px; border-radius: 50%; background-color: var(--color-primary); border: 2px solid white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);" />',
+	iconSize: [16, 16],
+	iconAnchor: [8, 8],
+});
+
+interface AirportsMapProps {
+	airports: Airport[];
+}
+
+function FitMapToBounds({ airports }: AirportsMapProps) {
+	fitBoundsToRoutes(airports);
+	return null;
+}
+
+export function AirlineRouteMap({
+	origin_airport,
+	destination_airports,
+}: AirlineRouteMapProps) {
 	return (
-		<>
-			<Button type="button" onClick={() => setIsDarkMode((prev) => !prev)}>
-				Toggle Dark Mode
-			</Button>
-			<MapLibre
-				initialViewState={{
-					longitude: origin_airport.longitude,
-					latitude: origin_airport.latitude,
-					zoom: 12,
-				}}
-				style={{ width: "100%", height: "600px" }}
-				mapStyle={
-					isDarkMode
-						? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-						: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
-				}
+		<MapContainer
+			boundsOptions={{
+				padding: [20, 20],
+			}}
+			zoom={13}
+			scrollWheelZoom={false}
+			className=" size-full relative h-[600px] z-0"
+		>
+			<FitMapToBounds airports={destination_airports} />
+			<TileLayer
+				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+			/>
+
+			{destination_airports.map((airport) => {
+				const arcPositions: [number, number][] = generateGreatCircleArc(
+					[origin_airport.longitude, origin_airport.latitude],
+					[airport.longitude, airport.latitude],
+				).map(([lng, lat]) => [lat, lng]);
+
+				return (
+					<>
+						<Polyline
+							className=" opa"
+							positions={arcPositions}
+							pathOptions={{
+								weight: 2,
+								className:
+									"opacity-20 hover:opacity-100 stroke-muted-foreground",
+							}}
+						/>
+						<Marker
+							key={airport.iata_code}
+							position={[airport.latitude, airport.longitude]}
+							icon={customIcon}
+						>
+							<Popup>{airport.name}</Popup>
+						</Marker>
+					</>
+				);
+			})}
+
+			<Marker
+				key={origin_airport.iata_code}
+				position={[origin_airport.latitude, origin_airport.longitude]}
+				icon={highlightedIcon}
 			>
-				<Marker
-					longitude={origin_airport.longitude}
-					latitude={origin_airport.latitude}
-					anchor="bottom"
-				>
-					<div className="size-4 rounded-full bg-primary border-2 border-white shadow-lg" />
-				</Marker>
-				<FullscreenControl />
-				<GeolocateControl />
-				<NavigationControl />
-			</MapLibre>
-		</>
+				<Popup>{origin_airport.name}</Popup>
+			</Marker>
+		</MapContainer>
 	);
+}
+
+function fitBoundsToRoutes(airports: Airport[]) {
+	const map = useMap();
+
+	if (airports.length === 0) return;
+
+	const bounds: [number, number][] = [];
+
+	airports.forEach((airport) => {
+		bounds.push([airport.latitude, airport.longitude]);
+	});
+
+	if (bounds.length > 0) {
+		map.fitBounds(bounds, { padding: [20, 20] });
+	}
 }
