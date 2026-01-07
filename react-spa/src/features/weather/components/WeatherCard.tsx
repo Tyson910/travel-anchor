@@ -18,6 +18,7 @@ import {
 	Wind,
 } from "lucide-react";
 import { useState } from "react";
+import { ZodError } from "zod";
 
 import { cn } from "@/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -308,7 +309,9 @@ export function WeatherCard({
 				</header>
 				<main className="p-6">
 					<p className="text-muted-foreground">
-						{error?.message ?? "Failed to load weather data"}
+						{error instanceof ZodError
+							? "Failed to load weather data"
+							: (error?.message ?? "Failed to load weather data")}
 					</p>
 				</main>
 			</div>
