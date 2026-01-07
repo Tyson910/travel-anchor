@@ -152,17 +152,6 @@ function AirportHubPage() {
 	return (
 		<div className="bg-primary/2">
 			<div className="container mx-auto px-4 py-8">
-				{/* Back Navigation */}
-				<nav className="mb-6">
-					<Link
-						to="/"
-						className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-					>
-						<ArrowLeft className="size-4" />
-						Back to Search
-					</Link>
-				</nav>
-
 				{/* Hero Header */}
 				<header className="mb-8">
 					<div className="py-6 flex flex-col justify-center">
