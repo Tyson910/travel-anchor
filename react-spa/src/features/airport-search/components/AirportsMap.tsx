@@ -1,18 +1,20 @@
-import { Icon } from "leaflet";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { DivIcon } from "leaflet";
+import {
+	MapContainer,
+	Marker,
+	Polyline,
+	Popup,
+	TileLayer,
+	useMap,
+} from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
 
-// Create a custom icon once
-const customIcon = new Icon({
-	iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-	iconRetinaUrl:
-		"https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-	shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-	iconSize: [25, 41],
-	iconAnchor: [12, 41],
-	popupAnchor: [1, -34],
-	shadowSize: [41, 41],
+const customIcon = new DivIcon({
+	className: "custom-marker",
+	html: '<div style="width: 16px; height: 16px; border-radius: 50%; background-color: var(--color-primary); border: 2px solid white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);" />',
+	iconSize: [16, 16],
+	iconAnchor: [8, 8],
 });
 
 interface Airport {
