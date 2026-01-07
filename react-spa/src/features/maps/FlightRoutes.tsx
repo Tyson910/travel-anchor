@@ -43,15 +43,15 @@ interface AirlineRouteMapProps {
 }
 
 const customIcon = new DivIcon({
-	className: "custom-marker ",
-	html: '<div style="width: 16px; height: 16px; border-radius: 50%; background-color: var(--color-muted-foreground); border: 2px solid white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);" />',
+	className: "custom-marker",
+	html: '<div class="size-3 rounded-full bg-muted-foreground border-2 border-white shadow-lg"></div>',
 	iconSize: [16, 16],
 	iconAnchor: [8, 8],
 });
 
 const highlightedIcon = new DivIcon({
-	className: "custom-marker ",
-	html: '<div style="width: 16px; height: 16px; border-radius: 50%; background-color: var(--color-primary); border: 2px solid white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);" />',
+	className: "highlighted-marker ",
+	html: '<div class="size-4 rounded-full bg-primary border-2 border-white shadow-lg"></div>',
 	iconSize: [16, 16],
 	iconAnchor: [8, 8],
 });
