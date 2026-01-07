@@ -1,19 +1,10 @@
 import {
 	createFileRoute,
 	type ErrorComponentProps,
-	Link,
 	PathParamError,
 	useNavigate,
 } from "@tanstack/react-router";
-import {
-	ArrowLeft,
-	Clock,
-	Cloud,
-	Home,
-	MapPin,
-	Plane,
-	RefreshCw,
-} from "lucide-react";
+import { Clock, Cloud, Home, MapPin, Plane, RefreshCw } from "lucide-react";
 
 import { AirlineRouteMap } from "@/features/maps/FlightRoutes";
 import { deSlugifyStr } from "@/lib/formatters";
