@@ -1,12 +1,5 @@
 import { DivIcon } from "leaflet";
-import {
-	MapContainer,
-	Marker,
-	Polyline,
-	Popup,
-	TileLayer,
-	useMap,
-} from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
 
