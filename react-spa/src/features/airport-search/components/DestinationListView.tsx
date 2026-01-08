@@ -100,9 +100,9 @@ function OriginAirportsList({
 			{origins.map((origin, index) => (
 				<div key={`${origin.iata_code}-${index}`} className="space-y-3">
 					<div className="flex gap-x-3 items-center w-full">
-						<span className="text-xl font-bold">{destination.iata_code}</span>
-						<ArrowRightIcon className="size-5" />
 						<span className="text-xl font-bold">{origin.iata_code}</span>
+						<ArrowRightIcon className="size-5" />
+						<span className="text-xl font-bold">{destination.iata_code}</span>
 					</div>
 					<OriginDisplay origin={origin} />
 					{index < origins.length - 1 && <Separator className="my-6" />}
