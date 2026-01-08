@@ -12,6 +12,7 @@ import {
 
 import "leaflet/dist/leaflet.css";
 
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -148,9 +149,15 @@ function RouteDetailsDialog({ route }: RouteDetailsDialogProps) {
 	return (
 		<div className="w-full">
 			<div className="mb-4 sm:mb-6">
-				<div className="font-bold mb-6 text-lg sm:text-xl leading-tight">
+				<Link
+					to="/airport/$iata"
+					params={{
+						iata: route.iata_code,
+					}}
+					className="font-bold mb-6 text-lg sm:text-xl leading-tight"
+				>
 					{route.name}
-				</div>
+				</Link>
 				<div>
 					<div className="flex items-center gap-2 mt-1">
 						<Badge variant="iata" size="sm" className="text-xs sm:text-sm">
