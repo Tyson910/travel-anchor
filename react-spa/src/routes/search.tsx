@@ -116,14 +116,14 @@ function SearchPage() {
 	return (
 		<div className="bg-primary/2">
 			<div className="container mx-auto px-4 py-8">
-				<title>Mutual Flight Destinations - Travel Anchor</title>
+				<title>Mutual Flight Destinations - Flight Anchor</title>
 				<meta
 					name="description"
 					content="Find mutual direct-flight destinations for your group travel"
 				/>
 				<meta
 					property="og:title"
-					content="Mutual Flight Destinations - Travel Anchor"
+					content="Mutual Flight Destinations - Flight Anchor"
 				/>
 				<meta
 					property="og:description"
