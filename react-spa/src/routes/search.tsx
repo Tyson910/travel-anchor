@@ -273,13 +273,7 @@ function SearchPage() {
 								return <DestinationListView routes={sortedRoutes} />;
 							}
 
-							return (
-								<AirportsMap
-									airports={filteredRoutes.map(
-										({ destination_airport }) => destination_airport,
-									)}
-								/>
-							);
+							return <AirportsMap routes={filteredRoutes} />;
 						}}
 					</Await>
 				</CatchBoundary>
