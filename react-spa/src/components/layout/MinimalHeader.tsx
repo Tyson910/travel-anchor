@@ -11,7 +11,7 @@ export function MinimalHeader() {
 							<RouteIcon className="w-4 h-4 text-primary-foreground" />
 						</div>
 						<div className="text-xl font-bold tracking-tight">
-							Travel Anchor
+							Flight Anchor
 						</div>
 					</Link>
 				</div>

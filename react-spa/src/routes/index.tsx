@@ -63,7 +63,7 @@ function HomePage() {
 
 	return (
 		<>
-			<title>Travel Anchor - Smart Flight Connections</title>
+			<title>Flight Anchor - Smart Flight Connections</title>
 			<meta
 				name="description"
 				content="Find direct-flight connections between multiple airports with intelligent route analysis."
