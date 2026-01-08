@@ -111,7 +111,7 @@ export function AirlineRouteMap({
 							position={[airport.latitude, airport.longitude]}
 							icon={customIcon}
 						>
-							<Popup>
+							<Popup className="overflow-y-scroll h-[550px]">
 								<RouteDetailsDialog route={airport} />
 							</Popup>
 						</Marker>
