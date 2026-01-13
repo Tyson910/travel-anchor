@@ -12,6 +12,8 @@ import "leaflet/dist/leaflet.css";
 
 import type { SearchPageLoaderResponse } from "~/routes/search";
 
+import { Link } from "@tanstack/react-router";
+
 import { generateGreatCircleArc } from "@/features/maps/route-utils";
 
 const customIcon = new DivIcon({
@@ -135,7 +137,16 @@ export function AirportsMap({ routes }: AirportsMapProps) {
 						position={[airport.latitude, airport.longitude]}
 						icon={customIcon}
 					>
-						<Popup>{airport.name}</Popup>
+						<Popup>
+							<Link
+								to="/airport/$iata"
+								params={{
+									iata: airport.iata_code,
+								}}
+							>
+								{airport.name}
+							</Link>
+						</Popup>
 					</Marker>
 				);
 			})}
