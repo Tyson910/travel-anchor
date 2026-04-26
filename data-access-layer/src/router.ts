@@ -3,8 +3,8 @@ import { createRouter } from "better-call";
 import {
 	getAirportByIATACodeEndpoint,
 	searchAirportEndpoint,
-} from "#domains/airport/endpoints.ts";
-import { getAirportRoutesEndpoint } from "#domains/flight-route/endpoints.ts";
+} from "#domains/airport/endpoints";
+import { getAirportRoutesEndpoint } from "#domains/flight-route/endpoints";
 
 export const router = createRouter(
 	{

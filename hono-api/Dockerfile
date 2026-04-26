@@ -1,4 +1,4 @@
-# Use official Bun image
+# Use Bun for dependency installation/build steps
 FROM oven/bun:latest AS base
 WORKDIR /app
 
@@ -16,17 +16,17 @@ COPY react-spa/package.json ./react-spa/
 
 RUN bun install --frozen-lockfile --ignore-scripts --filter './hono-api'
 
-# Generate database types from data-access-layer
-RUN cd data-access-layer && bun run db:inspect
-
 # Copy source code
 COPY . .
+
+# Build workspace packages needed at runtime
+RUN cd data-access-layer && bun run build
 
 # Build the hono-api package
 RUN cd hono-api && bun run build
 
-# Production stage
-FROM oven/bun:latest AS production
+# Production stage uses Node runtime
+FROM node:20-bookworm-slim AS production
 WORKDIR /app
 
 # Install system fonts for text rendering in OG images
@@ -52,4 +52,4 @@ COPY --from=base /app/hono-api/package.json ./hono-api/
 EXPOSE 3000
 
 # Start the application
-CMD ["bun", "run", "--cwd", "hono-api", "start"]
+CMD ["node", "hono-api/dist/index.js"]

@@ -6,11 +6,10 @@
 		"outDir": "./dist",
 		"baseUrl": ".",
 
-		"allowImportingTsExtensions": true,
-		"emitDeclarationOnly": true,
 		// Environment Settings
 		// See also https://aka.ms/tsconfig/module
-		"module": "preserve",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"target": "esnext",
 		// For nodejs:
 		"lib": ["esnext"],

@@ -1,7 +1,7 @@
 import { NoResultError } from "kysely";
 
 import { logger } from "#logger";
-import { getAirportByIATA, searchAirport } from "./repository.ts";
+import { getAirportByIATA, searchAirport } from "./repository.js";
 
 export const airportService = {
 	async searchAirports(query: string) {

@@ -1,9 +1,9 @@
 import { createEndpoint } from "better-call";
 import { z } from "zod";
 
-import { oneOrManyIATAValidator } from "#shared/schemas.ts";
-import { logger } from "#shared/utils/logger.ts";
-import { getAirportRoutesByIATA } from "./repository";
+import { oneOrManyIATAValidator } from "#shared/schemas";
+import { logger } from "#shared/utils/logger";
+import { getAirportRoutesByIATA } from "./repository.js";
 
 export const getAirportRoutesEndpoint = createEndpoint(
 	"/flight-route",

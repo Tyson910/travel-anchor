@@ -1,5 +1,5 @@
 import { logger } from "#logger";
-import { getAirportRoutesByIATA } from "./repository.ts";
+import { getAirportRoutesByIATA } from "./repository.js";
 
 export const flightRouteService = {
 	async getAirportRoutesByIATA(IATA: string[]) {

@@ -1,4 +1,4 @@
-import type { DB } from "./types.ts";
+import type { DB } from "./types.js";
 
 import { Kysely, ParseJSONResultsPlugin, PostgresDialect } from "kysely";
 import pg from "pg";

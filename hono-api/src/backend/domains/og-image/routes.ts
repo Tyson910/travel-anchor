@@ -2,8 +2,8 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { Resvg } from "@resvg/resvg-js";
 import { flightRouteService } from "@travel-anchor/data-access-layer";
 
-import { getOgImageRoute } from "./schema.ts";
-import { generateDynamicOGImage } from "./utils";
+import { getOgImageRoute } from "./schema.js";
+import { generateDynamicOGImage } from "./utils.js";
 
 export const openImageRoutes = new OpenAPIHono().openapi(
 	getOgImageRoute,

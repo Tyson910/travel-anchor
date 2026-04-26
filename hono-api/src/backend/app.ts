@@ -11,9 +11,9 @@ import { HTTPException } from "hono/http-exception";
 import { prettyJSON } from "hono/pretty-json";
 import { secureHeaders } from "hono/secure-headers";
 
-import { openImageRoutes } from "#domains/og-image/routes.ts";
+import { openImageRoutes } from "#domains/og-image/routes";
 import { logger } from "#logger";
-import { timing } from "#middleware/timing.ts";
+import { timing } from "#middleware/timing";
 
 const frontEndURL = process.env.FRONTEND_URL;
 

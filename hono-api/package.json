@@ -3,29 +3,51 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./src/index.ts",
-			"default": null
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
 		}
 	},
 	"imports": {
-		"#shared/*": "./src/backend/shared/*",
-		"#domains/*": "./src/backend/domains/*",
-		"#middleware/*": "./src/backend/shared/middleware/*",
-		"#utils/*": "./src/backend/shared/utils/*",
-		"#database/*": "./src/backend/shared/database/*",
-		"#database": "./src/backend/shared/database/index.ts",
-		"#logger": "./src/backend/shared/utils/logger.ts"
+		"#shared/*": {
+			"types": "./src/backend/shared/*.ts",
+			"default": "./dist/backend/shared/*.js"
+		},
+		"#domains/*": {
+			"types": "./src/backend/domains/*.ts",
+			"default": "./dist/backend/domains/*.js"
+		},
+		"#middleware/*": {
+			"types": "./src/backend/shared/middleware/*.ts",
+			"default": "./dist/backend/shared/middleware/*.js"
+		},
+		"#utils/*": {
+			"types": "./src/backend/shared/utils/*.ts",
+			"default": "./dist/backend/shared/utils/*.js"
+		},
+		"#database/*": {
+			"types": "./src/backend/shared/database/*.ts",
+			"default": "./dist/backend/shared/database/*.js"
+		},
+		"#database": {
+			"types": "./src/backend/shared/database/index.ts",
+			"default": "./dist/backend/shared/database/index.js"
+		},
+		"#logger": {
+			"types": "./src/backend/shared/utils/logger.ts",
+			"default": "./dist/backend/shared/utils/logger.js"
+		}
 	},
 	"scripts": {
-		"dev": "bun --watch src/index.ts",
-		"build": "rm -rf dist && tsc && bun build ./src/index.ts --outdir ./dist --target bun --minify --sourcemap",
+		"dev": "tsx watch src/index.ts",
+		"build": "rm -rf dist && tsc -p tsconfig.json",
 		"check": "tsc --noEmit",
-		"start": "bun run ./dist/index.js",
+		"start": "node ./dist/index.js",
 		"test": "bun test",
 		"test:watch": "bun test --watch",
 		"db:generate": "prisma generate"
 	},
 	"dependencies": {
+		"@hono/node-server": "^1.19.5",
 		"@hono/zod-openapi": "^1.1.0",
 		"@resvg/resvg-js": "^2.6.2",
 		"@travel-anchor/data-access-layer": "workspace:",
@@ -35,6 +57,7 @@
 	},
 	"devDependencies": {
 		"@types/bun": "catalog:",
+		"tsx": "^4.20.6",
 		"typescript": "catalog:"
 	}
 }

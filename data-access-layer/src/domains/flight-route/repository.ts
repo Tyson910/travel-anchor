@@ -2,8 +2,8 @@ import { type ExpressionBuilder, sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/postgres";
 
 import { type DB, kyselyDriver } from "#database";
-import { airportColumns } from "#domains/airport/repository.ts";
-import { logger } from "#utils/logger.ts";
+import { airportColumns } from "#domains/airport/repository";
+import { logger } from "#utils/logger";
 
 const originAirportWhereClause = (
 	eb: ExpressionBuilder<DB, "route">,
